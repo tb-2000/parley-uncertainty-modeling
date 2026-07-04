@@ -1,0 +1,99 @@
+dtmc
+const int c = 1;
+const int N=9;
+const int xstart = 0;
+const int ystart = 0;
+const int xtarget = 9;
+const int ytarget = 9;
+const double p = 0.01;
+
+module Robot 
+  x : [0..N] init xstart;
+  y : [0..N] init ystart;
+  move_ready : [0..1] init 1;
+  crashed : [0..1] init 0;
+
+  [east] (move_ready=1) -> 
+    (1-3*p): (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+  [west] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    (1-3*p): (x'=max(x-1, 0)) & (move_ready'=0); 
+  [north] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    (1-3*p): (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+  [south] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    (1-3*p): (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+
+  [check] (move_ready=0) & hasCrashed -> (crashed'=1) & (move_ready'=1); 
+  [check] (move_ready=0) & !hasCrashed -> (crashed'=0) & (move_ready'=1); 
+  [stucked] (crashed=1) -> true;
+endmodule
+
+module Knowledge
+  xhat : [0..N] init xstart;
+  yhat : [0..N] init ystart;
+
+  // dirichlet-priors for east,west,south,north
+  alphaE : [1..100] init 1;
+  alphaN : [1..100] init 1;
+  alphaS : [1..100] init 1;
+  alphaW : [1..100] init 1;
+
+  step : [0..c] init 0;
+
+  formula sum = alphaE+alphaN+alphaS+alphaW;
+
+  formula pEast = alphaE/sum;
+  formula pNorth = alphaN/sum;
+  formula pSouth = alphaS/sum;
+  formula pWest = alphaW/sum;
+
+  // Formel, die angibt, ob Roboterposition am Rand ist -> wenn ja, dann keine dirichlet-Aktualisierung, da nicht die gegangene Richtung bestimmbar ist
+  formula ambigious = (x=0) | (x=n) | (y=0) | (y=N);
+
+  // formeln, die angeben, in welche Richtung Roboter in Wahrheit gegangen ist 
+  formula movedWest = (x=xhat-1) & (y=yhat);
+  formula movedEast = (x=xhat+1) & (y=yhat);
+  formula movedNorth = (x=xhat) & (y=yhat+1);
+  formula movedSouth = (x=xhat) & (y=yhat-1);
+
+  ready : [0..1] init 1;
+  [west] ready=1 -> pEast : (xhat'=min(xhat+1,N)) + pNorth : (yhat'=min(yhat+1,N)) + pSouth : (xhat'=max(xhat-1,0)) + pWest : (yhat'=max(yhat-1,0));
+  [east] ready=1 -> pEast : (xhat'=min(xhat+1,N)) + pNorth : (yhat'=min(yhat+1,N)) + pSouth : (xhat'=max(xhat-1,0)) + pWest : (yhat'=max(yhat-1,0));
+  [south] ready=1 -> pEast : (xhat'=min(xhat+1,N)) + pNorth : (yhat'=min(yhat+1,N)) + pSouth : (xhat'=max(xhat-1,0)) + pWest : (yhat'=max(yhat-1,0));
+  [north] ready=1 -> pEast : (xhat'=min(xhat+1,N)) + pNorth : (yhat'=min(yhat+1,N)) + pSouth : (xhat'=max(xhat-1,0)) + pWest : (yhat'=max(yhat-1,0));
+
+  // je nachdem, in welche Richtung echter Roboter ging, wird passender Dirichlet-Prior erhöht (dies klappt nur, wenn c=1)
+  [update_west] step>=c & ready=0  & !ambigious & movedWest-> (xhat'=x) & (yhat'=y) & (step'=0) & (ready'=1) & (alphaW'=min(alphaW+1,100));
+  [update_east] step>=c & ready=0  & !ambigious & movedEast-> (xhat'=x) & (yhat'=y) & (step'=0) & (ready'=1) & (alphaE'=min(alphaE+1,100));
+  [update_north] step>=c & ready=0  & !ambigious & movedNorth-> (xhat'=x) & (yhat'=y) & (step'=0) & (ready'=1) & (alphaN'=min(alphaN+1,100));
+  [update_south] step>=c & ready=0  & !ambigious & movedSouth-> (xhat'=x) & (yhat'=y) & (step'=0) & (ready'=1) & (alphaS'=min(alphaS+1,100));
+
+  // update, wenn Richtung nicht ersichtlich ist (keine Dirichlet-Aktualisierung)
+  [update] step>=c & ready=0 -> (xhat'=x) & (yhat'=y) & (step'=0) & (ready'=1);
+
+  [skip_update] step<c & ready=0 -> (step'=step+1) & (ready'=1);
+endmodule
+
+rewards "cost" 
+  [east] true : 1; 
+  [west] true : 1; 
+  [north] true : 1; 
+  [south] true : 1; 
+  [update] true : 5;
+endrewards 
+
+rewards "uncertainty-bayesian"
+  true : 100/(alphaE+alphaN+alphaS+alphaW);
+endrewards
+
