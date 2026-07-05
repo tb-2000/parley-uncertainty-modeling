@@ -1,0 +1,133 @@
+dtmc
+const int c = 1;
+const int N=9;
+const int xstart = 0;
+const int ystart = 0;
+const int xtarget = 9;
+const int ytarget = 9;
+const double p = 0.01;
+const int B = 10;
+
+formula hasCrashed = (x=0) & (y=1);
+
+module Robot 
+  x : [0..N] init xstart;
+  y : [0..N] init ystart;
+  move_ready : [0..1] init 1;
+  crashed : [0..1] init 0;
+
+  [east] (move_ready=1) -> 
+    (1-3*p): (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+  [west] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    (1-3*p): (x'=max(x-1, 0)) & (move_ready'=0); 
+  [north] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    (1-3*p): (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+  [south] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    (1-3*p): (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+
+  [check] (move_ready=0) & hasCrashed -> (crashed'=1) & (move_ready'=1); 
+  [check] (move_ready=0) & !hasCrashed -> (crashed'=0) & (move_ready'=1); 
+  [stucked] (crashed=1) -> true;
+endmodule
+
+module sensor
+  obsx : [0..N] init xstart;
+  obsy : [1..N] init ystart;
+
+  [observe_east] (move_ready=0) -> 
+    0.85 : (obsx'=x) & (obsy'=y) +
+    0.05 : (obsx'=min(x+1,N)) & (obsy'=y) +
+    0.05 : (obsx'=x) & (obsy'=min(y+1,N)) + 
+    0.05 : (obsx'=x) & (obsy'=max(y-1,0));
+  [observe_west] (move_ready=0) -> 
+    0.85 : (obsx'=x) & (obsy'=y) +
+    0.05 : (obsx'=max(x-1,0)) & (obsy'=y) +
+    0.05 : (obsx'=x) & (obsy'=min(y+1,N)) + 
+    0.05 : (obsx'=x) & (obsy'=max(y-1,0));
+  [observe_north] (move_ready=0) -> 
+    0.85 : (obsx'=x) & (obsy'=y) +
+    0.05 : (obsx'=min(x+1,N)) & (obsy'=y) +
+    0.05 : (obsx'=max(x-1,0)) & (obsy'=y) + 
+    0.05 : (obsx'=x) & (obsy'=max(y-1,0));
+  [observe_south] (move_ready=0) -> 
+    0.85 : (obsx'=x) & (obsy'=y) +
+    0.05 : (obsx'=min(x+1,N)) & (obsy'=y) +
+    0.05 : (obsx'=x) & (obsy'=min(y+1,N)) + 
+    0.05 : (obsx'=max(x-1,0)) & (obsy'=y);
+endmodule
+
+module Knowledge
+  bx1 : [0..N] init xstart;
+  by1 : [0..N] init ystart;
+
+  bx2 : [0..N] init xstart;
+  by2 : [0..N] init ystart;
+
+  bx3 : [0..N] init xstart;
+  by3 : [0..N] init ystart;
+
+  bx4 : [0..N] init xstart;
+  by4 : [0..N] init ystart;
+
+  // belief werte [0..10] der einzelnen Kandidaten  mit anfänglicher Reihenfolge
+  belief1 : [0..B] init 10;
+  belief2 : [0..B] init 8;
+  belief3 : [0..B] init 6;
+  belief4 : [0..B] init 4;
+
+  formula noMatch = !(bx1=obsx & by1=obsy) & !(bx2=obsx & by2=obsy) & !(bx3=obsx & by3=obsy) & !(bx4=obsx & by4=obsy);
+
+  step : [0..c] init 0;
+  ready : [0..1] init 1;
+
+  [west] ready=1 -> (bx1'=max(bx1-1, 0)) & (bx2'=max(bx2-1, 0)) & (bx3'=max(bx3-1, 0)) & (bx4'=max(bx4-1, 0)) & (ready'=0);
+  [east] ready=1 -> (bx1'=min(bx1+1, N)) & (bx2'=min(bx2+1, N)) & (bx3'=min(bx3+1, N)) & (bx4'=min(bx4+1, N)) & (ready'=0);
+  [south] ready=1 -> (by1'=max(by1-1, 0)) & (by2'=max(by2-1, 0)) & (by3'=max(by3-1, 0)) & (by4'=max(by4-1, 0)) & (ready'=0);
+  [north] ready=1 -> (by1'=min(by1+1, N)) & (by2'=min(by21, N)) & (by3'=min(by3+1, N)) & (by4'=min(by4+1, N)) & (ready'=0);
+
+  // je nachdem welcher kandidat mit Messung übereinstimmt, wird belief erhöht oder gesenkt
+  [update] step>=c & ready=0 & (obsx=bx1) & (obsy=by1) -> (belief1'=min(belief1+2,B)) & (belief2'=max(belief2-1,0)) & (belief3'=max(belief3-1,0)) & (belief4'=max(belief4-1,0)) & (step'=0) & (ready'=1);
+  [update] step>=c & ready=0 & (obsx=bx2) & (obsy=by2) -> (belief2'=min(belief2+2,B)) & (belief1'=max(belief1-1,0)) & (belief3'=max(belief3-1,0)) & (belief4'=max(belief4-1,0)) & (step'=0) & (ready'=1);
+  [update] step>=c & ready=0 & (obsx=bx3) & (obsy=by3) -> (belief3'=min(belief3+2,B)) & (belief2'=max(belief2-1,0)) & (belief1'=max(belief1-1,0)) & (belief4'=max(belief4-1,0)) & (step'=0) & (ready'=1);
+  [update] step>=c & ready=0 & (obsx=bx4) & (obsy=by4) -> (belief4'=min(belief4+2,B)) & (belief2'=max(belief2-1,0)) & (belief3'=max(belief3-1,0)) & (belief1'=max(belief1-1,0)) & (step'=0) & (ready'=1);
+  
+  // stimmt kein Kandidat mit Messung überein, wird der mit geringsten Belief ersetzt mit Messung (bei gleichen Belief gilt reihenfolge: b1>b2>b3>b4)
+  [update] step>=c & ready=0 & noMatch & (belief1<=belief2) & (belief1<=belief3) & (belief1<=belief4) -> (belief1'=min(belief1+2,B)) & (belief2'=max(belief2-1,0)) & (belief3'=max(belief3-1,0)) & (belief4'=max(belief4-1,0)) & (step'=0) & (ready'=1);
+  [update] step>=c & ready=0 & noMatch & (belief1>belief2) & (belief2<=belief3) & (belief2<=belief4) -> (belief2'=min(belief2+2,B)) & (belief1'=max(belief1-1,0)) & (belief3'=max(belief3-1,0)) & (belief4'=max(belief4-1,0)) & (step'=0) & (ready'=1);
+  [update] step>=c & ready=0 & noMatch & (belief1>belief2) & (belief1>belief3) & (belief3<=belief4) -> (belief3'=min(belief3+2,B)) & (belief2'=max(belief2-1,0)) & (belief1'=max(belief1-1,0)) & (belief4'=max(belief4-1,0)) & (step'=0) & (ready'=1);
+  [update] step>=c & ready=0 & noMatch & (belief1>belief2) & (belief1>belief3) & (belief1>belief4) -> (belief4'=min(belief4+2,B)) & (belief2'=max(belief2-1,0)) & (belief3'=max(belief3-1,0)) & (belief1'=max(belief1-1,0)) & (step'=0) & (ready'=1);
+  
+  // Zusätzlich könnte Crash-Info genutzt werden: wenn [bx1,by1] eine crash zelle darstellen -> belief1=max(belief1-1,0), da Hypothese unplausibel geworden ist
+  // [update] ... & b1HasCrashed -> ... & belief1=max(belief1-1,0) & ...
+
+  [skip_update] step<c & ready=0 -> (step'=step+1) & (ready'=1);
+endmodule
+
+rewards "cost" 
+  [east] true : 1; 
+  [west] true : 1; 
+  [north] true : 1; 
+  [south] true : 1; 
+  [update] true : 5;
+endrewards 
+
+rewards "uncertainty-hmm"
+  true : 10-confidence;
+endrewards
+
+rewards "sensor"
+  (obsx!=bx | obsy!=by) : 1;
+endrewards
+

@@ -1,0 +1,110 @@
+dtmc
+const int c = 1;
+const int N=9;
+const int xstart = 0;
+const int ystart = 0;
+const int xtarget = 9;
+const int ytarget = 9;
+const double p = 0.01;
+
+formula hasCrashed = (x=0) & (y=1);
+
+module Robot 
+  x : [0..N] init xstart;
+  y : [0..N] init ystart;
+  move_ready : [0..1] init 1;
+  crashed : [0..1] init 0;
+
+  [east] (move_ready=1) -> 
+    (1-3*p): (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+  [west] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    (1-3*p): (x'=max(x-1, 0)) & (move_ready'=0); 
+  [north] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    (1-3*p): (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+  [south] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    (1-3*p): (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+
+  [check] (move_ready=0) & hasCrashed -> (crashed'=1) & (move_ready'=1); 
+  [check] (move_ready=0) & !hasCrashed -> (crashed'=0) & (move_ready'=1); 
+  [stucked] (crashed=1) -> true;
+endmodule
+
+module sensor
+  obsx : [0..N] init xstart;
+  obsy : [1..N] init ystart;
+
+  [observe_east] (move_ready=0) -> 
+    0.85 : (obsx'=x) & (obsy'=y) +
+    0.05 : (obsx'=min(x+1,N)) & (obsy'=y) +
+    0.05 : (obsx'=x) & (obsy'=min(y+1,N)) + 
+    0.05 : (obsx'=x) & (obsy'=max(y-1,0));
+  [observe_west] (move_ready=0) -> 
+    0.85 : (obsx'=x) & (obsy'=y) +
+    0.05 : (obsx'=max(x-1,0)) & (obsy'=y) +
+    0.05 : (obsx'=x) & (obsy'=min(y+1,N)) + 
+    0.05 : (obsx'=x) & (obsy'=max(y-1,0));
+  [observe_north] (move_ready=0) -> 
+    0.85 : (obsx'=x) & (obsy'=y) +
+    0.05 : (obsx'=min(x+1,N)) & (obsy'=y) +
+    0.05 : (obsx'=max(x-1,0)) & (obsy'=y) + 
+    0.05 : (obsx'=x) & (obsy'=max(y-1,0));
+  [observe_south] (move_ready=0) -> 
+    0.85 : (obsx'=x) & (obsy'=y) +
+    0.05 : (obsx'=min(x+1,N)) & (obsy'=y) +
+    0.05 : (obsx'=x) & (obsy'=min(y+1,N)) + 
+    0.05 : (obsx'=max(x-1,0)) & (obsy'=y);
+endmodule
+
+module Knowledge
+  bx : [0..N] init xstart;
+  by : [0..N] init ystart;
+
+  confidence : [0..19] init 10;
+
+  step : [0..c] init 0;
+  ready : [0..1] init 1;
+
+  [west] ready=1 -> (bx'=max(bx-1, 0)) & (ready'=0);
+  [east] ready=1 -> (bx'=min(bx+1, N)) & (ready'=0);
+  [south] ready=1 -> (by'=max(by-1, 0)) & (ready'=0);
+  [north] ready=1 -> (by'=min(by+1, N)) & (ready'=0);
+
+  // Sensor stimmt überein
+  [update] step>=c & ready=0 & (obsx=bx) & (obsy=by) -> (confidence'=min(confidence+1,10)) & (step'=0) & (ready'=1);
+
+  // Sensor liegt daneben
+  [update] step>=c & ready=0 & (obsx!=bx | obsy!=by) -> (bx'=obsx) & (by'=obsy) & (confidence'=max(confidence-2,0)) & (step'=0) & (ready'=1);
+
+  // wenn Beobachtung in Crash-Zelle ist -> dann entweder Messung verwerfen oder Confidence senken
+  [update] step>=c & ready=0 & hasCrashed -> (confidence'=max(confidence-2,0)) & (step'=0) & (ready'=1);
+  [skip_update] step<c & ready=0 -> (step'=step+1) & (ready'=1);
+endmodule
+
+rewards "cost" 
+  [east] true : 1; 
+  [west] true : 1; 
+  [north] true : 1; 
+  [south] true : 1; 
+  [update] true : 5;
+endrewards 
+
+rewards "uncertainty-hmm"
+  true : 10-confidence;
+endrewards
+
+rewards "sensor"
+  (obsx!=bx | obsy!=by) : 1;
+endrewards
+
