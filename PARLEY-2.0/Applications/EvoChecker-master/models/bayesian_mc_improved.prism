@@ -1,0 +1,753 @@
+dtmc
+
+// ============================================================
+// Konstanten
+// ============================================================
+
+const int N = 9;
+
+const int xstart = 0;
+const int ystart = 0;
+
+const int xtarget = 9;
+const int ytarget = 9;
+
+// Tatsächlicher Bewegungsfehler des Roboters
+const double p = 0.01;
+
+// Fehler der Messung der ausgeführten Bewegungsrichtung.
+// Korrekte Beobachtung: 1-3*pS
+// Jede falsche Richtungsbeobachtung: pS
+const double pS = 0.01;
+
+// Nach wie vielen Bewegungen wird eine Messung ausgeführt?
+const int c = 1;
+
+// Obergrenze der Dirichlet-Parameter.
+// Für PARLEY sollte dieser Wert klein gehalten werden.
+const int ALPHA_MAX = 10;
+
+// Informative Start-Priors:
+// beabsichtigte Richtung ist zunächst wahrscheinlicher
+const int PRIOR_CORRECT = 4;
+const int PRIOR_ERROR = 1;
+
+
+// ============================================================
+// Reale Roboterdynamik
+//
+// Diese Wahrscheinlichkeiten ändern sich während der gesamten
+// Modellausführung nicht.
+// ============================================================
+
+module Robot 
+  x : [0..N] init xstart;
+  y : [0..N] init ystart;
+  move_ready : [0..1] init 1;
+  crashed : [0..1] init 0;
+
+  [east] (move_ready=1) -> 
+    (1-3*p): (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+
+  [west] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    (1-3*p): (x'=max(x-1, 0)) & (move_ready'=0); 
+
+  [north] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    (1-3*p): (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+
+  [south] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    (1-3*p): (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+
+  [check] (move_ready=0) & hasCrashed ->
+    (crashed'=1) & (move_ready'=1); 
+
+  [check] (move_ready=0) & !hasCrashed ->
+    (crashed'=0) & (move_ready'=1); 
+
+  [stucked] (crashed=1) -> true;
+
+endmodule
+
+
+// ============================================================
+// Knowledge-Modul
+//
+// Die Dirichlet-Parameter repräsentieren Wissen über:
+//
+// P(tatsächliche Richtung | ausgeführter Befehl)
+//
+// Sie beeinflussen nicht die reale Bewegung.
+// ============================================================
+
+module Knowledge
+
+  // ==========================================================
+  // Nominale Positionsschätzung
+  // ==========================================================
+
+  xhat : [0..N] init xstart;
+  yhat : [0..N] init ystart;
+
+
+  // ==========================================================
+  // Position vor der letzten Bewegung
+  //
+  // Bei einer synchronisierten Bewegungsaktion erhalten
+  // xBefore/yBefore die alten Werte von x/y.
+  // ==========================================================
+
+  xBefore : [0..N] init xstart;
+  yBefore : [0..N] init ystart;
+
+
+  // ==========================================================
+  // Zuletzt ausgeführter Befehl
+  //
+  // 0 = kein ausstehender Befehl
+  // 1 = east
+  // 2 = west
+  // 3 = north
+  // 4 = south
+  // ==========================================================
+
+  lastCommand : [0..4] init 0;
+
+
+  // ==========================================================
+  // Ablaufsteuerung
+  //
+  // ready=1:
+  // Eine neue Bewegung darf ausgeführt werden.
+  //
+  // ready=0:
+  // Nach der Bewegung muss erst check und anschließend
+  // update oder skip_update stattfinden.
+  //
+  // checked=1:
+  // Der Crash-Check wurde bereits ausgeführt.
+  // ==========================================================
+
+  ready   : [0..1] init 1;
+  checked : [0..1] init 0;
+
+  step : [0..c] init 0;
+
+
+  // ==========================================================
+  // Dirichlet-Prior für Befehl east
+  //
+  // alphaEE:
+  // Befehl east führte tatsächlich nach east.
+  //
+  // alphaEN:
+  // Befehl east führte tatsächlich nach north.
+  // ==========================================================
+
+  alphaEE : [1..ALPHA_MAX] init PRIOR_CORRECT;
+  alphaEN : [1..ALPHA_MAX] init PRIOR_ERROR;
+  alphaES : [1..ALPHA_MAX] init PRIOR_ERROR;
+  alphaEW : [1..ALPHA_MAX] init PRIOR_ERROR;
+
+
+  // ==========================================================
+  // Dirichlet-Prior für Befehl west
+  // ==========================================================
+
+  alphaWE : [1..ALPHA_MAX] init PRIOR_ERROR;
+  alphaWN : [1..ALPHA_MAX] init PRIOR_ERROR;
+  alphaWS : [1..ALPHA_MAX] init PRIOR_ERROR;
+  alphaWW : [1..ALPHA_MAX] init PRIOR_CORRECT;
+
+
+  // ==========================================================
+  // Dirichlet-Prior für Befehl north
+  // ==========================================================
+
+  alphaNE : [1..ALPHA_MAX] init PRIOR_ERROR;
+  alphaNN : [1..ALPHA_MAX] init PRIOR_CORRECT;
+  alphaNS : [1..ALPHA_MAX] init PRIOR_ERROR;
+  alphaNW : [1..ALPHA_MAX] init PRIOR_ERROR;
+
+
+  // ==========================================================
+  // Dirichlet-Prior für Befehl south
+  // ==========================================================
+
+  alphaSE : [1..ALPHA_MAX] init PRIOR_ERROR;
+  alphaSN : [1..ALPHA_MAX] init PRIOR_ERROR;
+  alphaSS : [1..ALPHA_MAX] init PRIOR_CORRECT;
+  alphaSW : [1..ALPHA_MAX] init PRIOR_ERROR;
+
+
+  // ==========================================================
+  // Bewegungen
+  //
+  // xhat/yhat werden wie im ursprünglichen Modell anhand des
+  // Befehls fortgeschrieben.
+  //
+  // Gleichzeitig wird die reale Position vor der Bewegung
+  // gespeichert.
+  // ==========================================================
+
+  [east] ready=1 ->
+      (xBefore'=x)
+    & (yBefore'=y)
+    & (xhat'=min(xhat+1,N))
+    & (lastCommand'=1)
+    & (ready'=0)
+    & (checked'=0);
+
+  [west] ready=1 ->
+      (xBefore'=x)
+    & (yBefore'=y)
+    & (xhat'=max(xhat-1,0))
+    & (lastCommand'=2)
+    & (ready'=0)
+    & (checked'=0);
+
+  [north] ready=1 ->
+      (xBefore'=x)
+    & (yBefore'=y)
+    & (yhat'=min(yhat+1,N))
+    & (lastCommand'=3)
+    & (ready'=0)
+    & (checked'=0);
+
+  [south] ready=1 ->
+      (xBefore'=x)
+    & (yBefore'=y)
+    & (yhat'=max(yhat-1,0))
+    & (lastCommand'=4)
+    & (ready'=0)
+    & (checked'=0);
+
+
+  // ==========================================================
+  // Synchronisation mit dem unveränderten Robot-Modul
+  //
+  // Das Robot-Modul setzt bei [check] move_ready wieder auf 1
+  // und aktualisiert crashed.
+  //
+  // Im Knowledge-Modul wird lediglich gespeichert, dass dieser
+  // Schritt bereits erfolgt ist.
+  // ==========================================================
+
+  [check] ready=0 & checked=0 & lastCommand>0 ->
+      (checked'=1);
+
+
+  // ==========================================================
+  // Dirichlet-Updates für Befehl east
+  // ==========================================================
+
+  [update]
+    ready=0
+    & checked=1
+    & step>=c
+    & lastCommand=1
+    & movedEast
+  ->
+      (alphaEE'=min(alphaEE+1,ALPHA_MAX))
+    & (xhat'=x)
+    & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+  [update]
+    ready=0
+    & checked=1
+    & step>=c
+    & lastCommand=1
+    & movedNorth
+  ->
+      (alphaEN'=min(alphaEN+1,ALPHA_MAX))
+    & (xhat'=x)
+    & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+  [update]
+    ready=0
+    & checked=1
+    & step>=c
+    & lastCommand=1
+    & movedSouth
+  ->
+      (alphaES'=min(alphaES+1,ALPHA_MAX))
+    & (xhat'=x)
+    & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+  [update]
+    ready=0
+    & checked=1
+    & step>=c
+    & lastCommand=1
+    & movedWest
+  ->
+      (alphaEW'=min(alphaEW+1,ALPHA_MAX))
+    & (xhat'=x)
+    & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+
+  // ==========================================================
+  // Dirichlet-Updates für Befehl west
+  // ==========================================================
+
+  [update]
+    ready=0 & checked=1 & step>=c
+    & lastCommand=2 & movedEast
+  ->
+      (alphaWE'=min(alphaWE+1,ALPHA_MAX))
+    & (xhat'=x) & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+  [update]
+    ready=0 & checked=1 & step>=c
+    & lastCommand=2 & movedNorth
+  ->
+      (alphaWN'=min(alphaWN+1,ALPHA_MAX))
+    & (xhat'=x) & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+  [update]
+    ready=0 & checked=1 & step>=c
+    & lastCommand=2 & movedSouth
+  ->
+      (alphaWS'=min(alphaWS+1,ALPHA_MAX))
+    & (xhat'=x) & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+  [update]
+    ready=0 & checked=1 & step>=c
+    & lastCommand=2 & movedWest
+  ->
+      (alphaWW'=min(alphaWW+1,ALPHA_MAX))
+    & (xhat'=x) & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+
+  // ==========================================================
+  // Dirichlet-Updates für Befehl north
+  // ==========================================================
+
+  [update]
+    ready=0 & checked=1 & step>=c
+    & lastCommand=3 & movedEast
+  ->
+      (alphaNE'=min(alphaNE+1,ALPHA_MAX))
+    & (xhat'=x) & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+  [update]
+    ready=0 & checked=1 & step>=c
+    & lastCommand=3 & movedNorth
+  ->
+      (alphaNN'=min(alphaNN+1,ALPHA_MAX))
+    & (xhat'=x) & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+  [update]
+    ready=0 & checked=1 & step>=c
+    & lastCommand=3 & movedSouth
+  ->
+      (alphaNS'=min(alphaNS+1,ALPHA_MAX))
+    & (xhat'=x) & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+  [update]
+    ready=0 & checked=1 & step>=c
+    & lastCommand=3 & movedWest
+  ->
+      (alphaNW'=min(alphaNW+1,ALPHA_MAX))
+    & (xhat'=x) & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+
+  // ==========================================================
+  // Dirichlet-Updates für Befehl south
+  // ==========================================================
+
+  [update]
+    ready=0 & checked=1 & step>=c
+    & lastCommand=4 & movedEast
+  ->
+      (alphaSE'=min(alphaSE+1,ALPHA_MAX))
+    & (xhat'=x) & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+  [update]
+    ready=0 & checked=1 & step>=c
+    & lastCommand=4 & movedNorth
+  ->
+      (alphaSN'=min(alphaSN+1,ALPHA_MAX))
+    & (xhat'=x) & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+  [update]
+    ready=0 & checked=1 & step>=c
+    & lastCommand=4 & movedSouth
+  ->
+      (alphaSS'=min(alphaSS+1,ALPHA_MAX))
+    & (xhat'=x) & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+  [update]
+    ready=0 & checked=1 & step>=c
+    & lastCommand=4 & movedWest
+  ->
+      (alphaSW'=min(alphaSW+1,ALPHA_MAX))
+    & (xhat'=x) & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+
+  // ==========================================================
+  // Update bei nicht eindeutig erkannter Bewegung
+  //
+  // Dies kann insbesondere am Kartenrand auftreten.
+  //
+  // Die Position wird korrigiert, aber kein Alpha-Wert erhöht.
+  // ==========================================================
+
+  [update]
+    ready=0
+    & checked=1
+    & step>=c
+    & lastCommand>0
+    & !directionRecognised
+  ->
+      (xhat'=x)
+    & (yhat'=y)
+    & (step'=0)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+
+  // ==========================================================
+  // Kein Update
+  //
+  // Es wird keine neue Evidenz gesammelt.
+  // xhat/yhat bleiben auf ihrer nominalen Schätzung.
+  // ==========================================================
+
+  [skip_update]
+    ready=0
+    & checked=1
+    & step<c
+  ->
+      (step'=step+1)
+    & (lastCommand'=0)
+    & (checked'=0)
+    & (ready'=1);
+
+endmodule
+
+
+// ============================================================
+// Tatsächliche Bewegungsrichtung
+//
+// Diese Formeln werden ausschließlich vom Sensorprozess benutzt.
+// Das Knowledge-Update liest nur obs.
+// ============================================================
+
+formula movedEast =
+    (x=xBefore+1) & (y=yBefore);
+
+formula movedWest =
+    (x=xBefore-1) & (y=yBefore);
+
+formula movedNorth =
+    (x=xBefore) & (y=yBefore+1);
+
+formula movedSouth =
+    (x=xBefore) & (y=yBefore-1);
+
+formula directionRecognised =
+    movedEast | movedWest | movedNorth | movedSouth;
+
+
+// ============================================================
+// Sensor
+//
+// obs:
+// 0 = Beobachtung nicht eindeutig
+// 1 = East beobachtet
+// 2 = North beobachtet
+// 3 = South beobachtet
+// 4 = West beobachtet
+//
+// Der Sensor darf von x/y abhängen, weil er das generative
+// Beobachtungsmodell darstellt. Das Knowledge-Modul aktualisiert
+// sich dagegen ausschließlich anhand von obs.
+// ============================================================
+
+module Sensor
+
+    // 0 = nicht eindeutig
+    // 1 = East beobachtet
+    // 2 = North beobachtet
+    // 3 = South beobachtet
+    // 4 = West beobachtet
+    obs : [0..4] init 0;
+
+    [check] movedEast ->
+          (1-3*pS) : (obs'=1)
+        + pS       : (obs'=2)
+        + pS       : (obs'=3)
+        + pS       : (obs'=4);
+
+    [check] movedNorth ->
+          pS       : (obs'=1)
+        + (1-3*pS) : (obs'=2)
+        + pS       : (obs'=3)
+        + pS       : (obs'=4);
+
+    [check] movedSouth ->
+          pS       : (obs'=1)
+        + pS       : (obs'=2)
+        + (1-3*pS) : (obs'=3)
+        + pS       : (obs'=4);
+
+    [check] movedWest ->
+          pS       : (obs'=1)
+        + pS       : (obs'=2)
+        + pS       : (obs'=3)
+        + (1-3*pS) : (obs'=4);
+
+    [check] !directionRecognised ->
+        (obs'=0);
+
+endmodule
+
+
+// ============================================================
+// Dirichlet-Summen
+// ============================================================
+
+formula sumE =
+    alphaEE + alphaEN + alphaES + alphaEW;
+
+formula sumW =
+    alphaWE + alphaWN + alphaWS + alphaWW;
+
+formula sumN =
+    alphaNE + alphaNN + alphaNS + alphaNW;
+
+formula sumS =
+    alphaSE + alphaSN + alphaSS + alphaSW;
+
+
+// ============================================================
+// Posterior-Erwartungswerte
+//
+// Diese Wahrscheinlichkeiten beschreiben das Wissen.
+//
+// Sie werden ausdrücklich nicht als reale
+// Bewegungswahrscheinlichkeiten eingesetzt.
+// ============================================================
+
+// Befehl East
+formula pEE = (1.0*alphaEE)/sumE;
+formula pEN = (1.0*alphaEN)/sumE;
+formula pES = (1.0*alphaES)/sumE;
+formula pEW = (1.0*alphaEW)/sumE;
+
+// Befehl West
+formula pWE = (1.0*alphaWE)/sumW;
+formula pWN = (1.0*alphaWN)/sumW;
+formula pWS = (1.0*alphaWS)/sumW;
+formula pWW = (1.0*alphaWW)/sumW;
+
+// Befehl North
+formula pNE = (1.0*alphaNE)/sumN;
+formula pNN = (1.0*alphaNN)/sumN;
+formula pNS = (1.0*alphaNS)/sumN;
+formula pNW = (1.0*alphaNW)/sumN;
+
+// Befehl South
+formula pSE = (1.0*alphaSE)/sumS;
+formula pSN = (1.0*alphaSN)/sumS;
+formula pSS = (1.0*alphaSS)/sumS;
+formula pSW = (1.0*alphaSW)/sumS;
+
+
+// ============================================================
+// Konzentration der Posterior-Verteilungen
+// ============================================================
+
+formula maxProbE =
+    max(max(pEE,pEN),max(pES,pEW));
+
+formula maxProbW =
+    max(max(pWE,pWN),max(pWS,pWW));
+
+formula maxProbN =
+    max(max(pNE,pNN),max(pNS,pNW));
+
+formula maxProbS =
+    max(max(pSE,pSN),max(pSS,pSW));
+
+
+// ============================================================
+// Labels
+// ============================================================
+
+label "targetReal" =
+    x=xtarget & y=ytarget;
+
+label "targetEstimated" =
+    xhat=xtarget & yhat=ytarget;
+
+label "estimateCorrect" =
+    x=xhat & y=yhat;
+
+label "lowEvidenceEast" =
+    sumE<=8;
+
+label "lowEvidenceWest" =
+    sumW<=8;
+
+label "lowEvidenceNorth" =
+    sumN<=8;
+
+label "lowEvidenceSouth" =
+    sumS<=8;
+
+
+// ============================================================
+// Kosten
+// ============================================================
+
+rewards "cost"
+
+    [east] true : 1;
+    [west] true : 1;
+    [north] true : 1;
+    [south] true : 1;
+
+    // Kosten der Sensorabfrage
+    [update] true : 5;
+
+endrewards
+
+
+// ============================================================
+// Unsicherheit aufgrund geringer Evidenz
+//
+// Hoher Wert:
+// wenige Messungen wurden durchgeführt.
+//
+// Der Reward sinkt mit wachsender Dirichlet-Summe.
+// ============================================================
+
+rewards "uncertaintyEvidence"
+
+    true :
+          100.0/sumE
+        + 100.0/sumW
+        + 100.0/sumN
+        + 100.0/sumS;
+
+endrewards
+
+
+// ============================================================
+// Unsicherheit aufgrund einer flachen Verteilung
+//
+// Hoher Wert:
+// Keine Bewegungsrichtung dominiert klar.
+// ============================================================
+
+rewards "uncertaintyDistribution"
+
+    true :
+          (1-maxProbE)
+        + (1-maxProbW)
+        + (1-maxProbN)
+        + (1-maxProbS);
+
+endrewards
+
+
+// ============================================================
+// Positionsfehler ausschließlich zur Evaluation
+//
+// Dieser Reward darf nicht für Controllerentscheidungen
+// verwendet werden, weil er Ground Truth liest.
+// ============================================================
+
+rewards "positionError"
+
+    x>=xhat & y>=yhat :
+        (x-xhat)+(y-yhat);
+
+    x>=xhat & y<yhat :
+        (x-xhat)+(yhat-y);
+
+    x<xhat & y>=yhat :
+        (xhat-x)+(y-yhat);
+
+    x<xhat & y<yhat :
+        (xhat-x)+(yhat-y);
+
+endrewards
