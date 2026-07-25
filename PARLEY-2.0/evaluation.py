@@ -2,7 +2,8 @@ import os
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-from deap.tools._hypervolume.pyhv import hypervolume
+#from deap.tools._hypervolume.pyhv import hypervolume   //veraltet
+from moocore import hypervolume
 from scipy.stats import wilcoxon, anderson, mannwhitneyu
 
 

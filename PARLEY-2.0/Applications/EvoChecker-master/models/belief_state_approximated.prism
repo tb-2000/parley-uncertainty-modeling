@@ -7,6 +7,9 @@ const int ystart = 0;
 const int xtarget = 9;
 const int ytarget = 9;
 const double p = 0.01;
+const int MaxB = 100;
+const int MaxAge = 5;
+const int highUncertainty = 100;
 
 module Robot 
   x : [0..N] init xstart;
@@ -40,12 +43,23 @@ module Robot
   [stucked] (crashed=1) -> true;
 endmodule
 
-module Knowledge
-  //xhat : [0..N] init xstart;
-  //yhat : [0..N] init ystart;
+// ============================================================
+// Top-4-Belief-Modell
+// ============================================================
 
-  // Approximation eines Bayes-Filters: Belief der 4 wahrscheinlichsten Kandidaten/Positionen
-  // [x1,y1] ist der aussichtsreichste Kandidat, der ohne Fehler in jede korrekte Richtung geht
+module Knowledge
+
+
+  // --------------------------------------------------------
+  // Vier wahrscheinlichste Positionshypothesen
+  //
+  // Kandidat 1 ist nach jeder Prädiktion der Kandidat für das
+  // beabsichtigte Bewegungsergebnis.
+  //
+  // Kandidaten 2 bis 4 repräsentieren die drei fehlerhaften
+  // Bewegungsergebnisse.
+  // --------------------------------------------------------
+
   x1 : [0..N] init xstart; 
   y1 : [0..N] init ystart;
 
@@ -58,38 +72,480 @@ module Knowledge
   x4 : [0..N] init xstart;
   y4 : [0..N] init ystart;
 
-  // disktretisierte belief states für die jeweiligen Kandidaten
-  // 10 = hohes Vertauen, 0 = kein Vertauen
-  b1 : [0..10] init 10;
-  b2 : [0..10] init 0;
-  b3 : [0..10] init 0;
-  b4 : [0..10] init 0;
+  // --------------------------------------------------------
+  // Diskretisierte Belief-Massen
+  //
+  // Empfohlene Invariante:
+  //
+  // b1 + b2 + b3 + b4 + br= 100
+  //
+  // Die hier eingesetzten Werte sind Platzhalter.
+  // Das externe Python-Skript soll später die tatsächlichen
+  // diskretisierten Werte erzeugen.
+  // br ist die Restmasse.
+  // --------------------------------------------------------
+
+  b1 : [0..MaxB] init 100;
+  b2 : [0..MaxB] init 0;
+  b3 : [0..MaxB] init 0;
+  b4 : [0..MaxB] init 0;
+  br : [0..MaxB] init 0;
+
+  // ---------------------------------------------------------
+  // alle Belief-States:
+
+  belief_0: (x,y) : 100 // start position
+  belief_1: // gehen 1. Mal nach Osten
+    (x+1,y): 97
+    (x,y+1): 1
+    (x-1,y): 1
+    (x,y-1): 1
+  belief_2: // gehen 1. Mal nach Westen
+    (x-1,y): 97
+    (x,y+1): 1
+    (x+1,y): 1
+    (x,y-1): 1
+  belief_3: // gehen 1. Mal nach Norden
+    (x,y+1): 97
+    (x,y-1): 1
+    (x+1,y): 1
+    (x-1,y): 1
+  belief_4: // gehen 1. Mal nach Süden
+    (x,y-1): 97
+    (x,y+1): 1
+    (x+1,y): 1
+    (x-1,y): 1
+  belief_5: // gingen 2x Osten
+    (x+2,y): 94
+    (x+1,y+1): 2
+    (x,y): 2
+    (x+1,y-1): 2
+    other: 0
+  belief_6: // 1x Osten, 1x Westen
+    (x,y): 94
+    (x+1,y+1): 1
+    (x+2,y): 1
+    (x+1,y-1): 1
+    other: 3
+  belief_7: // 1x Osten, 1x Norden
+    (x+1,y+1): 94 // nur ein Weg möglich: Osten->Norden (0.97*0.97)
+    (x,y): 2 // erreichbar durch 4 Wege: Osten->Westen (0.97*0.01); SÜden->Norden (0.01*0.97); Westen->Osten(0.01*0.01); Norden->Süden (0.01*0.01)
+    (x+1,y-1): 1 // erreichbar durch 2 Wege: Osten->Süden (0.97*0.01); Süden->Osten (0.01*0.01)
+    (x-1,y+1): 1 // erreichbar durch 2 Wege: Westen->Norden (0.01*0.97); Norden->Westen (0.01*0.01)
+    other: 2
+  belief_8: // 1x Osten, 1x Süden
+    (x,y): 94
+    (x+1,y+1): 2
+    (x+2,y): 1
+    (x+1,y-1): 1
+    other: 2
+  belief_9: // 1x Westen, 1x Norden
+    (x,y): 94
+    (x+1,y+1): 2
+    (x+2,y): 1
+    (x+1,y-1): 1
+    other: 2
+  belief_10: // 1x Westen, 1x Süden
+    (x,y): 94
+    (x+1,y+1): 2
+    (x+2,y): 1
+    (x+1,y-1): 1
+    other: 2
+  belief_11: // 1x Süden, 1x Norden
+    (x,y): 94
+    (x+1,y+1): 1
+    (x+2,y): 1
+    (x+1,y-1): 1
+    other: 3
+  belief_12: // 2x Süden
+    (x,y): 94
+    (x+1,y+1): 2
+    (x+2,y): 2
+    (x+1,y-1): 2
+    other: 0
+  belief_13: // 2x Norden
+    (x,y): 94
+    (x+1,y+1): 2
+    (x+2,y): 2
+    (x+1,y-1): 2
+    other: 0
+  belief_14: // 2x Westen
+    (x,y): 94
+    (x+1,y+1): 2
+    (x+2,y): 2
+    (x+1,y-1): 2
+    other: 0
+  belief_15: // 3x gleiche Richtung wie z.B. 3x Osten
+    (x+3,y): 91
+    (x+1,y): 3
+    (x+2,y+1): 3
+    (x+2,y-1): 3
+    other:0
+  belief_16: // 2x gleiche Reichtung, 1x entgegengesetzte (EEW, WWE, EWE, etc)
+    (x,y): 91
+    (x,y): 2
+    (x,y): 2
+    (x,y): 2
+    other: 3
+  belief_17: // 2x eine Richtung, 1x senkrechte (WWO, OWO)
+    (x,y): 91
+    (x,y): 3
+    (x,y): 2
+    (x,y): 2
+    other: 2
+  belief_18: // 3x verschiede Richtung (EWS)
+    (x,y): 91
+    (x,y): 2
+    (x,y): 2
+    (x,y): 1
+    other: 4
+  //==========================================================================================
+  // die oberen Belief-States lassen sich zusammenfassen zu:
+  // belief-state-0: 100
+  // belief-state-1: (0.97,0.01,0.01,0.01,0.00) -> eine Bewegung in beliebige Richtung
+  // belief-state-2: (0.94,0.02,0.02,0.02,0.00) -> 2x in die gleiche Richtung
+  // belief-state-3: (0.94,0.01,0.01,0.01,0.03) -> 2 entgegengesetzte Richtungen (west->east)
+  // belief-state-4: (0.94,0.02,0.01,0.01,0.02) -> 2 senkrechte Richtungen (east->north)
+  //===========================================================================================
+
+  belief : [0..100] init 0;
 
   step : [0..c] init 0;
   ready : [0..1] init 1;
 
-  formula noMatch = !(x1=x & y1=y) & !(x2=x & y2=y) & !(x3=x & y3=y) & !(x4=x & y4=y)
+  // 0: Crashprüfung noch nicht abgeschlossen
+  // 1: Crashprüfung abgeschlossen
+  checked : [0..1] init 1;
 
-  // nach jeder Bewegung wächst Unsicherheit über aktuelle Positionen
-  // es wird angenommen, dass alle Hypothesen in die gleiche Richtung gehen!
-  [west] ready=1 -> (x1'=max(x1-1,0)) & (x2'=max(x2-1,0)) & (x3'=max(x3-1,0)) & (x4'=max(x4-1,0)) & (b1'=max(b1-1,0)) & (b2'=max(b2-1,0)) & (b3'=max(b3-1,0)) & (b4'=max(b4-1,0)) & (ready'=0);
-  [east] ready=1 -> (x1'=min(x1+1,N)) & (x2'=min(x2+1,N)) & (x3'=min(x3+1,N)) & (x4'=min(x4+1,N)) & (b1'=max(b1-1,0)) & (b2'=max(b2-1,0)) & (b3'=max(b3-1,0)) & (b4'=max(b4-1,0)) & (ready'=0);
-  [north] ready=1 -> (y1'=min(y1+1,N)) & (y2'=min(y2+1,N)) & (y3'=min(y3+1,N)) & (y4'=min(y4+1,N)) & (b1'=max(b1-1,0)) & (b2'=max(b2-1,0)) & (b3'=max(b3-1,0)) & (b4'=max(b4-1,0)) & (ready'=0);
-  [south] ready=1 -> (y1'=max(y1-1,0)) & (y2'=max(y2-1,0)) & (y3'=max(y3-1,0)) & (y4'=max(y4-1,0)) & (b1'=max(b1-1,0)) & (b2'=max(b2-1,0)) & (b3'=max(b3-1,0)) & (b4'=max(b4-1,0)) & (ready'=0);
+  // Anzahl Schritte, wo bis dahin alle Beliefs ermittelt werden
+  age : [0..MaxAge] init 0;
+  
+  // ========================================================
+  // Prädiktionsschritt Osten
+  //
+  // Diese erste Version erzeugt die vier möglichen
+  // Bewegungsresultate relativ zur MAP-Hypothese x1,y1.
+  //
+  // Die Belief-Massen 97,1,1,1 entsprechen der
+  // Bewegungsverteilung bei p=0.01.
+  //
+  // Für den vollständigen Top-4-Filter sollte Python später
+  // alle bisherigen Kandidaten propagieren, gleiche
+  // Positionen aggregieren und die neuen Top 4 bestimmen.
+  // ========================================================
 
-  // ein Update reduziert Unsicherheit des aussichtsreichsten Kandidaten und erhöht Unsicherheit bei anderen
-  [update] step>=c & ready=0 & x1=x & y1=y -> (b1'=min(b1+3,10)) & (b2'=max(b2-2,0)) & (b3'=max(b3-2,0)) & (b4'=max(b4-2,0)) & (step'=0) & (ready'=1);
-  [update] step>=c & ready=0 & x2=x & y2=y -> (b2'=min(b2+3,10)) & (b1'=max(b1-2,0)) & (b3'=max(b3-2,0)) & (b4'=max(b4-2,0)) & (step'=0) & (ready'=1);
-  [update] step>=c & ready=0 & x3=x & y3=y -> (b3'=min(b3+3,10)) & (b2'=max(b2-2,0)) & (b1'=max(b1-2,0)) & (b4'=max(b4-2,0)) & (step'=0) & (ready'=1);
-  [update] step>=c & ready=0 & x4=x & y4=y -> (b4'=min(b4+3,10)) & (b2'=max(b2-2,0)) & (b3'=max(b3-2,0)) & (b1'=max(b4-2,0)) & (step'=0) & (ready'=1);
+  [east] ready=1 & age<MaxAge ->
 
-  // wenn kein aussichtsreichster Kandidat vorliegt, ersetze Kandidaten mit niedrigsten belief mit Ground Truth [x,y]
-  [update] step>=c & ready=0 & noMatch & (b1<=b2) & (b1<=b3) & (b1<=b4) -> (x1'=x) & (y1'=y) & (b1'=2) & (step'=0) & (ready'=1);
-  [update] step>=c & ready=0 & noMatch & (b1>b2) & (b2<=b3) & (b2<=b4) -> (x2'=x) & (y2'=y) & (b2'=2) & (step'=0) & (ready'=1);
-  [update] step>=c & ready=0 & noMatch & (b1>b2) & (b1>b3) & (b3<=b4) -> (x3'=x) & (y3'=y) & (b3'=2) & (step'=0) & (ready'=1);
-  [update] step>=c & ready=0 & noMatch & (b1>b2) & (b1>b3) & (b1>b4) -> (x4'=x) & (y4'=y) & (b4'=2) & (step'=0) & (ready'=1);
+      // beabsichtigtes Ergebnis: Osten
+      (x1'=min(x1+1,N)) &
+      (y1'=y1) &
 
-  [skip_update] step<c & ready=0 -> (step'=step+1) & (ready'=1);
+      // Fehler: Norden
+      (x2'=x1) &
+      (y2'=min(y1+1,N)) &
+
+      // Fehler: Süden
+      (x3'=x1) &
+      (y3'=max(y1-1,0)) &
+
+      // Fehler: Westen
+      (x4'=max(x1-1,0)) &
+      (y4'=y1) &
+
+      (b1'=97) &
+      (b2'=1) &
+      (b3'=1) &
+      (b4'=1) &
+
+      (ready'=0) &
+      (checked'=0);
+
+
+  // ========================================================
+  // Prädiktionsschritt Westen
+  // ========================================================
+
+  [west] ready=1 ->
+
+      // beabsichtigtes Ergebnis: Westen
+      (x1'=max(x1-1,0)) &
+      (y1'=y1) &
+
+      // Fehler: Norden
+      (x2'=x1) &
+      (y2'=min(y1+1,N)) &
+
+      // Fehler: Süden
+      (x3'=x1) &
+      (y3'=max(y1-1,0)) &
+
+      // Fehler: Osten
+      (x4'=min(x1+1,N)) &
+      (y4'=y1) &
+
+      (b1'=97) &
+      (b2'=1) &
+      (b3'=1) &
+      (b4'=1) &
+
+      (ready'=0) &
+      (checked'=0);
+
+
+  // ========================================================
+  // Prädiktionsschritt Norden
+  // ========================================================
+
+  [north] ready=1 ->
+
+      // beabsichtigtes Ergebnis: Norden
+      (x1'=x1) &
+      (y1'=min(y1+1,N)) &
+
+      // Fehler: Osten
+      (x2'=min(x1+1,N)) &
+      (y2'=y1) &
+
+      // Fehler: Westen
+      (x3'=max(x1-1,0)) &
+      (y3'=y1) &
+
+      // Fehler: Süden
+      (x4'=x1) &
+      (y4'=max(y1-1,0)) &
+
+      (b1'=97) &
+      (b2'=1) &
+      (b3'=1) &
+      (b4'=1) &
+
+      (ready'=0) &
+      (checked'=0);
+
+
+  // ========================================================
+  // Prädiktionsschritt Süden
+  // ========================================================
+
+  [south] ready=1 ->
+
+      // beabsichtigtes Ergebnis: Süden
+      (x1'=x1) &
+      (y1'=max(y1-1,0)) &
+
+      // Fehler: Osten
+      (x2'=min(x1+1,N)) &
+      (y2'=y1) &
+
+      // Fehler: Westen
+      (x3'=max(x1-1,0)) &
+      (y3'=y1) &
+
+      // Fehler: Norden
+      (x4'=x1) &
+      (y4'=min(y1+1,N)) &
+
+      (b1'=97) &
+      (b2'=1) &
+      (b3'=1) &
+      (b4'=1) &
+
+      (ready'=0) &
+      (checked'=0);
+
+
+  // ========================================================
+  // Synchronisierte Crashprüfung
+  //
+  // Dieses Kommando besitzt dasselbe Label wie die beiden
+  // [check]-Kommandos im Robot-Modul.
+  // ========================================================
+
+  [check] ready=0 & checked=0 ->
+      (checked'=1);
+
+  // ========================================================
+  // Sensormessung
+  //
+  // Die Aktion [sense] synchronisiert sich mit dem
+  // Sensor-Modul. Erst dort wird obs_x,obs_y probabilistisch
+  // festgelegt.
+  // ========================================================
+
+  [sense]
+      step>=c &
+      ready=0 &
+      checked=1 &
+      sensed=0
+  ->
+      (sensed'=1);
+
+  // ========================================================
+  // Beobachtungsupdate
+  //
+  // WICHTIG:
+  //
+  // Die folgenden Belief-Werte sind eine vorläufige
+  // diskretisierte Approximation. Ein echtes Bayes-Update
+  // muss die bisherigen Priors b1...b4 berücksichtigen:
+  //
+  // posterior_i =
+  //   likelihood(observation | candidate_i) * prior_i
+  //   -------------------------------------------------
+  //   Summe aller likelihood_j * prior_j
+  //
+  // Das externe Python-Skript sollte die folgenden Regeln
+  // daher später als Lookup-Tabelle erzeugen.
+  // ========================================================
+
+  // --------------------------------------------------------
+  // Beobachtung bestätigt Kandidat 1
+  // --------------------------------------------------------
+
+  [belief_update]
+      ready=0 &
+      checked=1 &
+      sensed=1 &
+      obsMatch1
+  ->
+      (b1'=85) &
+      (b2'=5) &
+      (b3'=5) &
+      (b4'=5) &
+
+      (step'=0) &
+      (ready'=1) &
+      (sensed'=0);
+
+
+  // --------------------------------------------------------
+  // Beobachtung bestätigt Kandidat 2
+  //
+  // Kandidat 2 wird anschließend an die erste Stelle sortiert,
+  // damit x1,y1 weiterhin die MAP-Hypothese darstellen.
+  // --------------------------------------------------------
+
+  [belief_update]
+      ready=0 &
+      checked=1 &
+      sensed=1 &
+      obsMatch2
+  ->
+      (x1'=x2) &
+      (y1'=y2) &
+      (b1'=85) &
+
+      (x2'=x1) &
+      (y2'=y1) &
+      (b2'=5) &
+
+      (b3'=5) &
+      (b4'=5) &
+
+      (step'=0) &
+      (ready'=1) &
+      (sensed'=0);
+
+
+  // --------------------------------------------------------
+  // Beobachtung bestätigt Kandidat 3
+  // --------------------------------------------------------
+
+  [belief_update]
+      ready=0 &
+      checked=1 &
+      sensed=1 &
+      obsMatch3
+  ->
+      (x1'=x3) &
+      (y1'=y3) &
+      (b1'=85) &
+
+      (x3'=x1) &
+      (y3'=y1) &
+      (b3'=5) &
+
+      (b2'=5) &
+      (b4'=5) &
+
+      (step'=0) &
+      (ready'=1) &
+      (sensed'=0);
+
+
+  // --------------------------------------------------------
+  // Beobachtung bestätigt Kandidat 4
+  // --------------------------------------------------------
+
+  [belief_update]
+      ready=0 &
+      checked=1 &
+      sensed=1 &
+      obsMatch4
+  ->
+      (x1'=x4) &
+      (y1'=y4) &
+      (b1'=85) &
+
+      (x4'=x1) &
+      (y4'=y1) &
+      (b4'=5) &
+
+      (b2'=5) &
+      (b3'=5) &
+
+      (step'=0) &
+      (ready'=1) &
+      (sensed'=0);
+
+
+  // --------------------------------------------------------
+  // Beobachtung entspricht keinem bisherigen Kandidaten
+  //
+  // Die Beobachtung wird als neue Hypothese eingefügt.
+  // Sie erhält wegen des Sensorfehlers keine Sicherheit 100.
+  // Die bisherigen Kandidaten werden nach hinten verschoben.
+  // --------------------------------------------------------
+
+  [belief_update]
+      ready=0 &
+      checked=1 &
+      sensed=1 &
+      obsNoMatch
+  ->
+      (x1'=obs_x) &
+      (y1'=obs_y) &
+      (b1'=70) &
+
+      (x2'=x1) &
+      (y2'=y1) &
+      (b2'=20) &
+
+      (x3'=x2) &
+      (y3'=y2) &
+      (b3'=5) &
+
+      (x4'=x3) &
+      (y4'=y3) &
+      (b4'=5) &
+
+      (step'=0) &
+      (ready'=1) &
+      (sensed'=0);
+
+
+  // ========================================================
+  // Keine Sensormessung
+  // ========================================================
+
+  [skip_update]
+      step<c &
+      ready=0 &
+      checked=1
+  ->
+      (step'=step+1) &
+      (ready'=1);
+
 endmodule
 
 rewards "cost" 
@@ -97,11 +553,52 @@ rewards "cost"
   [west] true : 1; 
   [north] true : 1; 
   [south] true : 1; 
-  [update] true : 5;
+  [sense] true : 5;
 endrewards 
 
-// neuer reward: je unsicher Wissenszustand (belief), desto höher Kosten
-rewards "uncertainty-belief"
-  true : (3-b1) + (3-b2) + (3-b3) + (3-b4);
+
+// ============================================================
+// Dominanzunsicherheit
+//
+// Bei normalisierten Beliefs ist
+//
+//     10 - max(b1,b2,b3,b4)
+//
+// klein, wenn ein Kandidat stark dominiert.
+// ============================================================
+
+rewards "dominance"
+
+    true :
+        10 - max(max(b1,b2),max(b3,b4));
+
 endrewards
 
+// ============================================================
+// Fehler der wahrscheinlichsten Positionshypothese
+//
+// Manhattan-Distanz zwischen MAP-Position und Ground Truth.
+// Diese Metrik kann zusätzlich zur Belief-Dominanz verwendet
+// werden.
+// ============================================================
+
+rewards "positionError"
+
+    true :
+        (x-x1) + (y-y1);
+
+endrewards
+
+// ============================================================
+// Beobachtungsfehler
+//
+// Bewertet die Abweichung der Sensorbeobachtung von der
+// tatsächlichen Position.
+// ============================================================
+
+rewards "observationError"
+
+    observation_ready=1 :
+        (x-obs_x) + (y-obs_y);
+
+endrewards
