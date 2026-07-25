@@ -9,7 +9,7 @@ import plot_fronts
 import urc_synthesis
 import time
 
-max_replications = 10
+max_replications = 1 # 10
 
 
 def maps():

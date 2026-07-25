@@ -13,8 +13,8 @@ def run_task(args):
         f.write("       MODEL_TEMPLATE_FILE = models/model_{0}_umc.prism\n".format(str(i)))
         f.write("       PROPERTIES_FILE = robot.pctl\n")
         f.write("       ALGORITHM = NSGAII\n")
-        f.write("       POPULATION_SIZE = 100\n")
-        f.write("       MAX_EVALUATIONS = 4000\n")
+        f.write("       POPULATION_SIZE = 20\n") # 100
+        f.write("       MAX_EVALUATIONS = 200\n") # 4000
         f.write("       PROCESSORS = 1\n")
         f.write("       PLOT_PARETO_FRONT = false\n")
         f.write("       VERBOSE = true\n")
