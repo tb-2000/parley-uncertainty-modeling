@@ -80,18 +80,31 @@ def add_controller(file_path, estimates, variables, possible_decisions, baseline
     with open(file_path, 'a') as file:
         file.write('  c : [1..10] init decision_0_0;\n')
 
+        # for combination in combinations:
+        #     # combination describes a tuple of values, e.g., for ^x and ^y, such as (0, 0)
+        #     new_line = '  [URC] 1=1' ##Fehler!
+        #     for c, estimate in zip(combination, estimates):
+        #         # estimate describes the variable's name
+        #         new_line += f' & {estimate}={c}'
+        #     new_line += ' -> (c\'=decision'
+        #     for c in combination:
+        #         new_line += f'_{c}'
+        #     new_line += ');\n'
+        #     file.write(new_line)
+        # file.write('endmodule\n')
         for combination in combinations:
-            # combination describes a tuple of values, e.g., for ^x and ^y, such as (0, 0)
-            new_line = '  [URC] 1=1'
-            for c, estimate in zip(combination, estimates):
-                # estimate describes the variable's name
-                new_line += f' & {estimate}={c}'
-            new_line += ' -> (c\'=decision'
-            for c in combination:
-                new_line += f'_{c}'
-            new_line += ');\n'
-            file.write(new_line)
-        file.write('endmodule\n')
+            conditions = [
+                f'{estimate}={value}'
+                for value, estimate in zip(combination, estimates)
+            ]
+
+            guard = ' & '.join(conditions) if conditions else 'true'
+            decision_suffix = ''.join(f'_{value}' for value in combination)
+
+            file.write(
+                f'  [URC] {guard} '
+                f'-> (c\'=decision{decision_suffix});\n'
+            )
 
 
 def __add_controller_prefix(file_path, possible_decisions, combinations, variables, baseline):
