@@ -1,6 +1,5 @@
 import os
 from multiprocessing import Pool, cpu_count
-import subprocess
 
 
 def run_task(args):
@@ -14,8 +13,8 @@ def run_task(args):
         f.write("       MODEL_TEMPLATE_FILE = models/model_{0}_umc.prism\n".format(str(i)))
         f.write("       PROPERTIES_FILE = robot.pctl\n")
         f.write("       ALGORITHM = NSGAII\n")
-        f.write("       POPULATION_SIZE = 20\n") # 100
-        f.write("       MAX_EVALUATIONS = 200\n") # 4000
+        f.write("       POPULATION_SIZE = 100\n") # 100
+        f.write("       MAX_EVALUATIONS = 4000\n") # 4000
         f.write("       PROCESSORS = 1\n")
         f.write("       PLOT_PARETO_FRONT = false\n")
         f.write("       VERBOSE = true\n")
@@ -23,37 +22,6 @@ def run_task(args):
     # Note: INIT_PORT doesn't have an effect https://github.com/gerasimou/EvoChecker/issues/11
 
     os.system('java -jar ./target/EvoChecker-1.1.0.jar ' + path)
-
-    # command = [
-    #     "java",
-    #     "-jar",
-    #     "./target/EvoChecker-1.1.0.jar",
-    #     path
-    # ]
-
-    # print("Executing:", " ".join(command))
-    # print("Working directory:", os.getcwd())
-    # print("Properties file:", os.path.abspath(path))
-
-    # result = subprocess.run(
-    #     command,
-    #     text=True,
-    #     stdout=subprocess.PIPE,
-    #     stderr=subprocess.PIPE
-    # )
-
-    # print("\n===== EvoChecker STDOUT =====")
-    # print(result.stdout)
-
-    # print("\n===== EvoChecker STDERR =====")
-    # print(result.stderr)
-
-    # print("\nReturn code:", result.returncode)
-
-    # if result.returncode != 0:
-    #     raise RuntimeError(
-    #         f"EvoChecker failed with return code {result.returncode}"
-    # )
 
 
 def run(map_, replications):
