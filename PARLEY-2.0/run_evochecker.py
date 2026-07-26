@@ -1,5 +1,6 @@
 import os
 from multiprocessing import Pool, cpu_count
+import subprocess
 
 
 def run_task(args):
@@ -21,7 +22,38 @@ def run_task(args):
         f.write("       INIT_PORT = 55{0}\n".format(str(i)))
     # Note: INIT_PORT doesn't have an effect https://github.com/gerasimou/EvoChecker/issues/11
 
-    os.system('java -jar ./target/EvoChecker-1.1.0.jar ' + path)
+    #os.system('java -jar ./target/EvoChecker-1.1.0.jar ' + path)
+
+    command = [
+        "java",
+        "-jar",
+        "./target/EvoChecker-1.1.0.jar",
+        path
+    ]
+
+    print("Executing:", " ".join(command))
+    print("Working directory:", os.getcwd())
+    print("Properties file:", os.path.abspath(path))
+
+    result = subprocess.run(
+        command,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+
+    print("\n===== EvoChecker STDOUT =====")
+    print(result.stdout)
+
+    print("\n===== EvoChecker STDERR =====")
+    print(result.stderr)
+
+    print("\nReturn code:", result.returncode)
+
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"EvoChecker failed with return code {result.returncode}"
+    )
 
 
 def run(map_, replications):
@@ -34,5 +66,7 @@ def run(map_, replications):
     # Create a list of tuples with all combinations of i and rep
     tasks = [(map_, rep) for rep in rep_values]
 
-    with Pool(num_processes) as pool:
-        pool.map(run_task, tasks)
+    # with Pool(num_processes) as pool:
+    #     pool.map(run_task, tasks)
+    def run(map_, rep):
+        run_task((map_, 0))
