@@ -78,11 +78,13 @@ def add_controller(file_path, estimates, variables, possible_decisions, baseline
     combinations = generate_combinations_list(variables)
     __add_controller_prefix(file_path, possible_decisions, combinations, variables, baseline)
     with open(file_path, 'a') as file:
-        file.write('  c : [1..10] init decision_0_0;\n')
+        #file.write('  c : [1..10] init decision_0_0;\n') ##decision_0_0 leads to null?
+        file.write('  c : [1..10] init 1;\n')
 
         for combination in combinations:
             # combination describes a tuple of values, e.g., for ^x and ^y, such as (0, 0)
-            new_line = '  [URC] 1=1'
+            #new_line = '  [URC] 1=1' ##Fehler?
+            new_line = '  [URC] true'
             for c, estimate in zip(combination, estimates):
                 # estimate describes the variable's name
                 new_line += f' & {estimate}={c}'
