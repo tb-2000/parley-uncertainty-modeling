@@ -161,7 +161,7 @@ public class ModelInvokerPrism implements IModelInvoker {
 			throw new IOException("Invalid PrismExecutor response", e);
 			}
 	}
-	/============================================================
+	//============================================================
 	
 	private List<String> checkResult(String resultString){
 		// System.out.println("Received from PRISM: " + modelBuilder.toString());
