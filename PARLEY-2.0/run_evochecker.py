@@ -66,7 +66,7 @@ def run(map_, replications):
     # Create a list of tuples with all combinations of i and rep
     tasks = [(map_, rep) for rep in rep_values]
 
-    # with Pool(num_processes) as pool:
-    #     pool.map(run_task, tasks)
-    def run(map_, rep):
-        run_task((map_, 0))
+    with Pool(num_processes) as pool:
+        pool.map(run_task, tasks)
+    # def run(map_, rep):
+    #     run_task((map_, 0))
