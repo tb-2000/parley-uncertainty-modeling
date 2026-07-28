@@ -311,8 +311,7 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 			// HIER EINFÜGEN
 			System.out.println(
 				"Starting PrismExecutor worker " + id +
-				" 
-				on port " + portNum
+				" on port " + portNum
 			);
 			//============================================================
 			
