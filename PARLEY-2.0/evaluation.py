@@ -265,3 +265,6 @@ def main():
 
         print(perform_mann_whitney_u_test(spread_gain))
         print(perform_mann_whitney_u_test(hv_gain))
+
+if __name__ == '__main__':
+    main()
