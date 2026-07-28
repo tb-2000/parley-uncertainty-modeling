@@ -306,6 +306,15 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 			params[1] = "-jar";
 			params[2] = Utility.getProperty(Constants.MODEL_CHECKING_ENGINE);
 			params[3] = String.valueOf(portNum);
+
+			//============================================================
+			// HIER EINFÜGEN
+			System.out.println(
+				"Starting PrismExecutor worker " + id +
+				" 
+				on port " + portNum
+			);
+			//============================================================
 			
 			
 			try {
@@ -330,6 +339,12 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 				while (!successful) {
 					try {
 						socket	= new Socket(HOSTNAME, portNum);
+						//============================================================
+						System.out.println(
+							"Connected worker " + id +
+							" to port " + portNum
+						);
+						//============================================================
 						in		= new BufferedReader(new InputStreamReader(socket.getInputStream()));
 						out		= new PrintWriter(socket.getOutputStream());
 						successful = true;
