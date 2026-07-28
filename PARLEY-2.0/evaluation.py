@@ -187,39 +187,39 @@ def main():
                 # Read the expected values from the external file (excluding the first line)
                 pareto_data = []
                 filename = ""
-                # for filename_ in os.listdir(fronts_dir + 'ROBOT{0}_REP{1}/NSGAII/'.format(str(m), str(rep))):
-                #     if "Front" in filename_:
-                #         filename = filename_
+                for filename_ in os.listdir(fronts_dir + 'ROBOT{0}_REP{1}/NSGAII/'.format(str(m), str(rep))):
+                    if "Front" in filename_:
+                        filename = filename_
 
-                directory = (
-                    fronts_dir
-                    + f"ROBOT{m}_REP{rep}/NSGAII/"
-                )
+                # directory = (
+                #     fronts_dir
+                #     + f"ROBOT{m}_REP{rep}/NSGAII/"
+                # )
 
-                front_files = [
-                    filename
-                    for filename in os.listdir(directory)
-                    if "Front" in filename
-                ]
+                # front_files = [
+                #     filename
+                #     for filename in os.listdir(directory)
+                #     if "Front" in filename
+                # ]
 
-                if not front_files:
-                    raise FileNotFoundError(
-                        f"Keine Front-Datei in {directory} gefunden."
-                    )
+                # if not front_files:
+                #     raise FileNotFoundError(
+                #         f"Keine Front-Datei in {directory} gefunden."
+                #     )
 
-                filename = max(
-                    front_files,
-                    key=lambda name: os.path.getmtime(
-                        os.path.join(directory, name)
-                    )
-                )
+                # filename = max(
+                #     front_files,
+                #     key=lambda name: os.path.getmtime(
+                #         os.path.join(directory, name)
+                #     )
+                # )
 
-                front_path = os.path.join(directory, filename)
+                # front_path = os.path.join(directory, filename)
 
                 print(f"Map {m}, Rep {rep}: verwende {filename}")
 
-                # with open(fronts_dir + 'ROBOT{0}_REP{1}/NSGAII/'.format(str(m), str(rep)) + filename, 'r') as f:
-                with open(front_path, 'r') as f:
+                with open(fronts_dir + 'ROBOT{0}_REP{1}/NSGAII/'.format(str(m), str(rep)) + filename, 'r') as f:
+                # with open(front_path, 'r') as f:
                     next(f)  # Skip the first line
                     for line in f:
                         values = line.strip().split('\t')
