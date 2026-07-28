@@ -13,7 +13,12 @@ plt.rcParams.update({'font.size': 16})
 
 def is_dominated(x, y, data):
     for other_x, other_y in data:
-        if other_x <= x and other_y <= y:
+        # if other_x <= x and other_y <= y:
+        #     return True
+        # verhindert, dass ein Punkt als dominiert gilt, wenn er gleich ist
+        strictly_better = other_x < x and other_y < y
+        no_worse = other_x <= x and other_y <= y
+        if strictly_better and no_worse:
             return True
     return False
 
@@ -182,11 +187,39 @@ def main():
                 # Read the expected values from the external file (excluding the first line)
                 pareto_data = []
                 filename = ""
-                for filename_ in os.listdir(fronts_dir + 'ROBOT{0}_REP{1}/NSGAII/'.format(str(m), str(rep))):
-                    if "Front" in filename_:
-                        filename = filename_
+                # for filename_ in os.listdir(fronts_dir + 'ROBOT{0}_REP{1}/NSGAII/'.format(str(m), str(rep))):
+                #     if "Front" in filename_:
+                #         filename = filename_
 
-                with open(fronts_dir + 'ROBOT{0}_REP{1}/NSGAII/'.format(str(m), str(rep)) + filename, 'r') as f:
+                directory = (
+                    fronts_dir
+                    + f"ROBOT{m}_REP{rep}/NSGAII/"
+                )
+
+                front_files = [
+                    filename
+                    for filename in os.listdir(directory)
+                    if "Front" in filename
+                ]
+
+                if not front_files:
+                    raise FileNotFoundError(
+                        f"Keine Front-Datei in {directory} gefunden."
+                    )
+
+                filename = max(
+                    front_files,
+                    key=lambda name: os.path.getmtime(
+                        os.path.join(directory, name)
+                    )
+                )
+
+                front_path = os.path.join(directory, filename)
+
+                print(f"Map {m}, Rep {rep}: verwende {filename}")
+
+                # with open(fronts_dir + 'ROBOT{0}_REP{1}/NSGAII/'.format(str(m), str(rep)) + filename, 'r') as f:
+                with open(front_path, 'r') as f:
                     next(f)  # Skip the first line
                     for line in f:
                         values = line.strip().split('\t')
@@ -212,8 +245,10 @@ def main():
             hv_map.append(hv_rep / 10)
 
         # Calculate differences for spread and hypervolume
-        spread_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_spread)] for repetition in umc_spread]
-        hv_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_hv)] for repetition in umc_hv]
+        # spread_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_spread)] for repetition in umc_spread]
+        spread_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_spread, baseline_spread)]
+        # hv_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_hv)] for repetition in umc_hv]
+        hv_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_hv, baseline_hv)]
 
         # Select the maps shown in the plots (if too many maps)
         selected_maps = range(maps-10)
