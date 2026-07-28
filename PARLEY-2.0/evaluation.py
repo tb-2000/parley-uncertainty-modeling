@@ -13,13 +13,13 @@ plt.rcParams.update({'font.size': 16})
 
 def is_dominated(x, y, data):
     for other_x, other_y in data:
-        # if other_x <= x and other_y <= y:
-        #     return True
-        # verhindert, dass ein Punkt als dominiert gilt, wenn er gleich ist
-        strictly_better = other_x < x and other_y < y
-        no_worse = other_x <= x and other_y <= y
-        if strictly_better and no_worse:
+        if other_x <= x and other_y <= y:
             return True
+        # # verhindert, dass ein Punkt als dominiert gilt, wenn er gleich ist
+        # strictly_better = other_x < x and other_y < y
+        # no_worse = other_x <= x and other_y <= y
+        # if strictly_better and no_worse:
+        #     return True
     return False
 
 
