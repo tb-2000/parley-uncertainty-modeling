@@ -1,0 +1,85 @@
+PRISM
+=====
+
+Version: 4.5.dev
+Date: Tue Jul 28 16:35:25 CEST 2026
+Hostname: gruenau4
+Memory limits: cudd=1g, java(heap)=30.0g
+
+Type:        DTMC
+Modules:     Robot Adaptation_MAPE_controller Knowledge URC Turn 
+Variables:   x y move_ready crashed xhat yhat step ready c t 
+
+---------------------------------------------------------------------
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 83 iterations in 0.81 seconds (average 0.009795, setup 0.00)
+
+Time for model construction: 1.127 seconds.
+
+Warning: Deadlocks detected and fixed in 73 states
+
+Type:        DTMC
+States:      19219 (1 initial)
+Transitions: 33279
+
+Transition matrix: 39732 nodes (7 terminal), 33279 minterms, vars: 30r/30c
+
+---------------------------------------------------------------------
+
+Model checking: P=? [ F (x=9&y=9&crashed=0) ]
+
+Prob0: 73 iterations in 0.24 seconds (average 0.003301, setup 0.00)
+
+Prob1: 17 iterations in 0.08 seconds (average 0.004941, setup 0.00)
+
+yes = 20, no = 11997, maybe = 7202
+
+Computing remaining probabilities...
+Engine: Hybrid
+
+Building hybrid MTBDD matrix... [levels=30, nodes=51696] [2.4 MB]
+Splitting into blocks... [levels=12, n=756, nnz=1176, compact] [8.3 KB]
+Adding explicit sparse matrices... [levels=18, num=1118, compact] [77.6 KB]
+Creating vector for diagonals... [dist=1, compact] [37.5 KB]
+Creating vector for RHS... [dist=2, compact] [37.6 KB]
+Allocating iteration vectors... [150.1 KB + 0.7 KB = 150.8 KB]
+TOTAL: [2.7 MB]
+
+Starting iterations...
+
+Gauss-Seidel: 109 iterations in 0.84 seconds (average 0.000284, setup 0.81)
+
+Value in the initial state: 0.8082718332048304
+
+Time for model checking: 1.229 seconds.
+
+Result: 0.8082718332048304 (value in the initial state)
+
+---------------------------------------------------------------------
+
+Model checking: R{"cost"}=? [ C<=100 ]
+
+Computing rewards...
+Engine: Hybrid
+
+Building hybrid MTBDD matrix... [levels=30, nodes=85830] [3.9 MB]
+Adding explicit sparse matrices... [levels=30, num=1, compact] [148.8 KB]
+Creating vector for rewards... [dist=4, compact] [37.6 KB]
+Allocating iteration vectors... [2 x 150.1 KB]
+TOTAL: [4.4 MB]
+
+Starting iterations...
+
+Iterative method: 100 iterations in 3.85 seconds (average 0.000120, setup 3.84)
+
+Value in the initial state: 49.17848776507658
+
+Time for model checking: 3.887 seconds.
+
+Result: 49.17848776507658 (value in the initial state)
+al state)
+

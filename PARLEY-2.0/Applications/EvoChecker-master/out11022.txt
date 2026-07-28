@@ -2,7 +2,7 @@ PRISM
 =====
 
 Version: 4.5.dev
-Date: Tue Jul 28 13:49:38 CEST 2026
+Date: Tue Jul 28 16:35:25 CEST 2026
 Hostname: gruenau4
 Memory limits: cudd=1g, java(heap)=30.0g
 
@@ -16,48 +16,48 @@ Building model...
 
 Computing reachable states...
 
-Reachability (BFS): 88 iterations in 0.89 seconds (average 0.010159, setup 0.00)
+Reachability (BFS): 96 iterations in 1.01 seconds (average 0.010490, setup 0.00)
 
-Time for model construction: 1.274 seconds.
+Time for model construction: 1.31 seconds.
 
-Warning: Deadlocks detected and fixed in 223 states
+Warning: Deadlocks detected and fixed in 117 states
 
 Type:        DTMC
-States:      31088 (1 initial)
-Transitions: 54214
+States:      29340 (1 initial)
+Transitions: 51038
 
-Transition matrix: 43340 nodes (7 terminal), 54214 minterms, vars: 30r/30c
+Transition matrix: 46700 nodes (7 terminal), 51038 minterms, vars: 30r/30c
 
 ---------------------------------------------------------------------
 
 Model checking: P=? [ F (x=9&y=9&crashed=0) ]
 
-Prob0: 73 iterations in 0.27 seconds (average 0.003712, setup 0.00)
+Prob0: 73 iterations in 0.23 seconds (average 0.003137, setup 0.00)
 
-Prob1: 17 iterations in 0.21 seconds (average 0.012529, setup 0.00)
+Prob1: 17 iterations in 0.08 seconds (average 0.004941, setup 0.00)
 
-yes = 32, no = 20022, maybe = 11034
+yes = 36, no = 18366, maybe = 10938
 
 Computing remaining probabilities...
 Engine: Hybrid
 
-Building hybrid MTBDD matrix... [levels=30, nodes=54406] [2.5 MB]
-Splitting into blocks... [levels=12, n=718, nnz=1074, compact] [7.7 KB]
-Adding explicit sparse matrices... [levels=18, num=1012, compact] [120.6 KB]
-Creating vector for diagonals... [dist=1, compact] [60.7 KB]
-Creating vector for RHS... [dist=2, compact] [60.7 KB]
-Allocating iteration vectors... [242.9 KB + 1.1 KB = 243.9 KB]
-TOTAL: [3.0 MB]
+Building hybrid MTBDD matrix... [levels=30, nodes=64871] [3.0 MB]
+Splitting into blocks... [levels=12, n=780, nnz=1242, compact] [8.7 KB]
+Adding explicit sparse matrices... [levels=18, num=1179, compact] [119.3 KB]
+Creating vector for diagonals... [dist=1, compact] [57.3 KB]
+Creating vector for RHS... [dist=2, compact] [57.3 KB]
+Allocating iteration vectors... [229.2 KB + 0.9 KB = 230.1 KB]
+TOTAL: [3.4 MB]
 
 Starting iterations...
 
-Gauss-Seidel: 111 iterations in 2.11 seconds (average 0.000396, setup 2.07)
+Gauss-Seidel: 109 iterations in 1.51 seconds (average 0.000404, setup 1.46)
 
-Value in the initial state: 0.7462669638497627
+Value in the initial state: 0.8122115165297392
 
-Time for model checking: 2.653 seconds.
+Time for model checking: 1.884 seconds.
 
-Result: 0.7462669638497627 (value in the initial state)
+Result: 0.8122115165297392 (value in the initial state)
 
 ---------------------------------------------------------------------
 
@@ -66,21 +66,23 @@ Model checking: R{"cost"}=? [ C<=100 ]
 Computing rewards...
 Engine: Hybrid
 
-Building hybrid MTBDD matrix... [levels=30, nodes=94786] [4.3 MB]
-Adding explicit sparse matrices... [levels=30, num=1, compact] [242.2 KB]
-Creating vector for rewards... [dist=4, compact] [60.8 KB]
-Allocating iteration vectors... [2 x 242.9 KB]
-TOTAL: [5.1 MB]
+Building hybrid MTBDD matrix... [levels=30, nodes=107202] [4.9 MB]
+Adding explicit sparse matrices... [levels=30, num=1, compact] [228.1 KB]
+Creating vector for rewards... [dist=4, compact] [57.3 KB]
+Allocating iteration vectors... [2 x 229.2 KB]
+TOTAL: [5.6 MB]
 
 Starting iterations...
 
-Iterative method: 100 iterations in 9.74 seconds (average 0.000240, setup 9.71)
+Iterative method: 100 iterations in 8.15 seconds (average 0.000230, setup 8.13)
 
-Value in the initial state: 38.52491067002578
+Value in the initial state: 43.07909344913054
 
-Time for model checking: 9.764 seconds.
+Time for model checking: 8.221 seconds.
 
-Result: 38.52491067002578 (value in the initial state)
+Result: 43.07909344913054 (value in the initial state)
+)
 
-te)
+)
+
 )
