@@ -245,10 +245,10 @@ def main():
             hv_map.append(hv_rep / 10)
 
         # Calculate differences for spread and hypervolume
-        # spread_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_spread)] for repetition in umc_spread]
-        spread_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_spread, baseline_spread)]
-        # hv_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_hv)] for repetition in umc_hv]
-        hv_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_hv, baseline_hv)]
+        spread_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_spread)] for repetition in umc_spread]
+        # spread_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_spread, baseline_spread)]
+        hv_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_hv)] for repetition in umc_hv]
+        # hv_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_hv, baseline_hv)]
 
         # Select the maps shown in the plots (if too many maps)
         selected_maps = range(maps-10)
