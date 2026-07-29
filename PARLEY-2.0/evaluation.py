@@ -599,7 +599,7 @@ def main():
 
                 # front_path = os.path.join(directory, filename)
 
-                print(f"Map {m}, Rep {rep}: verwende {filename}")
+                # print(f"Map {m}, Rep {rep}: verwende {filename}")
 
                 with open(fronts_dir + 'ROBOT{0}_REP{1}/NSGAII/'.format(str(m), str(rep)) + filename, 'r') as f:
                 # with open(front_path, 'r') as f:
@@ -627,8 +627,19 @@ def main():
             umc_hv.append(rep_hv)
             hv_map.append(hv_rep / 10)
 
+        # Calculate differences for spread and hypervolume
+        spread_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_spread)] for repetition in umc_spread]
+        # spread_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_spread, baseline_spread)]
+        hv_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_hv)] for repetition in umc_hv]
+        # hv_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_hv, baseline_hv)]
+
+        mean_hv_gain_per_map = np.mean(
+                    np.asarray(hv_gain, dtype=float),
+                    axis=1
+                )
+        
         stability_results = random_subset_stability_analysis(
-            map_values=hv_map,
+            map_values=mean_hv_gain_per_map,
             acceptable_interval=acceptable_interval,
             sample_sizes=[
                 5, 10, 15, 20, 25, 30,
@@ -637,7 +648,7 @@ def main():
             repetitions=2000,
             random_seed=42
         )
-
+        
         print(
             "\nZufällige Stichprobenanalyse für "
             f"{acceptable_interval}"
@@ -678,12 +689,6 @@ def main():
                     f"mittlere Abweichung vom "
                     f"90-Map-Mittel = {deviation:.4f}"
                 )
-
-        # Calculate differences for spread and hypervolume
-        spread_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_spread)] for repetition in umc_spread]
-        # spread_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_spread, baseline_spread)]
-        hv_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_hv)] for repetition in umc_hv]
-        # hv_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_hv, baseline_hv)]
 
         # Select the maps shown in the plots (if too many maps)
         selected_maps = range(maps-10)
