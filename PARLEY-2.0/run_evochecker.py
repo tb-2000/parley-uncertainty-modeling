@@ -18,7 +18,7 @@ def run_task(args):
         f.write("       ALGORITHM = NSGAII\n")
         f.write("       POPULATION_SIZE = 100\n") # 100
         f.write("       MAX_EVALUATIONS = 4000\n") # 4000
-        f.write("       PROCESSORS = 8\n") # 1
+        f.write("       PROCESSORS = 4\n") # 1
         f.write("       PLOT_PARETO_FRONT = false\n")
         f.write("       VERBOSE = true\n")
         #f.write("       INIT_PORT = 55{0}\n".format(str(i)))
