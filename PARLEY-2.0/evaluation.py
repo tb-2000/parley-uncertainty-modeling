@@ -5,10 +5,143 @@ import matplotlib.pyplot as plt
 #from deap.tools._hypervolume.pyhv import hypervolume   //veraltet
 from moocore import hypervolume
 from scipy.stats import wilcoxon, anderson, mannwhitneyu
+from scipy.stats import t
 
 
 MAXIMUM_SPREAD_VALUE = 1.5
 plt.rcParams.update({'font.size': 16})
+
+def plot_cumulative_map_results(
+        gains_data,
+        first_map_number,
+        ylabel,
+        filename
+):
+    """
+    Stellt dar, wie sich der mittlere Gain mit zunehmender
+    Anzahl ausgewerteter Maps entwickelt.
+
+    gains_data:
+        Liste der Form:
+        [
+            [rep0, rep1, ..., rep9],  # Map 10
+            [rep0, rep1, ..., rep9],  # Map 11
+            ...
+        ]
+
+    first_map_number:
+        Nummer der ersten ausgewerteten Map, z. B. 10.
+    """
+
+    gains_array = np.asarray(gains_data, dtype=float)
+
+    if gains_array.ndim != 2:
+        raise ValueError(
+            "gains_data muss die Form [Maps][Repetitions] haben."
+        )
+
+    number_of_maps = gains_array.shape[0]
+
+    # Mittelwert über die Wiederholungen jeder Map
+    map_means = np.mean(gains_array, axis=1)
+
+    cumulative_means = []
+    lower_bounds = []
+    upper_bounds = []
+
+    for number_of_used_maps in range(1, number_of_maps + 1):
+        current_map_means = map_means[:number_of_used_maps]
+
+        cumulative_mean = np.mean(current_map_means)
+        cumulative_means.append(cumulative_mean)
+
+        # Für nur eine Map kann noch kein Konfidenzintervall
+        # aus der Streuung zwischen Maps berechnet werden.
+        if number_of_used_maps == 1:
+            lower_bounds.append(np.nan)
+            upper_bounds.append(np.nan)
+            continue
+
+        standard_error = (
+            np.std(current_map_means, ddof=1)
+            / np.sqrt(number_of_used_maps)
+        )
+
+        critical_value = t.ppf(
+            0.975,
+            df=number_of_used_maps - 1
+        )
+
+        margin = critical_value * standard_error
+
+        lower_bounds.append(cumulative_mean - margin)
+        upper_bounds.append(cumulative_mean + margin)
+
+    number_of_maps_axis = np.arange(1, number_of_maps + 1)
+
+    plt.figure(figsize=(12, 7))
+
+    plt.plot(
+        number_of_maps_axis,
+        cumulative_means,
+        marker="o",
+        markersize=3,
+        label="Kumulativer Mittelwert"
+    )
+
+    plt.fill_between(
+        number_of_maps_axis,
+        lower_bounds,
+        upper_bounds,
+        alpha=0.2,
+        label="95-%-Konfidenzintervall"
+    )
+
+    plt.axhline(
+        y=0,
+        linestyle="--",
+        linewidth=1,
+        label="Kein Gain"
+    )
+
+    # Orientierungslinien bei 20 und 30 Maps
+    if number_of_maps >= 20:
+        plt.axvline(
+            x=20,
+            linestyle=":",
+            linewidth=1
+        )
+
+    if number_of_maps >= 30:
+        plt.axvline(
+            x=30,
+            linestyle=":",
+            linewidth=1
+        )
+
+    plt.xlabel("Anzahl ausgewerteter Maps")
+    plt.ylabel(ylabel)
+    plt.xticks(
+        np.arange(
+            0,
+            number_of_maps + 1,
+            5
+        )
+    )
+
+    plt.grid(alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
+
+    os.makedirs(
+        os.path.dirname(filename),
+        exist_ok=True
+    )
+
+    plt.savefig(filename)
+    plt.close()
+
+    return map_means, np.asarray(cumulative_means)
 
 
 def is_dominated(x, y, data):
@@ -262,6 +395,35 @@ def main():
                                    f'{acceptable_interval[0]}-{acceptable_interval[1]}')
         # perform_wilcoxon_test_against_zero(hv_gain, alternative='greater')
         # perform_wilcoxon_test_against_zero(spread_gain, alternative='less')
+
+        interval_name = (
+            f"{acceptable_interval[0]}-"
+            f"{acceptable_interval[1]}"
+        )
+
+        hv_map_means, hv_cumulative_means = (
+            plot_cumulative_map_results(
+                gains_data=hv_gain,
+                first_map_number=10,
+                ylabel="Mittlerer Hypervolume-Gain",
+                filename=(
+                    "plots/map-stability/"
+                    f"hypervolume_{interval_name}.pdf"
+                )
+            )
+        )
+
+        spread_map_means, spread_cumulative_means = (
+            plot_cumulative_map_results(
+                gains_data=spread_gain,
+                first_map_number=10,
+                ylabel="Mittlerer Spread-Gain",
+                filename=(
+                    "plots/map-stability/"
+                    f"spread_{interval_name}.pdf"
+                )
+            )
+        )
 
         print(perform_mann_whitney_u_test(spread_gain))
         print(perform_mann_whitney_u_test(hv_gain))
