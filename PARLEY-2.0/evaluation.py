@@ -633,62 +633,62 @@ def main():
         hv_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_hv)] for repetition in umc_hv]
         # hv_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_hv, baseline_hv)]
 
-        mean_hv_gain_per_map = np.mean(
-                    np.asarray(hv_gain, dtype=float),
-                    axis=1
-                )
+        # mean_hv_gain_per_map = np.mean(
+        #             np.asarray(hv_gain, dtype=float),
+        #             axis=1
+        #         )
         
-        stability_results = random_subset_stability_analysis(
-            map_values=mean_hv_gain_per_map,
-            acceptable_interval=acceptable_interval,
-            sample_sizes=[
-                5, 10, 15, 20, 25, 30,
-                35, 40, 50, 60, 70, 80, 90
-            ],
-            repetitions=2000,
-            random_seed=42
-        )
+        # stability_results = random_subset_stability_analysis(
+        #     map_values=mean_hv_gain_per_map,
+        #     acceptable_interval=acceptable_interval,
+        #     sample_sizes=[
+        #         5, 10, 15, 20, 25, 30,
+        #         35, 40, 50, 60, 70, 80, 90
+        #     ],
+        #     repetitions=2000,
+        #     random_seed=42
+        # )
         
-        print(
-            "\nZufällige Stichprobenanalyse für "
-            f"{acceptable_interval}"
-        )
+        # print(
+        #     "\nZufällige Stichprobenanalyse für "
+        #     f"{acceptable_interval}"
+        # )
 
-        for index, sample_size in enumerate(
-                stability_results["sample_sizes"]
-        ):
-            if sample_size in [10, 20, 30, 40, 90]:
-                mean_estimate = (
-                    stability_results[
-                        "mean_subset_estimates"
-                    ][index]
-                )
+        # for index, sample_size in enumerate(
+        #         stability_results["sample_sizes"]
+        # ):
+        #     if sample_size in [10, 20, 30, 40, 90]:
+        #         mean_estimate = (
+        #             stability_results[
+        #                 "mean_subset_estimates"
+        #             ][index]
+        #         )
 
-                lower = stability_results[
-                    "lower_bounds"
-                ][index]
+        #         lower = stability_results[
+        #             "lower_bounds"
+        #         ][index]
 
-                upper = stability_results[
-                    "upper_bounds"
-                ][index]
+        #         upper = stability_results[
+        #             "upper_bounds"
+        #         ][index]
 
-                width = stability_results[
-                    "interval_widths"
-                ][index]
+        #         width = stability_results[
+        #             "interval_widths"
+        #         ][index]
 
-                deviation = stability_results[
-                    "mean_absolute_deviations"
-                ][index]
+        #         deviation = stability_results[
+        #             "mean_absolute_deviations"
+        #         ][index]
 
-                print(
-                    f"{sample_size:2d} Maps: "
-                    f"Mittel = {mean_estimate:.4f}, "
-                    f"95-%-Intervall = "
-                    f"[{lower:.4f}, {upper:.4f}], "
-                    f"Breite = {width:.4f}, "
-                    f"mittlere Abweichung vom "
-                    f"90-Map-Mittel = {deviation:.4f}"
-                )
+        #         print(
+        #             f"{sample_size:2d} Maps: "
+        #             f"Mittel = {mean_estimate:.4f}, "
+        #             f"95-%-Intervall = "
+        #             f"[{lower:.4f}, {upper:.4f}], "
+        #             f"Breite = {width:.4f}, "
+        #             f"mittlere Abweichung vom "
+        #             f"90-Map-Mittel = {deviation:.4f}"
+        #         )
 
         # Select the maps shown in the plots (if too many maps)
         selected_maps = range(maps-10)
@@ -703,34 +703,34 @@ def main():
         # perform_wilcoxon_test_against_zero(hv_gain, alternative='greater')
         # perform_wilcoxon_test_against_zero(spread_gain, alternative='less')
 
-        interval_name = (
-            f"{acceptable_interval[0]}-"
-            f"{acceptable_interval[1]}"
-        )
+        # interval_name = (
+        #     f"{acceptable_interval[0]}-"
+        #     f"{acceptable_interval[1]}"
+        # )
 
-        hv_map_means, hv_cumulative_means = (
-            plot_cumulative_map_results(
-                gains_data=hv_gain,
-                first_map_number=10,
-                ylabel="Mittlerer Hypervolume-Gain",
-                filename=(
-                    "plots/map-stability/"
-                    f"hypervolume_{interval_name}.pdf"
-                )
-            )
-        )
+        # hv_map_means, hv_cumulative_means = (
+        #     plot_cumulative_map_results(
+        #         gains_data=hv_gain,
+        #         first_map_number=10,
+        #         ylabel="Mittlerer Hypervolume-Gain",
+        #         filename=(
+        #             "plots/map-stability/"
+        #             f"hypervolume_{interval_name}.pdf"
+        #         )
+        #     )
+        # )
 
-        spread_map_means, spread_cumulative_means = (
-            plot_cumulative_map_results(
-                gains_data=spread_gain,
-                first_map_number=10,
-                ylabel="Mittlerer Spread-Gain",
-                filename=(
-                    "plots/map-stability/"
-                    f"spread_{interval_name}.pdf"
-                )
-            )
-        )
+        # spread_map_means, spread_cumulative_means = (
+        #     plot_cumulative_map_results(
+        #         gains_data=spread_gain,
+        #         first_map_number=10,
+        #         ylabel="Mittlerer Spread-Gain",
+        #         filename=(
+        #             "plots/map-stability/"
+        #             f"spread_{interval_name}.pdf"
+        #         )
+        #     )
+        # )
 
         print(perform_mann_whitney_u_test(spread_gain))
         print(perform_mann_whitney_u_test(hv_gain))
