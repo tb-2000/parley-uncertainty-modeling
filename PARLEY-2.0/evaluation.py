@@ -143,6 +143,256 @@ def plot_cumulative_map_results(
 
     return map_means, np.asarray(cumulative_means)
 
+def random_subset_stability_analysis(
+        map_values,
+        acceptable_interval,
+        sample_sizes=None,
+        repetitions=2000,
+        random_seed=42,
+        output_directory="plots/map-stability"
+):
+    """
+    Untersucht, wie stabil der mittlere Hypervolume-Gain bei
+    zufällig ausgewählten Teilmengen der Maps ist.
+
+    map_values:
+        Ein mittlerer Hypervolume-Gain pro Map, also hv_map.
+
+    sample_sizes:
+        Untersuchte Anzahlen von Maps, z. B.
+        [5, 10, 15, 20, 25, 30, ..., 90].
+
+    repetitions:
+        Anzahl zufälliger Ziehungen pro Stichprobengröße.
+
+    Es wird ohne Zurücklegen gezogen. Innerhalb einer
+    Stichprobe kann dieselbe Map daher nicht doppelt vorkommen.
+    """
+
+    values = np.asarray(map_values, dtype=float)
+
+    if values.ndim != 1:
+        raise ValueError(
+            "map_values muss genau einen Wert pro Map enthalten."
+        )
+
+    number_of_available_maps = len(values)
+
+    if number_of_available_maps < 2:
+        raise ValueError(
+            "Für die Analyse werden mindestens zwei Maps benötigt."
+        )
+
+    if sample_sizes is None:
+        sample_sizes = list(
+            range(5, number_of_available_maps + 1, 5)
+        )
+
+        # Gesamtzahl ergänzen, falls sie nicht durch 5 teilbar ist
+        if sample_sizes[-1] != number_of_available_maps:
+            sample_sizes.append(number_of_available_maps)
+
+    sample_sizes = [
+        size
+        for size in sample_sizes
+        if 1 <= size <= number_of_available_maps
+    ]
+
+    if not sample_sizes:
+        raise ValueError(
+            "Keine gültigen Stichprobengrößen vorhanden."
+        )
+
+    rng = np.random.default_rng(random_seed)
+
+    full_mean = np.mean(values)
+
+    result_sizes = []
+    result_means = []
+    lower_bounds = []
+    upper_bounds = []
+    interval_widths = []
+    mean_absolute_deviations = []
+    standard_deviations = []
+
+    # Optional: alle Ziehungen für spätere Auswertungen speichern
+    subset_means_by_size = {}
+
+    for sample_size in sample_sizes:
+
+        # Wenn alle Maps verwendet werden, existiert nur eine
+        # mögliche vollständige Stichprobe.
+        if sample_size == number_of_available_maps:
+            subset_means = np.array([full_mean])
+        else:
+            subset_means = np.empty(repetitions)
+
+            for repetition in range(repetitions):
+                selected_values = rng.choice(
+                    values,
+                    size=sample_size,
+                    replace=False
+                )
+
+                subset_means[repetition] = np.mean(
+                    selected_values
+                )
+
+        subset_means_by_size[sample_size] = subset_means
+
+        mean_of_subset_means = np.mean(subset_means)
+
+        lower = np.percentile(subset_means, 2.5)
+        upper = np.percentile(subset_means, 97.5)
+
+        mean_absolute_deviation = np.mean(
+            np.abs(subset_means - full_mean)
+        )
+
+        result_sizes.append(sample_size)
+        result_means.append(mean_of_subset_means)
+        lower_bounds.append(lower)
+        upper_bounds.append(upper)
+        interval_widths.append(upper - lower)
+        mean_absolute_deviations.append(
+            mean_absolute_deviation
+        )
+        standard_deviations.append(
+            np.std(subset_means, ddof=1)
+            if len(subset_means) > 1
+            else 0.0
+        )
+
+    result_sizes = np.asarray(result_sizes)
+    result_means = np.asarray(result_means)
+    lower_bounds = np.asarray(lower_bounds)
+    upper_bounds = np.asarray(upper_bounds)
+    interval_widths = np.asarray(interval_widths)
+    mean_absolute_deviations = np.asarray(
+        mean_absolute_deviations
+    )
+    standard_deviations = np.asarray(
+        standard_deviations
+    )
+
+    os.makedirs(output_directory, exist_ok=True)
+
+    interval_name = (
+        f"{acceptable_interval[0]}-"
+        f"{acceptable_interval[1]}"
+    )
+
+    # Plot 1: Verteilung der geschätzten Mittelwerte
+    plt.figure(figsize=(12, 7))
+
+    plt.plot(
+        result_sizes,
+        result_means,
+        marker="o",
+        label="Mittel der zufälligen Stichproben"
+    )
+
+    plt.fill_between(
+        result_sizes,
+        lower_bounds,
+        upper_bounds,
+        alpha=0.2,
+        label="Empirisches 95-%-Intervall"
+    )
+
+    plt.axhline(
+        full_mean,
+        linestyle="--",
+        linewidth=1,
+        label=f"Mittelwert aller Maps: {full_mean:.4f}"
+    )
+
+    if 20 in result_sizes:
+        plt.axvline(
+            20,
+            linestyle=":",
+            linewidth=1
+        )
+
+    if 30 in result_sizes:
+        plt.axvline(
+            30,
+            linestyle=":",
+            linewidth=1
+        )
+
+    plt.xlabel("Anzahl zufällig ausgewählter Maps")
+    plt.ylabel("Mittlerer Hypervolume-Gain")
+    plt.title(
+        "Stabilität zufälliger Map-Stichproben "
+        f"für {interval_name}"
+    )
+    plt.legend()
+    plt.tight_layout()
+
+    plt.savefig(
+        os.path.join(
+            output_directory,
+            f"random_subsets_hv_{interval_name}.pdf"
+        )
+    )
+
+    plt.close()
+
+    # Plot 2: Breite des empirischen Intervalls
+    plt.figure(figsize=(12, 7))
+
+    plt.plot(
+        result_sizes,
+        interval_widths,
+        marker="o"
+    )
+
+    if 20 in result_sizes:
+        plt.axvline(
+            20,
+            linestyle=":",
+            linewidth=1
+        )
+
+    if 30 in result_sizes:
+        plt.axvline(
+            30,
+            linestyle=":",
+            linewidth=1
+        )
+
+    plt.xlabel("Anzahl zufällig ausgewählter Maps")
+    plt.ylabel("Breite des empirischen 95-%-Intervalls")
+    plt.title(
+        "Unsicherheit der Mittelwertschätzung "
+        f"für {interval_name}"
+    )
+    plt.tight_layout()
+
+    plt.savefig(
+        os.path.join(
+            output_directory,
+            f"random_subsets_width_{interval_name}.pdf"
+        )
+    )
+
+    plt.close()
+
+    return {
+        "sample_sizes": result_sizes,
+        "mean_subset_estimates": result_means,
+        "lower_bounds": lower_bounds,
+        "upper_bounds": upper_bounds,
+        "interval_widths": interval_widths,
+        "standard_deviations": standard_deviations,
+        "mean_absolute_deviations": (
+            mean_absolute_deviations
+        ),
+        "full_mean": full_mean,
+        "subset_means": subset_means_by_size
+    }
+
 
 def is_dominated(x, y, data):
     for other_x, other_y in data:
@@ -376,6 +626,58 @@ def main():
             umc_spread.append(rep_spread)
             umc_hv.append(rep_hv)
             hv_map.append(hv_rep / 10)
+
+        stability_results = random_subset_stability_analysis(
+            map_values=hv_map,
+            acceptable_interval=acceptable_interval,
+            sample_sizes=[
+                5, 10, 15, 20, 25, 30,
+                35, 40, 50, 60, 70, 80, 90
+            ],
+            repetitions=2000,
+            random_seed=42
+        )
+
+        print(
+            "\nZufällige Stichprobenanalyse für "
+            f"{acceptable_interval}"
+        )
+
+        for index, sample_size in enumerate(
+                stability_results["sample_sizes"]
+        ):
+            if sample_size in [10, 20, 30, 40, 90]:
+                mean_estimate = (
+                    stability_results[
+                        "mean_subset_estimates"
+                    ][index]
+                )
+
+                lower = stability_results[
+                    "lower_bounds"
+                ][index]
+
+                upper = stability_results[
+                    "upper_bounds"
+                ][index]
+
+                width = stability_results[
+                    "interval_widths"
+                ][index]
+
+                deviation = stability_results[
+                    "mean_absolute_deviations"
+                ][index]
+
+                print(
+                    f"{sample_size:2d} Maps: "
+                    f"Mittel = {mean_estimate:.4f}, "
+                    f"95-%-Intervall = "
+                    f"[{lower:.4f}, {upper:.4f}], "
+                    f"Breite = {width:.4f}, "
+                    f"mittlere Abweichung vom "
+                    f"90-Map-Mittel = {deviation:.4f}"
+                )
 
         # Calculate differences for spread and hypervolume
         spread_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_spread)] for repetition in umc_spread]
