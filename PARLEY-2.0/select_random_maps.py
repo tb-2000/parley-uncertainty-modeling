@@ -7,6 +7,7 @@ def main():
     auswahl = sorted(random.sample(maps, 50))
 
     print(auswahl)
+    print(auswahl[0])
 
 if __name__ == '__main__':
     main()
