@@ -7,8 +7,9 @@ import run_evochecker
 import evaluation
 import plot_fronts
 import urc_synthesis
+import time
 
-max_replications = 10
+max_replications = 10 # 10
 
 
 def maps():
@@ -20,7 +21,7 @@ def models(i):
     infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
     outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
     # TODO umc_synthesis.manipulate_prism_model is currently broken
-    urc_synthesis.manipulate_prism_model(infile, outfile, baseline=True)
+    urc_synthesis.manipulate_prism_model(infile, outfile, baseline=False) # vorher baseline=True, aber das ist nicht sinnvoll, da wir die Baseline ja erst berechnen wollen.
 
 
 def baseline(i):
@@ -46,15 +47,20 @@ def fronts(i):
 
 
 def main():
+    print('Starting PARLEY-2.0')
+    start = time.time()
     # maps()
     for i in range(10, 11):
         models(i)
-        #baseline(i)
-        # evo_checker(i)
-        # fronts(i)
+        baseline(i)
+        evo_checker(i)
+        fronts(i)
         print(f'Finished map {i}')
     # evaluation
-    #evaluation.main()
+    evaluation.main()
+    time.sleep(1)
+    end = time.time()
+    print(f"Total runtime of the program is {end - start} seconds")
 
 
 if __name__ == '__main__':

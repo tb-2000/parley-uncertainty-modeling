@@ -8,17 +8,21 @@ def run_task(args):
     i, rep = args
     path = "./{0}_{1}.properties".format(str(i), str(rep))
     open(path, "w").close()
+
+    init_port = 10000 + i * 100 + rep * 10
+
     with open(path, 'a') as f:
         f.write("PROBLEM = ROBOT{0}_REP{1}\n".format(str(i), str(rep)))
         f.write("       MODEL_TEMPLATE_FILE = models/model_{0}_umc.prism\n".format(str(i)))
         f.write("       PROPERTIES_FILE = robot.pctl\n")
         f.write("       ALGORITHM = NSGAII\n")
-        f.write("       POPULATION_SIZE = 100\n")
-        f.write("       MAX_EVALUATIONS = 4000\n")
-        f.write("       PROCESSORS = 1\n")
+        f.write("       POPULATION_SIZE = 100\n") # 100
+        f.write("       MAX_EVALUATIONS = 4000\n") # 4000
+        f.write("       PROCESSORS = 4\n") # 1
         f.write("       PLOT_PARETO_FRONT = false\n")
         f.write("       VERBOSE = true\n")
-        f.write("       INIT_PORT = 55{0}\n".format(str(i)))
+        #f.write("       INIT_PORT = 55{0}\n".format(str(i)))
+        f.write("       INIT_PORT = {init_port}\n".format(init_port=init_port))
     # Note: INIT_PORT doesn't have an effect https://github.com/gerasimou/EvoChecker/issues/11
 
     os.system('java -jar ./target/EvoChecker-1.1.0.jar ' + path)
@@ -36,3 +40,5 @@ def run(map_, replications):
 
     with Pool(num_processes) as pool:
         pool.map(run_task, tasks)
+    # def run(map_, rep):
+    #     run_task((map_, 0))

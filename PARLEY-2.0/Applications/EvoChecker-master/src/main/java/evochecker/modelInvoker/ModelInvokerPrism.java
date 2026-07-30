@@ -66,6 +66,13 @@ public class ModelInvokerPrism implements IModelInvoker {
 
 	@Override
 	public List<String> invoke(String model, String propertyFile, PrintWriter out, BufferedReader in) throws IOException {
+		//===================================================
+		// // Send the model and property file to the PrismExecutor
+		// System.err.println(
+		// 	"Sending to PrismExecutor: "
+		// 	+ model + "#" + propertyFile
+		// );
+		//===================================================
 		out.print(model + "#" + propertyFile + "\nEND\n");
 		out.flush();
 
@@ -76,6 +83,13 @@ public class ModelInvokerPrism implements IModelInvoker {
 	
 	@Override
 	public List<String> invokeParam(String model, String propertyFile, PrintWriter out, BufferedReader in) throws IOException {
+		//===================================================
+		// // Send the model and property file to the PrismExecutor
+		// System.err.println(
+		// 	"Sending parametric model: "
+		// 	+ model + "#" + propertyFile + "#param"
+		// );
+		//===================================================
 		out.print(model + "#" + propertyFile + "#param\nEND\n");
 		out.flush();
 
@@ -104,6 +118,50 @@ public class ModelInvokerPrism implements IModelInvoker {
 			return null;
 		}
 	}
+	//============================================================
+	// private List<String> processResult(BufferedReader in) throws IOException {
+	// 	StringBuilder resultBuilder = new StringBuilder();
+
+	// 	try {
+	// 		while (true) {
+	// 			String line = in.readLine();
+
+	// 			if (line == null) {
+	// 				throw new IOException(
+	// 					"PrismExecutor closed the socket before sending END. "
+	// 					+ "Received so far: " + resultBuilder
+	// 				);
+	// 			}
+
+	// 			System.err.println("PRISM EXECUTOR RESPONSE: " + line);
+
+	// 			if (line.endsWith("END")) {
+	// 				break;
+	// 			}
+
+	// 			resultBuilder.append(line).append("\n");
+	// 		}
+
+	// 		String resultString = resultBuilder.toString().trim();
+
+	// 		System.err.println(
+	// 			"COMPLETE PRISM RESULT: '" + resultString + "'"
+	// 		);
+
+	// 		return checkResult(resultString);
+	// 	}
+	// 	catch (Exception e) {
+	// 		System.err.println("Failed to read PrismExecutor result");
+	// 		e.printStackTrace();
+
+	// 		if (e instanceof IOException) {
+	// 			throw (IOException) e;
+	// 		}
+
+	// 		throw new IOException("Invalid PrismExecutor response", e);
+	// 		}
+	// }
+	//============================================================
 	
 	private List<String> checkResult(String resultString){
 		// System.out.println("Received from PRISM: " + modelBuilder.toString());

@@ -29,6 +29,7 @@ def plot_pareto_front(m=10, replication=0, header=True):
             next(file)  # Skip the header row
         for line in file:
             x, y = map(float, line.strip().split('\t'))
+            #x, y = map(float, line.split())
             data.append((x, y))
 
     pareto_data = pareto_front(data)
@@ -40,6 +41,7 @@ def plot_pareto_front(m=10, replication=0, header=True):
     with open(f'Applications/EvoChecker-master/data/ROBOT{m}_BASELINE/Front', 'r') as file:
         for line in file:
             x, y = map(float, line.strip().split('	'))
+            #x, y = map(float, line.split())
             data.append((x, y))
 
     baseline_data = pareto_front(data[:20])

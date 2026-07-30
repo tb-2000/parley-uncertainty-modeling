@@ -306,10 +306,21 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 			params[1] = "-jar";
 			params[2] = Utility.getProperty(Constants.MODEL_CHECKING_ENGINE);
 			params[3] = String.valueOf(portNum);
+
+			//============================================================
+			// HIER EINFÜGEN
+			System.out.println(
+				"Starting PrismExecutor worker " + id +
+				" on port " + portNum
+			);
+			//============================================================
 			
 			
 			try {
 				ProcessBuilder pb = new ProcessBuilder(params);
+				//============================================================
+				//pb.inheritIO();
+				//============================================================
 				Map<String, String> env = pb.environment();
 				env.put("DYLD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR)); //OSX
 				env.put("LD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR));   //Linux
@@ -327,6 +338,12 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 				while (!successful) {
 					try {
 						socket	= new Socket(HOSTNAME, portNum);
+						//============================================================
+						System.out.println(
+							"Connected worker " + id +
+							" to port " + portNum
+						);
+						//============================================================
 						in		= new BufferedReader(new InputStreamReader(socket.getInputStream()));
 						out		= new PrintWriter(socket.getOutputStream());
 						successful = true;

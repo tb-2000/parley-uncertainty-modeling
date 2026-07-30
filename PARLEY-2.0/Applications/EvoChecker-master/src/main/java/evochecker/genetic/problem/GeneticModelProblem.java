@@ -323,6 +323,9 @@ public abstract class GeneticModelProblem extends Problem {
 			this.evaluateConstraints(solution, resultsList);
 		} catch (Exception e) {
 			e.printStackTrace();
+			// System.err.println("Evaluation of solution failed");
+			// e.printStackTrace();
+			// return false;
 		}
 		if (verbose)
 			System.out.println();
