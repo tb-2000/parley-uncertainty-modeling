@@ -52,9 +52,9 @@ def main():
     # maps()
     for i in range(10, 11):
         models(i)
-        baseline(i)
+        #baseline(i)
         evo_checker(i)
-        fronts(i)
+        #fronts(i)
         print(f'Finished map {i}')
     # evaluation
     evaluation.main()
