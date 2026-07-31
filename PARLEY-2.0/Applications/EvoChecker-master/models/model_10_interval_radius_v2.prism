@@ -10,11 +10,15 @@ const double p = 0.01;
  
 formula hasCrashed = (1=0) | (x=0 & y=1) | (x=0 & y=3) | (x=0 & y=4) | (x=0 & y=5) | (x=0 & y=7) | (x=1 & y=2) | (x=1 & y=4) | (x=1 & y=7) | (x=2 & y=2) | (x=2 & y=8) | (x=3 & y=3) | (x=3 & y=7) | (x=3 & y=9) | (x=5 & y=4) | (x=5 & y=8) | (x=6 & y=2) | (x=6 & y=8) | (x=7 & y=3) | (x=7 & y=5) | (x=7 & y=6) | (x=8 & y=8) | (x=9 & y=3) | (x=9 & y=6) ;
 
+// Symmetric interval around the unchanged point estimate (xhat,yhat).
 formula xlow = max(xhat-xradius, 0);
 formula xhigh = min(xhat+xradius, N);
 formula ylow = max(yhat-yradius, 0);
 formula yhigh = min(yhat+yradius, N);
 formula interval_width = (xhigh-xlow) + (yhigh-ylow);
+
+// c remains the URC-controlled periodic update interval (values 1..10).
+// The interval threshold can only trigger an additional earlier update.
 formula periodic_update_required = step>=c;
 formula interval_update_required = interval_width>=max_interval_width;
 formula update_required = periodic_update_required | interval_update_required;
@@ -126,37 +130,48 @@ endmodule
 module Knowledge
   xhat : [0..N] init xstart;
   yhat : [0..N] init ystart;
+
+  // Symmetric uncertainty radius around xhat and yhat.
   xradius : [0..N] init 0;
   yradius : [0..N] init 0;
+
   step : [1..20] init 1;
 
   ready : [0..1] init 1;
 
+  // The point estimate is updated exactly as in the original model.
+  // For east/west, horizontal uncertainty grows more strongly.
   [west] ready=1 ->
     (xhat'=max(xhat-1, 0)) &
     (xradius'=min(xradius+2, N)) &
     (yradius'=min(yradius+1, N)) &
     (ready'=0);
+
   [east] ready=1 ->
     (xhat'=min(xhat+1, N)) &
     (xradius'=min(xradius+2, N)) &
     (yradius'=min(yradius+1, N)) &
     (ready'=0);
+
+  // For north/south, vertical uncertainty grows more strongly.
   [south] ready=1 ->
     (yhat'=max(yhat-1, 0)) &
     (xradius'=min(xradius+1, N)) &
     (yradius'=min(yradius+2, N)) &
     (ready'=0);
+
   [north] ready=1 ->
     (yhat'=min(yhat+1, N)) &
     (xradius'=min(xradius+1, N)) &
     (yradius'=min(yradius+2, N)) &
     (ready'=0);
 
+  // Regular update after c steps OR an earlier update if the interval is too wide.
   [update] update_required & ready=0 ->
     (xhat'=x) & (yhat'=y) &
     (xradius'=0) & (yradius'=0) &
     (step'=1) & (ready'=1);
+
   [skip_update] !update_required & ready=0 ->
     (ready'=1) & (step'=step+1);
 endmodule

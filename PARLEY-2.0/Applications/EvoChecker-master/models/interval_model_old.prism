@@ -1,0 +1,85 @@
+dtmc
+const int c = 1;
+const int N=9;
+const int xstart = 0;
+const int ystart = 0;
+const int xtarget = 9;
+const int ytarget = 9;
+const double p = 0.01;
+
+module Robot 
+  x : [0..N] init xstart;
+  y : [0..N] init ystart;
+  move_ready : [0..1] init 1;
+  crashed : [0..1] init 0;
+
+  [east] (move_ready=1) -> 
+    (1-3*p): (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+  [west] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    (1-3*p): (x'=max(x-1, 0)) & (move_ready'=0); 
+  [north] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    (1-3*p): (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+  [south] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    (1-3*p): (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+
+  [check] (move_ready=0) & hasCrashed -> (crashed'=1) & (move_ready'=1); 
+  [check] (move_ready=0) & !hasCrashed -> (crashed'=0) & (move_ready'=1); 
+  [stucked] (crashed=1) -> true;
+endmodule
+
+module Knowledge
+  // die alten geschätzten Koordinaten von X,Y
+  //xhat : [0..N] init xstart;
+  //yhat : [0..N] init ystart;
+  
+  // x-intervall
+  xlow : [0..N] init xstart;
+  xhigh : [0..N] init xstart;
+
+  // y-intervall
+  ylow : [0..N] init ystart;
+  yhigh : [0..N] init ystart;
+
+  step : [0..c] init 0;
+
+  ready : [0..1] init 1;
+
+  // jede Bewegung erhöht Interval um höch. +1 in jede Richtung
+  [west] ready=1 -> (xlow'=max(xlow-1, 0)) & (xhigh'=min(xhigh+1, N)) & (ylow'=max(ylow-1, 0)) & (yhigh'=min(yhigh+1, N)) & (ready'=0);
+  [east] ready=1 -> (xlow'=max(xlow-1, 0)) & (xhigh'=min(xhigh+1, N)) & (ylow'=max(ylow-1, 0)) & (yhigh'=min(yhigh+1, N)) & (ready'=0);
+  [south] ready=1 -> (xlow'=max(xlow-1, 0)) & (xhigh'=min(xhigh+1, N)) & (ylow'=max(ylow-1, 0)) & (yhigh'=min(yhigh+1, N)) & (ready'=0);
+  [north] ready=1 -> (xlow'=max(xlow-1, 0)) & (xhigh'=min(xhigh+1, N)) & (ylow'=max(ylow-1, 0)) & (yhigh'=min(yhigh+1, N)) & (ready'=0);
+
+  // update verringert Intervallbreiten auf 0:
+  // [xlow,xhigh] -> [x,x] und [ylow,yhigh] -> [y,y]
+  // (dabei könnte auch Messung von x,y selbst ungenau sein, d.h. update könnte nur zur Verringerung der Intervallbreiten führen)
+  [update] step>=c & ready=0 -> (xlow'=x) & (ylow'=y) & (xhigh'=x) & (yhigh'=y) & (step'=0) & (ready'=1); 
+
+  [skip_update] step<c & ready=0 -> (step'=step+1) & (ready'=1);
+endmodule
+
+rewards "cost" 
+  [east] true : 1; 
+  [west] true : 1; 
+  [north] true : 1; 
+  [south] true : 1; 
+  [update] true : 5;
+endrewards 
+
+// neuer reward, der hohe Intervallbreiten straft
+rewards "uncertainty-interval"
+  true : (xhigh-xlow) + (yhigh-ylow);
+endrewards
+

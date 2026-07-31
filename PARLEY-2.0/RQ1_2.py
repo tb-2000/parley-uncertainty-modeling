@@ -2,6 +2,7 @@ import os
 
 import create_maps
 import prism_model_generator
+import prism_model_generator_interval
 import prism_caller
 import run_evochecker
 import evaluation
@@ -17,7 +18,8 @@ def maps():
 
 
 def models(i):
-    prism_model_generator.generate_model(i)
+    # prism_model_generator.generate_model(i)
+    prism_model_generator_interval.generate_model(i)
     infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
     outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
     # TODO umc_synthesis.manipulate_prism_model is currently broken

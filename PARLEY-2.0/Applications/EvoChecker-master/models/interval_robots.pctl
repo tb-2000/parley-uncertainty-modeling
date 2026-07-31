@@ -1,8 +1,5 @@
-//Objective, max
-P=?[F(x=9 & y=9 & crashed=0)]
+// Objective, max
+P=? [ F (x=xtarget & y=ytarget & crashed=0) ]
 
-//Objective, min
-R{"cost"}=?[C<=100]
-
-//Objective, min
-R{"uncertainty-interval"}=?[C<=100]
+// Objective, min
+R{"cost"}=? [ C<=200 ]
