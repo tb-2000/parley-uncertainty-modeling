@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=parley_RQ1
-#SBATCH --partition=std
+#SBATCH --partition=longrun
 #SBATCH --output=%x_%j.out
 #SBATCH --error=%x_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=40
-#SBATCH --mem=64G
-#SBATCH --time=24:00:00
+#SBATCH --mem=90G
+#SBATCH --time=4-00:00:00
 
 set -euo pipefail
 
