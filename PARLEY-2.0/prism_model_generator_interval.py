@@ -49,6 +49,7 @@ def build_map(filename):
 def preambel():
     with open(prism_file, 'a') as f:
         f.write('dtmc\n')
+        f.write(f'const int c = {period};\n')
         f.write(f'const int max_interval_width = {max_interval_width};\n')
         f.write('const int N=' + str(mapSize - 1) + ';\n')
         f.write('const int xstart = ' + str(startX) + ';\n')
@@ -68,7 +69,9 @@ def preambel():
         f.write('formula ylow = max(yhat-yradius, 0);\n')
         f.write('formula yhigh = min(yhat+yradius, N);\n')
         f.write('formula interval_width = (xhigh-xlow) + (yhigh-ylow);\n')
-        f.write('formula update_required = interval_width>=max_interval_width;\n\n')
+        f.write('formula periodic_update_required = step>=c;\n')
+        f.write('formula interval_update_required = interval_width>=max_interval_width;\n')
+        f.write('formula update_required = periodic_update_required | interval_update_required;\n\n')
 
 
 def robot():
@@ -126,6 +129,7 @@ def knowledge():
         f.write('  yhat : [0..N] init ystart;\n')
         f.write('  xradius : [0..N] init 0;\n')
         f.write('  yradius : [0..N] init 0;\n')
+        f.write('  step : [1..20] init 1;\n')
         f.write('  ready : [0..1] init 1;\n\n')
 
         # MAPE remains unchanged and continues to use xhat/yhat.
@@ -154,12 +158,12 @@ def knowledge():
                 "    (yradius'=min(yradius+2, N)) &\n"
                 "    (ready'=0);\n\n")
 
-        # The interval width alone determines whether an update is required.
+        # Update after c steps or earlier if the interval becomes too wide.
         f.write('  [update] update_required & ready=0 ->\n'
                 "    (xhat'=x) & (yhat'=y) &\n"
                 "    (xradius'=0) & (yradius'=0) &\n"
-                "    (ready'=1);\n")
-        f.write("  [skip_update] !update_required & ready=0 -> (ready'=1);\n")
+                "    (step'=1) & (ready'=1);\n")
+        f.write("  [skip_update] !update_required & ready=0 -> (ready'=1) & (step'=step+1);\n")
         f.write('endmodule\n\n')
 
 
