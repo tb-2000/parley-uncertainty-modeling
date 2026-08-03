@@ -1,4 +1,5 @@
 dtmc
+const int c = 1;
 const int max_interval_width = 1;
 const int N=9;
 const int xstart = 0;
@@ -14,7 +15,9 @@ formula xhigh = min(xhat+xradius, N);
 formula ylow = max(yhat-yradius, 0);
 formula yhigh = min(yhat+yradius, N);
 formula interval_width = (xhigh-xlow) + (yhigh-ylow);
-formula update_required = interval_width>=max_interval_width;
+formula periodic_update_required = step>=c;
+formula interval_update_required = interval_width>=max_interval_width;
+formula update_required = periodic_update_required | interval_update_required;
 
 module Robot 
   x : [0..N] init xstart;
@@ -129,6 +132,7 @@ module Knowledge
   yhat : [0..N] init ystart;
   xradius : [0..N] init 0;
   yradius : [0..N] init 0;
+  step : [1..20] init 1;
   ready : [0..1] init 1;
 
   [west] ready=1 ->
@@ -155,8 +159,8 @@ module Knowledge
   [update] update_required & ready=0 ->
     (xhat'=x) & (yhat'=y) &
     (xradius'=0) & (yradius'=0) &
-    (ready'=1);
-  [skip_update] !update_required & ready=0 -> (ready'=1);
+    (step'=1) & (ready'=1);
+  [skip_update] !update_required & ready=0 -> (ready'=1) & (step'=step+1);
 endmodule
 
 rewards "cost" 
