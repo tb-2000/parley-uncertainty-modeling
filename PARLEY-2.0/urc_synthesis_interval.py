@@ -62,8 +62,8 @@ def __get_limit(string, constants):
 
 
 def remove_counter_from_module(output_path):
-    # The URC replaces both coupled constants c and max_interval_width.
-    pattern = re.compile(r"^\s*const\s+int\s+(?:c|max_interval_width)\s*=\s*\d+\s*;")
+    # The URC replaces the fixed interval-width threshold.
+    pattern = re.compile(r"^\s*const\s+int\s+max_interval_width\s*=\s*\d+\s*;")
     with open(output_path, 'r') as file:
         lines = file.readlines()
 
@@ -79,9 +79,8 @@ def add_controller(file_path, estimates, variables, possible_decisions, baseline
     combinations = generate_combinations_list(variables)
     __add_controller_prefix(file_path, possible_decisions, combinations, variables, baseline)
     with open(file_path, 'a') as file:
-        # One decision controls both the latest update step and the interval threshold.
-        file.write('  c : [1..10] init 1;\n')
-        file.write('  max_interval_width : [1..19] init 1;\n')
+        # Ten decisions map to empirically calibrated interval thresholds.
+        file.write('  max_interval_width : [3..19] init 3;\n')
 
         for combination in combinations:
             # combination describes a tuple of values, e.g., for ^x and ^y, such as (0, 0)
@@ -93,12 +92,20 @@ def add_controller(file_path, estimates, variables, possible_decisions, baseline
             decision_name = 'decision'
             for c in combination:
                 decision_name += f'_{c}'
-            # The same decision sets c=1..10 and the coupled threshold
-            # 1,5,8,11,13,15,16,17,18,19.
-            # decision 1..10 -> interval thresholds 1,3,5,...,19
+            # decision 1..10 -> thresholds 3,5,8,11,13,15,16,17,18,19
+            threshold_expression = (
+                f"{decision_name}=1 ? 3 : "
+                f"{decision_name}=2 ? 5 : "
+                f"{decision_name}=3 ? 8 : "
+                f"{decision_name}=4 ? 11 : "
+                f"{decision_name}=5 ? 13 : "
+                f"{decision_name}=6 ? 15 : "
+                f"{decision_name}=7 ? 16 : "
+                f"{decision_name}=8 ? 17 : "
+                f"{decision_name}=9 ? 18 : 19"
+            )
             new_line += (
-                f" -> (c'={decision_name}) & "
-                f"(max_interval_width'=2*{decision_name}-1);\n"
+                f" -> (max_interval_width'={threshold_expression});\n"
             )
             file.write(new_line)
         file.write('endmodule\n')

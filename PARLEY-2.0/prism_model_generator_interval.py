@@ -8,7 +8,7 @@ targetX = 4
 targetY = 4
 p = 0.01
 # Initial interval-width threshold; urc_synthesis.py replaces it in the UMC model.
-max_interval_width = 1
+max_interval_width = 3
 directions = ['west', 'east', 'south', 'north']
 directions_effects = ['(xhat\'=max(xhat-1, 0))', '(xhat\'=min(xhat+1, N))', '(yhat\'=max(yhat-1, 0))', '(yhat\'=min(yhat+1, N))']
 obstacles = []
@@ -49,7 +49,6 @@ def build_map(filename):
 def preambel():
     with open(prism_file, 'a') as f:
         f.write('dtmc\n')
-        f.write(f'const int c = {period};\n')
         f.write(f'const int max_interval_width = {max_interval_width};\n')
         f.write('const int N=' + str(mapSize - 1) + ';\n')
         f.write('const int xstart = ' + str(startX) + ';\n')
@@ -64,14 +63,12 @@ def preambel():
         f.write(';\n\n')
 
         # Interval formulas. xhat/yhat remain the point estimate used by MAPE.
-        f.write('formula xlow = max(xhat-xradius, 0);\n')
-        f.write('formula xhigh = min(xhat+xradius, N);\n')
-        f.write('formula ylow = max(yhat-yradius, 0);\n')
-        f.write('formula yhigh = min(yhat+yradius, N);\n')
+        f.write('formula xlow = max(xhat-xleft, 0);\n')
+        f.write('formula xhigh = min(xhat+xright, N);\n')
+        f.write('formula ylow = max(yhat-ydown, 0);\n')
+        f.write('formula yhigh = min(yhat+yup, N);\n')
         f.write('formula interval_width = (xhigh-xlow) + (yhigh-ylow);\n')
-        f.write('formula periodic_update_required = step>=c;\n')
-        f.write('formula interval_update_required = interval_width>=max_interval_width;\n')
-        f.write('formula update_required = periodic_update_required | interval_update_required;\n\n')
+        f.write('formula update_required = interval_width>=max_interval_width;\n\n')
 
 
 def robot():
@@ -127,43 +124,53 @@ def knowledge():
         f.write('module Knowledge\n')
         f.write('  xhat : [0..N] init xstart;\n')
         f.write('  yhat : [0..N] init ystart;\n')
-        f.write('  xradius : [0..N] init 0;\n')
-        f.write('  yradius : [0..N] init 0;\n')
-        f.write('  step : [1..20] init 1;\n')
+        f.write('  xleft : [0..N] init 0;\n')
+        f.write('  xright : [0..N] init 0;\n')
+        f.write('  ydown : [0..N] init 0;\n')
+        f.write('  yup : [0..N] init 0;\n')
         f.write('  ready : [0..1] init 1;\n\n')
 
         # MAPE remains unchanged and continues to use xhat/yhat.
-        # The radii only determine whether an additional early update is needed.
+        # The four directed distances describe the asymmetric interval.
         f.write('  [west] ready=1 ->\n'
                 "    (xhat'=max(xhat-1, 0)) &\n"
-                "    (xradius'=min(xradius+2, N)) &\n"
-                "    (yradius'=min(yradius+1, N)) &\n"
+                "    (xleft'=xleft) &\n"
+                "    (xright'=min(xright+2, N)) &\n"
+                "    (ydown'=min(ydown+1, N)) &\n"
+                "    (yup'=min(yup+1, N)) &\n"
                 "    (ready'=0);\n")
 
         f.write('  [east] ready=1 ->\n'
                 "    (xhat'=min(xhat+1, N)) &\n"
-                "    (xradius'=min(xradius+2, N)) &\n"
-                "    (yradius'=min(yradius+1, N)) &\n"
+                "    (xleft'=min(xleft+2, N)) &\n"
+                "    (xright'=xright) &\n"
+                "    (ydown'=min(ydown+1, N)) &\n"
+                "    (yup'=min(yup+1, N)) &\n"
                 "    (ready'=0);\n")
 
         f.write('  [south] ready=1 ->\n'
                 "    (yhat'=max(yhat-1, 0)) &\n"
-                "    (xradius'=min(xradius+1, N)) &\n"
-                "    (yradius'=min(yradius+2, N)) &\n"
+                "    (xleft'=min(xleft+1, N)) &\n"
+                "    (xright'=min(xright+1, N)) &\n"
+                "    (ydown'=ydown) &\n"
+                "    (yup'=min(yup+2, N)) &\n"
                 "    (ready'=0);\n")
 
         f.write('  [north] ready=1 ->\n'
                 "    (yhat'=min(yhat+1, N)) &\n"
-                "    (xradius'=min(xradius+1, N)) &\n"
-                "    (yradius'=min(yradius+2, N)) &\n"
+                "    (xleft'=min(xleft+1, N)) &\n"
+                "    (xright'=min(xright+1, N)) &\n"
+                "    (ydown'=min(ydown+2, N)) &\n"
+                "    (yup'=yup) &\n"
                 "    (ready'=0);\n\n")
 
-        # Update after c steps or earlier if the interval becomes too wide.
+        # The interval width alone determines whether an update is required.
         f.write('  [update] update_required & ready=0 ->\n'
                 "    (xhat'=x) & (yhat'=y) &\n"
-                "    (xradius'=0) & (yradius'=0) &\n"
-                "    (step'=1) & (ready'=1);\n")
-        f.write("  [skip_update] !update_required & ready=0 -> (ready'=1) & (step'=step+1);\n")
+                "    (xleft'=0) & (xright'=0) &\n"
+                "    (ydown'=0) & (yup'=0) &\n"
+                "    (ready'=1);\n")
+        f.write("  [skip_update] !update_required & ready=0 -> (ready'=1);\n")
         f.write('endmodule\n\n')
 
 
