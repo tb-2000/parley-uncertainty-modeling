@@ -92,16 +92,16 @@ def add_controller(file_path, estimates, variables, possible_decisions, baseline
             decision_name = 'decision'
             for c in combination:
                 decision_name += f'_{c}'
-            # decision 1..10 -> thresholds 4,6,8,12,14,15,16,17,18,19
+            # decision 1..10 -> thresholds [3, 6, 10, 11, 13, 14, 15, 16, 18, 19]
             threshold_expression = (
-                f"{decision_name}=1 ? 4 : "
+                f"{decision_name}=1 ? 3 : "
                 f"{decision_name}=2 ? 6 : "
-                f"{decision_name}=3 ? 8 : "
-                f"{decision_name}=4 ? 12 : "
-                f"{decision_name}=5 ? 14 : "
-                f"{decision_name}=6 ? 15 : "
-                f"{decision_name}=7 ? 16 : "
-                f"{decision_name}=8 ? 17 : "
+                f"{decision_name}=3 ? 10 : "
+                f"{decision_name}=4 ? 11 : "
+                f"{decision_name}=5 ? 13 : "
+                f"{decision_name}=6 ? 14 : "
+                f"{decision_name}=7 ? 15 : "
+                f"{decision_name}=8 ? 16 : "
                 f"{decision_name}=9 ? 18 : 19"
             )
             new_line += (

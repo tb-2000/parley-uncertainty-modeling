@@ -8,435 +8,147 @@ const double p = 0.01;
  
 formula hasCrashed = (1=0) | (x=0 & y=1) | (x=0 & y=2) | (x=1 & y=1) | (x=1 & y=6) | (x=2 & y=3) | (x=2 & y=4) | (x=2 & y=6) | (x=2 & y=8) | (x=3 & y=1) | (x=3 & y=2) | (x=3 & y=5) | (x=3 & y=6) | (x=3 & y=7) | (x=3 & y=8) | (x=4 & y=1) | (x=5 & y=1) | (x=5 & y=3) | (x=5 & y=4) | (x=5 & y=8) | (x=5 & y=9) | (x=6 & y=4) | (x=6 & y=6) | (x=7 & y=2) | (x=7 & y=4) | (x=7 & y=9) | (x=8 & y=3) | (x=8 & y=6) | (x=8 & y=7) | (x=9 & y=1) | (x=9 & y=3) | (x=9 & y=4) | (x=9 & y=5) ;
 
+formula xlow = max(xhat-xradius, 0);
+formula xhigh = min(xhat+xradius, N);
+formula ylow = max(yhat-yradius, 0);
+formula yhigh = min(yhat+yradius, N);
+formula interval_width = (xhigh-xlow) + (yhigh-ylow);
+formula update_required = interval_width>=max_interval_width;
+
 module Robot 
   x : [0..N] init xstart;
   y : [0..N] init ystart;
-  ready : [0..1] init 1;
+  move_ready : [0..1] init 1;
   crashed : [0..1] init 0;
 
-  [east] (ready=1) -> 
-    (1-3*p): (x'=min(x+1, N)) & (ready'=0) + 
-    p: (y'=min(y+1, N)) & (ready'=0) + 
-    p: (y'=max(y-1, 0)) & (ready'=0) + 
-    p: (x'=max(x-1, 0)) & (ready'=0); 
-  [west] (ready=1) -> 
-    p: (x'=min(x+1, N)) & (ready'=0) + 
-    p: (y'=min(y+1, N)) & (ready'=0) + 
-    p: (y'=max(y-1, 0)) & (ready'=0) + 
-    (1-3*p): (x'=max(x-1, 0)) & (ready'=0); 
-  [north] (ready=1) -> 
-    p: (x'=min(x+1, N)) & (ready'=0) + 
-    (1-3*p): (y'=min(y+1, N)) & (ready'=0) + 
-    p: (y'=max(y-1, 0)) & (ready'=0) + 
-    p: (x'=max(x-1, 0)) & (ready'=0); 
-  [south] (ready=1) -> 
-    p: (x'=min(x+1, N)) & (ready'=0) + 
-    p: (y'=min(y+1, N)) & (ready'=0) + 
-    (1-3*p): (y'=max(y-1, 0)) & (ready'=0) + 
-    p: (x'=max(x-1, 0)) & (ready'=0); 
+  [east] (move_ready=1) -> 
+    (1-3*p): (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+  [west] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    (1-3*p): (x'=max(x-1, 0)) & (move_ready'=0); 
+  [north] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    (1-3*p): (y'=min(y+1, N)) & (move_ready'=0) + 
+    p: (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
+  [south] (move_ready=1) -> 
+    p: (x'=min(x+1, N)) & (move_ready'=0) + 
+    p: (y'=min(y+1, N)) & (move_ready'=0) + 
+    (1-3*p): (y'=max(y-1, 0)) & (move_ready'=0) + 
+    p: (x'=max(x-1, 0)) & (move_ready'=0); 
 
-  [check] (ready=0) & hasCrashed -> (crashed'=1) & (ready'=1); 
-  [check] (ready=0) & !hasCrashed -> (crashed'=0) & (ready'=1); 
-  [stucked] (crashed=1) -> true;
+  [check] (move_ready=0) & hasCrashed -> (crashed'=1) & (move_ready'=1); 
+  [check] (move_ready=0) & !hasCrashed -> (move_ready'=1); 
 endmodule
 
 module Adaptation_MAPE_controller
-  [east] (xhat=0) & (yhat=0) & (crashed=0) -> true;
-  [north] (xhat=0) & (yhat=3) & (crashed=0) -> true;
-  [north] (xhat=0) & (yhat=4) & (crashed=0) -> true;
-  [north] (xhat=0) & (yhat=5) & (crashed=0) -> true;
-  [north] (xhat=0) & (yhat=6) & (crashed=0) -> true;
-  [north] (xhat=0) & (yhat=7) & (crashed=0) -> true;
-  [north] (xhat=0) & (yhat=8) & (crashed=0) -> true;
-  [east] (xhat=0) & (yhat=9) & (crashed=0) -> true;
-  [east] (xhat=1) & (yhat=0) & (crashed=0) -> true;
-  [north] (xhat=1) & (yhat=2) & (crashed=0) -> true;
-  [west] (xhat=1) & (yhat=3) & (crashed=0) -> true;
-  [west] (xhat=1) & (yhat=4) & (crashed=0) -> true;
-  [west] (xhat=1) & (yhat=5) & (crashed=0) -> true;
-  [west] (xhat=1) & (yhat=7) & (crashed=0) -> true;
-  [north] (xhat=1) & (yhat=8) & (crashed=0) -> true;
-  [east] (xhat=1) & (yhat=9) & (crashed=0) -> true;
-  [east] (xhat=2) & (yhat=0) & (crashed=0) -> true;
-  [north] (xhat=2) & (yhat=1) & (crashed=0) -> true;
-  [west] (xhat=2) & (yhat=2) & (crashed=0) -> true;
-  [west] (xhat=2) & (yhat=5) & (crashed=0) -> true;
-  [west] (xhat=2) & (yhat=7) & (crashed=0) -> true;
-  [east] (xhat=2) & (yhat=9) & (crashed=0) -> true;
-  [east] (xhat=3) & (yhat=0) & (crashed=0) -> true;
-  [east] (xhat=3) & (yhat=3) & (crashed=0) -> true;
-  [east] (xhat=3) & (yhat=4) & (crashed=0) -> true;
-  [east] (xhat=3) & (yhat=9) & (crashed=0) -> true;
-  [east] (xhat=4) & (yhat=0) & (crashed=0) -> true;
-  [north] (xhat=4) & (yhat=2) & (crashed=0) -> true;
-  [north] (xhat=4) & (yhat=3) & (crashed=0) -> true;
-  [north] (xhat=4) & (yhat=4) & (crashed=0) -> true;
-  [north] (xhat=4) & (yhat=5) & (crashed=0) -> true;
-  [north] (xhat=4) & (yhat=6) & (crashed=0) -> true;
-  [east] (xhat=4) & (yhat=7) & (crashed=0) -> true;
-  [south] (xhat=4) & (yhat=8) & (crashed=0) -> true;
-  [south] (xhat=4) & (yhat=9) & (crashed=0) -> true;
-  [east] (xhat=5) & (yhat=0) & (crashed=0) -> true;
-  [west] (xhat=5) & (yhat=2) & (crashed=0) -> true;
-  [north] (xhat=5) & (yhat=5) & (crashed=0) -> true;
-  [north] (xhat=5) & (yhat=6) & (crashed=0) -> true;
-  [east] (xhat=5) & (yhat=7) & (crashed=0) -> true;
-  [north] (xhat=6) & (yhat=0) & (crashed=0) -> true;
-  [north] (xhat=6) & (yhat=1) & (crashed=0) -> true;
-  [west] (xhat=6) & (yhat=2) & (crashed=0) -> true;
-  [south] (xhat=6) & (yhat=3) & (crashed=0) -> true;
-  [east] (xhat=6) & (yhat=5) & (crashed=0) -> true;
-  [north] (xhat=6) & (yhat=7) & (crashed=0) -> true;
-  [east] (xhat=6) & (yhat=8) & (crashed=0) -> true;
-  [south] (xhat=6) & (yhat=9) & (crashed=0) -> true;
-  [west] (xhat=7) & (yhat=0) & (crashed=0) -> true;
-  [west] (xhat=7) & (yhat=1) & (crashed=0) -> true;
-  [west] (xhat=7) & (yhat=3) & (crashed=0) -> true;
-  [north] (xhat=7) & (yhat=5) & (crashed=0) -> true;
-  [north] (xhat=7) & (yhat=6) & (crashed=0) -> true;
-  [north] (xhat=7) & (yhat=7) & (crashed=0) -> true;
-  [east] (xhat=7) & (yhat=8) & (crashed=0) -> true;
-  [west] (xhat=8) & (yhat=0) & (crashed=0) -> true;
-  [south] (xhat=8) & (yhat=1) & (crashed=0) -> true;
-  [south] (xhat=8) & (yhat=2) & (crashed=0) -> true;
-  [north] (xhat=8) & (yhat=4) & (crashed=0) -> true;
-  [west] (xhat=8) & (yhat=5) & (crashed=0) -> true;
-  [east] (xhat=8) & (yhat=8) & (crashed=0) -> true;
-  [east] (xhat=8) & (yhat=9) & (crashed=0) -> true;
-  [west] (xhat=9) & (yhat=0) & (crashed=0) -> true;
-  [west] (xhat=9) & (yhat=2) & (crashed=0) -> true;
-  [north] (xhat=9) & (yhat=6) & (crashed=0) -> true;
-  [north] (xhat=9) & (yhat=7) & (crashed=0) -> true;
-  [north] (xhat=9) & (yhat=8) & (crashed=0) -> true;
+  [east] (xhat=0) & (yhat=0) -> true;
+  [north] (xhat=0) & (yhat=3) -> true;
+  [north] (xhat=0) & (yhat=4) -> true;
+  [north] (xhat=0) & (yhat=5) -> true;
+  [north] (xhat=0) & (yhat=6) -> true;
+  [north] (xhat=0) & (yhat=7) -> true;
+  [north] (xhat=0) & (yhat=8) -> true;
+  [east] (xhat=0) & (yhat=9) -> true;
+  [east] (xhat=1) & (yhat=0) -> true;
+  [north] (xhat=1) & (yhat=2) -> true;
+  [west] (xhat=1) & (yhat=3) -> true;
+  [west] (xhat=1) & (yhat=4) -> true;
+  [west] (xhat=1) & (yhat=5) -> true;
+  [west] (xhat=1) & (yhat=7) -> true;
+  [north] (xhat=1) & (yhat=8) -> true;
+  [east] (xhat=1) & (yhat=9) -> true;
+  [east] (xhat=2) & (yhat=0) -> true;
+  [north] (xhat=2) & (yhat=1) -> true;
+  [west] (xhat=2) & (yhat=2) -> true;
+  [west] (xhat=2) & (yhat=5) -> true;
+  [west] (xhat=2) & (yhat=7) -> true;
+  [east] (xhat=2) & (yhat=9) -> true;
+  [east] (xhat=3) & (yhat=0) -> true;
+  [east] (xhat=3) & (yhat=3) -> true;
+  [east] (xhat=3) & (yhat=4) -> true;
+  [east] (xhat=3) & (yhat=9) -> true;
+  [east] (xhat=4) & (yhat=0) -> true;
+  [north] (xhat=4) & (yhat=2) -> true;
+  [north] (xhat=4) & (yhat=3) -> true;
+  [north] (xhat=4) & (yhat=4) -> true;
+  [north] (xhat=4) & (yhat=5) -> true;
+  [north] (xhat=4) & (yhat=6) -> true;
+  [east] (xhat=4) & (yhat=7) -> true;
+  [south] (xhat=4) & (yhat=8) -> true;
+  [south] (xhat=4) & (yhat=9) -> true;
+  [east] (xhat=5) & (yhat=0) -> true;
+  [west] (xhat=5) & (yhat=2) -> true;
+  [north] (xhat=5) & (yhat=5) -> true;
+  [north] (xhat=5) & (yhat=6) -> true;
+  [east] (xhat=5) & (yhat=7) -> true;
+  [north] (xhat=6) & (yhat=0) -> true;
+  [north] (xhat=6) & (yhat=1) -> true;
+  [west] (xhat=6) & (yhat=2) -> true;
+  [south] (xhat=6) & (yhat=3) -> true;
+  [east] (xhat=6) & (yhat=5) -> true;
+  [north] (xhat=6) & (yhat=7) -> true;
+  [east] (xhat=6) & (yhat=8) -> true;
+  [south] (xhat=6) & (yhat=9) -> true;
+  [west] (xhat=7) & (yhat=0) -> true;
+  [west] (xhat=7) & (yhat=1) -> true;
+  [west] (xhat=7) & (yhat=3) -> true;
+  [north] (xhat=7) & (yhat=5) -> true;
+  [north] (xhat=7) & (yhat=6) -> true;
+  [north] (xhat=7) & (yhat=7) -> true;
+  [east] (xhat=7) & (yhat=8) -> true;
+  [west] (xhat=8) & (yhat=0) -> true;
+  [south] (xhat=8) & (yhat=1) -> true;
+  [south] (xhat=8) & (yhat=2) -> true;
+  [north] (xhat=8) & (yhat=4) -> true;
+  [west] (xhat=8) & (yhat=5) -> true;
+  [east] (xhat=8) & (yhat=8) -> true;
+  [east] (xhat=8) & (yhat=9) -> true;
+  [west] (xhat=9) & (yhat=0) -> true;
+  [west] (xhat=9) & (yhat=2) -> true;
+  [north] (xhat=9) & (yhat=6) -> true;
+  [north] (xhat=9) & (yhat=7) -> true;
+  [north] (xhat=9) & (yhat=8) -> true;
 endmodule
 
 module Knowledge
   xhat : [0..N] init xstart;
   yhat : [0..N] init ystart;
+  xradius : [0..N] init 0;
+  yradius : [0..N] init 0;
+  ready : [0..1] init 1;
 
-  [west] true -> (xhat'=max(xhat-1, 0));
-  [east] true -> (xhat'=min(xhat+1, N));
-  [south] true -> (yhat'=max(yhat-1, 0));
-  [north] true -> (yhat'=min(yhat+1, N));
-  [update_1] true -> (xhat'=x) & (yhat'=y);
-endmodule
+  [west] ready=1 ->
+    (xhat'=max(xhat-1, 0)) &
+    (xradius'=min(xradius+2, N)) &
+    (yradius'=min(yradius+1, N)) &
+    (ready'=0);
+  [east] ready=1 ->
+    (xhat'=min(xhat+1, N)) &
+    (xradius'=min(xradius+2, N)) &
+    (yradius'=min(yradius+1, N)) &
+    (ready'=0);
+  [south] ready=1 ->
+    (yhat'=max(yhat-1, 0)) &
+    (xradius'=min(xradius+1, N)) &
+    (yradius'=min(yradius+2, N)) &
+    (ready'=0);
+  [north] ready=1 ->
+    (yhat'=min(yhat+1, N)) &
+    (xradius'=min(xradius+1, N)) &
+    (yradius'=min(yradius+2, N)) &
+    (ready'=0);
 
-evolve int decision_0_0 [0..10];
-evolve int decision_0_1 [0..10];
-evolve int decision_0_2 [0..10];
-evolve int decision_0_3 [0..10];
-evolve int decision_0_4 [0..10];
-evolve int decision_0_5 [0..10];
-evolve int decision_0_6 [0..10];
-evolve int decision_0_7 [0..10];
-evolve int decision_0_8 [0..10];
-evolve int decision_0_9 [0..10];
-evolve int decision_1_0 [0..10];
-evolve int decision_1_1 [0..10];
-evolve int decision_1_2 [0..10];
-evolve int decision_1_3 [0..10];
-evolve int decision_1_4 [0..10];
-evolve int decision_1_5 [0..10];
-evolve int decision_1_6 [0..10];
-evolve int decision_1_7 [0..10];
-evolve int decision_1_8 [0..10];
-evolve int decision_1_9 [0..10];
-evolve int decision_2_0 [0..10];
-evolve int decision_2_1 [0..10];
-evolve int decision_2_2 [0..10];
-evolve int decision_2_3 [0..10];
-evolve int decision_2_4 [0..10];
-evolve int decision_2_5 [0..10];
-evolve int decision_2_6 [0..10];
-evolve int decision_2_7 [0..10];
-evolve int decision_2_8 [0..10];
-evolve int decision_2_9 [0..10];
-evolve int decision_3_0 [0..10];
-evolve int decision_3_1 [0..10];
-evolve int decision_3_2 [0..10];
-evolve int decision_3_3 [0..10];
-evolve int decision_3_4 [0..10];
-evolve int decision_3_5 [0..10];
-evolve int decision_3_6 [0..10];
-evolve int decision_3_7 [0..10];
-evolve int decision_3_8 [0..10];
-evolve int decision_3_9 [0..10];
-evolve int decision_4_0 [0..10];
-evolve int decision_4_1 [0..10];
-evolve int decision_4_2 [0..10];
-evolve int decision_4_3 [0..10];
-evolve int decision_4_4 [0..10];
-evolve int decision_4_5 [0..10];
-evolve int decision_4_6 [0..10];
-evolve int decision_4_7 [0..10];
-evolve int decision_4_8 [0..10];
-evolve int decision_4_9 [0..10];
-evolve int decision_5_0 [0..10];
-evolve int decision_5_1 [0..10];
-evolve int decision_5_2 [0..10];
-evolve int decision_5_3 [0..10];
-evolve int decision_5_4 [0..10];
-evolve int decision_5_5 [0..10];
-evolve int decision_5_6 [0..10];
-evolve int decision_5_7 [0..10];
-evolve int decision_5_8 [0..10];
-evolve int decision_5_9 [0..10];
-evolve int decision_6_0 [0..10];
-evolve int decision_6_1 [0..10];
-evolve int decision_6_2 [0..10];
-evolve int decision_6_3 [0..10];
-evolve int decision_6_4 [0..10];
-evolve int decision_6_5 [0..10];
-evolve int decision_6_6 [0..10];
-evolve int decision_6_7 [0..10];
-evolve int decision_6_8 [0..10];
-evolve int decision_6_9 [0..10];
-evolve int decision_7_0 [0..10];
-evolve int decision_7_1 [0..10];
-evolve int decision_7_2 [0..10];
-evolve int decision_7_3 [0..10];
-evolve int decision_7_4 [0..10];
-evolve int decision_7_5 [0..10];
-evolve int decision_7_6 [0..10];
-evolve int decision_7_7 [0..10];
-evolve int decision_7_8 [0..10];
-evolve int decision_7_9 [0..10];
-evolve int decision_8_0 [0..10];
-evolve int decision_8_1 [0..10];
-evolve int decision_8_2 [0..10];
-evolve int decision_8_3 [0..10];
-evolve int decision_8_4 [0..10];
-evolve int decision_8_5 [0..10];
-evolve int decision_8_6 [0..10];
-evolve int decision_8_7 [0..10];
-evolve int decision_8_8 [0..10];
-evolve int decision_8_9 [0..10];
-evolve int decision_9_0 [0..10];
-evolve int decision_9_1 [0..10];
-evolve int decision_9_2 [0..10];
-evolve int decision_9_3 [0..10];
-evolve int decision_9_4 [0..10];
-evolve int decision_9_5 [0..10];
-evolve int decision_9_6 [0..10];
-evolve int decision_9_7 [0..10];
-evolve int decision_9_8 [0..10];
-evolve int decision_9_9 [0..10];
-const int maxStep = 10;
-module UMC_MAPE_controller
- step : [1..maxStep] init 1;
-  [skip_update] (xhat=0) & (yhat=0) & (step<decision_0_0) -> (step'=step+1);
-  [update_1] (xhat=0) & (yhat=0) & (step>=decision_0_0) -> (step'=1);
-  [skip_update] (xhat=0) & (yhat=1) & (step<decision_0_1) -> (step'=step+1);
-  [update_1] (xhat=0) & (yhat=1) & (step>=decision_0_1) -> (step'=1);
-  [skip_update] (xhat=0) & (yhat=2) & (step<decision_0_2) -> (step'=step+1);
-  [update_1] (xhat=0) & (yhat=2) & (step>=decision_0_2) -> (step'=1);
-  [skip_update] (xhat=0) & (yhat=3) & (step<decision_0_3) -> (step'=step+1);
-  [update_1] (xhat=0) & (yhat=3) & (step>=decision_0_3) -> (step'=1);
-  [skip_update] (xhat=0) & (yhat=4) & (step<decision_0_4) -> (step'=step+1);
-  [update_1] (xhat=0) & (yhat=4) & (step>=decision_0_4) -> (step'=1);
-  [skip_update] (xhat=0) & (yhat=5) & (step<decision_0_5) -> (step'=step+1);
-  [update_1] (xhat=0) & (yhat=5) & (step>=decision_0_5) -> (step'=1);
-  [skip_update] (xhat=0) & (yhat=6) & (step<decision_0_6) -> (step'=step+1);
-  [update_1] (xhat=0) & (yhat=6) & (step>=decision_0_6) -> (step'=1);
-  [skip_update] (xhat=0) & (yhat=7) & (step<decision_0_7) -> (step'=step+1);
-  [update_1] (xhat=0) & (yhat=7) & (step>=decision_0_7) -> (step'=1);
-  [skip_update] (xhat=0) & (yhat=8) & (step<decision_0_8) -> (step'=step+1);
-  [update_1] (xhat=0) & (yhat=8) & (step>=decision_0_8) -> (step'=1);
-  [skip_update] (xhat=0) & (yhat=9) & (step<decision_0_9) -> (step'=step+1);
-  [update_1] (xhat=0) & (yhat=9) & (step>=decision_0_9) -> (step'=1);
-  [skip_update] (xhat=1) & (yhat=0) & (step<decision_1_0) -> (step'=step+1);
-  [update_1] (xhat=1) & (yhat=0) & (step>=decision_1_0) -> (step'=1);
-  [skip_update] (xhat=1) & (yhat=1) & (step<decision_1_1) -> (step'=step+1);
-  [update_1] (xhat=1) & (yhat=1) & (step>=decision_1_1) -> (step'=1);
-  [skip_update] (xhat=1) & (yhat=2) & (step<decision_1_2) -> (step'=step+1);
-  [update_1] (xhat=1) & (yhat=2) & (step>=decision_1_2) -> (step'=1);
-  [skip_update] (xhat=1) & (yhat=3) & (step<decision_1_3) -> (step'=step+1);
-  [update_1] (xhat=1) & (yhat=3) & (step>=decision_1_3) -> (step'=1);
-  [skip_update] (xhat=1) & (yhat=4) & (step<decision_1_4) -> (step'=step+1);
-  [update_1] (xhat=1) & (yhat=4) & (step>=decision_1_4) -> (step'=1);
-  [skip_update] (xhat=1) & (yhat=5) & (step<decision_1_5) -> (step'=step+1);
-  [update_1] (xhat=1) & (yhat=5) & (step>=decision_1_5) -> (step'=1);
-  [skip_update] (xhat=1) & (yhat=6) & (step<decision_1_6) -> (step'=step+1);
-  [update_1] (xhat=1) & (yhat=6) & (step>=decision_1_6) -> (step'=1);
-  [skip_update] (xhat=1) & (yhat=7) & (step<decision_1_7) -> (step'=step+1);
-  [update_1] (xhat=1) & (yhat=7) & (step>=decision_1_7) -> (step'=1);
-  [skip_update] (xhat=1) & (yhat=8) & (step<decision_1_8) -> (step'=step+1);
-  [update_1] (xhat=1) & (yhat=8) & (step>=decision_1_8) -> (step'=1);
-  [skip_update] (xhat=1) & (yhat=9) & (step<decision_1_9) -> (step'=step+1);
-  [update_1] (xhat=1) & (yhat=9) & (step>=decision_1_9) -> (step'=1);
-  [skip_update] (xhat=2) & (yhat=0) & (step<decision_2_0) -> (step'=step+1);
-  [update_1] (xhat=2) & (yhat=0) & (step>=decision_2_0) -> (step'=1);
-  [skip_update] (xhat=2) & (yhat=1) & (step<decision_2_1) -> (step'=step+1);
-  [update_1] (xhat=2) & (yhat=1) & (step>=decision_2_1) -> (step'=1);
-  [skip_update] (xhat=2) & (yhat=2) & (step<decision_2_2) -> (step'=step+1);
-  [update_1] (xhat=2) & (yhat=2) & (step>=decision_2_2) -> (step'=1);
-  [skip_update] (xhat=2) & (yhat=3) & (step<decision_2_3) -> (step'=step+1);
-  [update_1] (xhat=2) & (yhat=3) & (step>=decision_2_3) -> (step'=1);
-  [skip_update] (xhat=2) & (yhat=4) & (step<decision_2_4) -> (step'=step+1);
-  [update_1] (xhat=2) & (yhat=4) & (step>=decision_2_4) -> (step'=1);
-  [skip_update] (xhat=2) & (yhat=5) & (step<decision_2_5) -> (step'=step+1);
-  [update_1] (xhat=2) & (yhat=5) & (step>=decision_2_5) -> (step'=1);
-  [skip_update] (xhat=2) & (yhat=6) & (step<decision_2_6) -> (step'=step+1);
-  [update_1] (xhat=2) & (yhat=6) & (step>=decision_2_6) -> (step'=1);
-  [skip_update] (xhat=2) & (yhat=7) & (step<decision_2_7) -> (step'=step+1);
-  [update_1] (xhat=2) & (yhat=7) & (step>=decision_2_7) -> (step'=1);
-  [skip_update] (xhat=2) & (yhat=8) & (step<decision_2_8) -> (step'=step+1);
-  [update_1] (xhat=2) & (yhat=8) & (step>=decision_2_8) -> (step'=1);
-  [skip_update] (xhat=2) & (yhat=9) & (step<decision_2_9) -> (step'=step+1);
-  [update_1] (xhat=2) & (yhat=9) & (step>=decision_2_9) -> (step'=1);
-  [skip_update] (xhat=3) & (yhat=0) & (step<decision_3_0) -> (step'=step+1);
-  [update_1] (xhat=3) & (yhat=0) & (step>=decision_3_0) -> (step'=1);
-  [skip_update] (xhat=3) & (yhat=1) & (step<decision_3_1) -> (step'=step+1);
-  [update_1] (xhat=3) & (yhat=1) & (step>=decision_3_1) -> (step'=1);
-  [skip_update] (xhat=3) & (yhat=2) & (step<decision_3_2) -> (step'=step+1);
-  [update_1] (xhat=3) & (yhat=2) & (step>=decision_3_2) -> (step'=1);
-  [skip_update] (xhat=3) & (yhat=3) & (step<decision_3_3) -> (step'=step+1);
-  [update_1] (xhat=3) & (yhat=3) & (step>=decision_3_3) -> (step'=1);
-  [skip_update] (xhat=3) & (yhat=4) & (step<decision_3_4) -> (step'=step+1);
-  [update_1] (xhat=3) & (yhat=4) & (step>=decision_3_4) -> (step'=1);
-  [skip_update] (xhat=3) & (yhat=5) & (step<decision_3_5) -> (step'=step+1);
-  [update_1] (xhat=3) & (yhat=5) & (step>=decision_3_5) -> (step'=1);
-  [skip_update] (xhat=3) & (yhat=6) & (step<decision_3_6) -> (step'=step+1);
-  [update_1] (xhat=3) & (yhat=6) & (step>=decision_3_6) -> (step'=1);
-  [skip_update] (xhat=3) & (yhat=7) & (step<decision_3_7) -> (step'=step+1);
-  [update_1] (xhat=3) & (yhat=7) & (step>=decision_3_7) -> (step'=1);
-  [skip_update] (xhat=3) & (yhat=8) & (step<decision_3_8) -> (step'=step+1);
-  [update_1] (xhat=3) & (yhat=8) & (step>=decision_3_8) -> (step'=1);
-  [skip_update] (xhat=3) & (yhat=9) & (step<decision_3_9) -> (step'=step+1);
-  [update_1] (xhat=3) & (yhat=9) & (step>=decision_3_9) -> (step'=1);
-  [skip_update] (xhat=4) & (yhat=0) & (step<decision_4_0) -> (step'=step+1);
-  [update_1] (xhat=4) & (yhat=0) & (step>=decision_4_0) -> (step'=1);
-  [skip_update] (xhat=4) & (yhat=1) & (step<decision_4_1) -> (step'=step+1);
-  [update_1] (xhat=4) & (yhat=1) & (step>=decision_4_1) -> (step'=1);
-  [skip_update] (xhat=4) & (yhat=2) & (step<decision_4_2) -> (step'=step+1);
-  [update_1] (xhat=4) & (yhat=2) & (step>=decision_4_2) -> (step'=1);
-  [skip_update] (xhat=4) & (yhat=3) & (step<decision_4_3) -> (step'=step+1);
-  [update_1] (xhat=4) & (yhat=3) & (step>=decision_4_3) -> (step'=1);
-  [skip_update] (xhat=4) & (yhat=4) & (step<decision_4_4) -> (step'=step+1);
-  [update_1] (xhat=4) & (yhat=4) & (step>=decision_4_4) -> (step'=1);
-  [skip_update] (xhat=4) & (yhat=5) & (step<decision_4_5) -> (step'=step+1);
-  [update_1] (xhat=4) & (yhat=5) & (step>=decision_4_5) -> (step'=1);
-  [skip_update] (xhat=4) & (yhat=6) & (step<decision_4_6) -> (step'=step+1);
-  [update_1] (xhat=4) & (yhat=6) & (step>=decision_4_6) -> (step'=1);
-  [skip_update] (xhat=4) & (yhat=7) & (step<decision_4_7) -> (step'=step+1);
-  [update_1] (xhat=4) & (yhat=7) & (step>=decision_4_7) -> (step'=1);
-  [skip_update] (xhat=4) & (yhat=8) & (step<decision_4_8) -> (step'=step+1);
-  [update_1] (xhat=4) & (yhat=8) & (step>=decision_4_8) -> (step'=1);
-  [skip_update] (xhat=4) & (yhat=9) & (step<decision_4_9) -> (step'=step+1);
-  [update_1] (xhat=4) & (yhat=9) & (step>=decision_4_9) -> (step'=1);
-  [skip_update] (xhat=5) & (yhat=0) & (step<decision_5_0) -> (step'=step+1);
-  [update_1] (xhat=5) & (yhat=0) & (step>=decision_5_0) -> (step'=1);
-  [skip_update] (xhat=5) & (yhat=1) & (step<decision_5_1) -> (step'=step+1);
-  [update_1] (xhat=5) & (yhat=1) & (step>=decision_5_1) -> (step'=1);
-  [skip_update] (xhat=5) & (yhat=2) & (step<decision_5_2) -> (step'=step+1);
-  [update_1] (xhat=5) & (yhat=2) & (step>=decision_5_2) -> (step'=1);
-  [skip_update] (xhat=5) & (yhat=3) & (step<decision_5_3) -> (step'=step+1);
-  [update_1] (xhat=5) & (yhat=3) & (step>=decision_5_3) -> (step'=1);
-  [skip_update] (xhat=5) & (yhat=4) & (step<decision_5_4) -> (step'=step+1);
-  [update_1] (xhat=5) & (yhat=4) & (step>=decision_5_4) -> (step'=1);
-  [skip_update] (xhat=5) & (yhat=5) & (step<decision_5_5) -> (step'=step+1);
-  [update_1] (xhat=5) & (yhat=5) & (step>=decision_5_5) -> (step'=1);
-  [skip_update] (xhat=5) & (yhat=6) & (step<decision_5_6) -> (step'=step+1);
-  [update_1] (xhat=5) & (yhat=6) & (step>=decision_5_6) -> (step'=1);
-  [skip_update] (xhat=5) & (yhat=7) & (step<decision_5_7) -> (step'=step+1);
-  [update_1] (xhat=5) & (yhat=7) & (step>=decision_5_7) -> (step'=1);
-  [skip_update] (xhat=5) & (yhat=8) & (step<decision_5_8) -> (step'=step+1);
-  [update_1] (xhat=5) & (yhat=8) & (step>=decision_5_8) -> (step'=1);
-  [skip_update] (xhat=5) & (yhat=9) & (step<decision_5_9) -> (step'=step+1);
-  [update_1] (xhat=5) & (yhat=9) & (step>=decision_5_9) -> (step'=1);
-  [skip_update] (xhat=6) & (yhat=0) & (step<decision_6_0) -> (step'=step+1);
-  [update_1] (xhat=6) & (yhat=0) & (step>=decision_6_0) -> (step'=1);
-  [skip_update] (xhat=6) & (yhat=1) & (step<decision_6_1) -> (step'=step+1);
-  [update_1] (xhat=6) & (yhat=1) & (step>=decision_6_1) -> (step'=1);
-  [skip_update] (xhat=6) & (yhat=2) & (step<decision_6_2) -> (step'=step+1);
-  [update_1] (xhat=6) & (yhat=2) & (step>=decision_6_2) -> (step'=1);
-  [skip_update] (xhat=6) & (yhat=3) & (step<decision_6_3) -> (step'=step+1);
-  [update_1] (xhat=6) & (yhat=3) & (step>=decision_6_3) -> (step'=1);
-  [skip_update] (xhat=6) & (yhat=4) & (step<decision_6_4) -> (step'=step+1);
-  [update_1] (xhat=6) & (yhat=4) & (step>=decision_6_4) -> (step'=1);
-  [skip_update] (xhat=6) & (yhat=5) & (step<decision_6_5) -> (step'=step+1);
-  [update_1] (xhat=6) & (yhat=5) & (step>=decision_6_5) -> (step'=1);
-  [skip_update] (xhat=6) & (yhat=6) & (step<decision_6_6) -> (step'=step+1);
-  [update_1] (xhat=6) & (yhat=6) & (step>=decision_6_6) -> (step'=1);
-  [skip_update] (xhat=6) & (yhat=7) & (step<decision_6_7) -> (step'=step+1);
-  [update_1] (xhat=6) & (yhat=7) & (step>=decision_6_7) -> (step'=1);
-  [skip_update] (xhat=6) & (yhat=8) & (step<decision_6_8) -> (step'=step+1);
-  [update_1] (xhat=6) & (yhat=8) & (step>=decision_6_8) -> (step'=1);
-  [skip_update] (xhat=6) & (yhat=9) & (step<decision_6_9) -> (step'=step+1);
-  [update_1] (xhat=6) & (yhat=9) & (step>=decision_6_9) -> (step'=1);
-  [skip_update] (xhat=7) & (yhat=0) & (step<decision_7_0) -> (step'=step+1);
-  [update_1] (xhat=7) & (yhat=0) & (step>=decision_7_0) -> (step'=1);
-  [skip_update] (xhat=7) & (yhat=1) & (step<decision_7_1) -> (step'=step+1);
-  [update_1] (xhat=7) & (yhat=1) & (step>=decision_7_1) -> (step'=1);
-  [skip_update] (xhat=7) & (yhat=2) & (step<decision_7_2) -> (step'=step+1);
-  [update_1] (xhat=7) & (yhat=2) & (step>=decision_7_2) -> (step'=1);
-  [skip_update] (xhat=7) & (yhat=3) & (step<decision_7_3) -> (step'=step+1);
-  [update_1] (xhat=7) & (yhat=3) & (step>=decision_7_3) -> (step'=1);
-  [skip_update] (xhat=7) & (yhat=4) & (step<decision_7_4) -> (step'=step+1);
-  [update_1] (xhat=7) & (yhat=4) & (step>=decision_7_4) -> (step'=1);
-  [skip_update] (xhat=7) & (yhat=5) & (step<decision_7_5) -> (step'=step+1);
-  [update_1] (xhat=7) & (yhat=5) & (step>=decision_7_5) -> (step'=1);
-  [skip_update] (xhat=7) & (yhat=6) & (step<decision_7_6) -> (step'=step+1);
-  [update_1] (xhat=7) & (yhat=6) & (step>=decision_7_6) -> (step'=1);
-  [skip_update] (xhat=7) & (yhat=7) & (step<decision_7_7) -> (step'=step+1);
-  [update_1] (xhat=7) & (yhat=7) & (step>=decision_7_7) -> (step'=1);
-  [skip_update] (xhat=7) & (yhat=8) & (step<decision_7_8) -> (step'=step+1);
-  [update_1] (xhat=7) & (yhat=8) & (step>=decision_7_8) -> (step'=1);
-  [skip_update] (xhat=7) & (yhat=9) & (step<decision_7_9) -> (step'=step+1);
-  [update_1] (xhat=7) & (yhat=9) & (step>=decision_7_9) -> (step'=1);
-  [skip_update] (xhat=8) & (yhat=0) & (step<decision_8_0) -> (step'=step+1);
-  [update_1] (xhat=8) & (yhat=0) & (step>=decision_8_0) -> (step'=1);
-  [skip_update] (xhat=8) & (yhat=1) & (step<decision_8_1) -> (step'=step+1);
-  [update_1] (xhat=8) & (yhat=1) & (step>=decision_8_1) -> (step'=1);
-  [skip_update] (xhat=8) & (yhat=2) & (step<decision_8_2) -> (step'=step+1);
-  [update_1] (xhat=8) & (yhat=2) & (step>=decision_8_2) -> (step'=1);
-  [skip_update] (xhat=8) & (yhat=3) & (step<decision_8_3) -> (step'=step+1);
-  [update_1] (xhat=8) & (yhat=3) & (step>=decision_8_3) -> (step'=1);
-  [skip_update] (xhat=8) & (yhat=4) & (step<decision_8_4) -> (step'=step+1);
-  [update_1] (xhat=8) & (yhat=4) & (step>=decision_8_4) -> (step'=1);
-  [skip_update] (xhat=8) & (yhat=5) & (step<decision_8_5) -> (step'=step+1);
-  [update_1] (xhat=8) & (yhat=5) & (step>=decision_8_5) -> (step'=1);
-  [skip_update] (xhat=8) & (yhat=6) & (step<decision_8_6) -> (step'=step+1);
-  [update_1] (xhat=8) & (yhat=6) & (step>=decision_8_6) -> (step'=1);
-  [skip_update] (xhat=8) & (yhat=7) & (step<decision_8_7) -> (step'=step+1);
-  [update_1] (xhat=8) & (yhat=7) & (step>=decision_8_7) -> (step'=1);
-  [skip_update] (xhat=8) & (yhat=8) & (step<decision_8_8) -> (step'=step+1);
-  [update_1] (xhat=8) & (yhat=8) & (step>=decision_8_8) -> (step'=1);
-  [skip_update] (xhat=8) & (yhat=9) & (step<decision_8_9) -> (step'=step+1);
-  [update_1] (xhat=8) & (yhat=9) & (step>=decision_8_9) -> (step'=1);
-  [skip_update] (xhat=9) & (yhat=0) & (step<decision_9_0) -> (step'=step+1);
-  [update_1] (xhat=9) & (yhat=0) & (step>=decision_9_0) -> (step'=1);
-  [skip_update] (xhat=9) & (yhat=1) & (step<decision_9_1) -> (step'=step+1);
-  [update_1] (xhat=9) & (yhat=1) & (step>=decision_9_1) -> (step'=1);
-  [skip_update] (xhat=9) & (yhat=2) & (step<decision_9_2) -> (step'=step+1);
-  [update_1] (xhat=9) & (yhat=2) & (step>=decision_9_2) -> (step'=1);
-  [skip_update] (xhat=9) & (yhat=3) & (step<decision_9_3) -> (step'=step+1);
-  [update_1] (xhat=9) & (yhat=3) & (step>=decision_9_3) -> (step'=1);
-  [skip_update] (xhat=9) & (yhat=4) & (step<decision_9_4) -> (step'=step+1);
-  [update_1] (xhat=9) & (yhat=4) & (step>=decision_9_4) -> (step'=1);
-  [skip_update] (xhat=9) & (yhat=5) & (step<decision_9_5) -> (step'=step+1);
-  [update_1] (xhat=9) & (yhat=5) & (step>=decision_9_5) -> (step'=1);
-  [skip_update] (xhat=9) & (yhat=6) & (step<decision_9_6) -> (step'=step+1);
-  [update_1] (xhat=9) & (yhat=6) & (step>=decision_9_6) -> (step'=1);
-  [skip_update] (xhat=9) & (yhat=7) & (step<decision_9_7) -> (step'=step+1);
-  [update_1] (xhat=9) & (yhat=7) & (step>=decision_9_7) -> (step'=1);
-  [skip_update] (xhat=9) & (yhat=8) & (step<decision_9_8) -> (step'=step+1);
-  [update_1] (xhat=9) & (yhat=8) & (step>=decision_9_8) -> (step'=1);
-  [skip_update] (xhat=9) & (yhat=9) & (step<decision_9_9) -> (step'=step+1);
-  [update_1] (xhat=9) & (yhat=9) & (step>=decision_9_9) -> (step'=1);
-endmodule
-
-module Turn
-  t : [0..2] init 0;
-  [west] t=0 -> (t'=1);
-  [east] t=0 -> (t'=1);
-  [south] t=0 -> (t'=1);
-  [north] t=0 -> (t'=1);
-  [check] t=1 -> (t'=2);
-
-  [skip_update] t=2 -> (t'=0);
-  [update_1] t=2 -> (t'=0);
-
+  [update] update_required & ready=0 ->
+    (xhat'=x) & (yhat'=y) &
+    (xradius'=0) & (yradius'=0) &
+    (ready'=1);
+  [skip_update] !update_required & ready=0 -> (ready'=1);
 endmodule
 
 rewards "cost" 
@@ -444,6 +156,222 @@ rewards "cost"
   [west] true : 1; 
   [north] true : 1; 
   [south] true : 1; 
-  [update_1] true : 5;
+  [update] true : 5;
 endrewards 
 
+
+evolve int decision_0_0 [1..10];
+evolve int decision_0_1 [1..10];
+evolve int decision_0_2 [1..10];
+evolve int decision_0_3 [1..10];
+evolve int decision_0_4 [1..10];
+evolve int decision_0_5 [1..10];
+evolve int decision_0_6 [1..10];
+evolve int decision_0_7 [1..10];
+evolve int decision_0_8 [1..10];
+evolve int decision_0_9 [1..10];
+evolve int decision_1_0 [1..10];
+evolve int decision_1_1 [1..10];
+evolve int decision_1_2 [1..10];
+evolve int decision_1_3 [1..10];
+evolve int decision_1_4 [1..10];
+evolve int decision_1_5 [1..10];
+evolve int decision_1_6 [1..10];
+evolve int decision_1_7 [1..10];
+evolve int decision_1_8 [1..10];
+evolve int decision_1_9 [1..10];
+evolve int decision_2_0 [1..10];
+evolve int decision_2_1 [1..10];
+evolve int decision_2_2 [1..10];
+evolve int decision_2_3 [1..10];
+evolve int decision_2_4 [1..10];
+evolve int decision_2_5 [1..10];
+evolve int decision_2_6 [1..10];
+evolve int decision_2_7 [1..10];
+evolve int decision_2_8 [1..10];
+evolve int decision_2_9 [1..10];
+evolve int decision_3_0 [1..10];
+evolve int decision_3_1 [1..10];
+evolve int decision_3_2 [1..10];
+evolve int decision_3_3 [1..10];
+evolve int decision_3_4 [1..10];
+evolve int decision_3_5 [1..10];
+evolve int decision_3_6 [1..10];
+evolve int decision_3_7 [1..10];
+evolve int decision_3_8 [1..10];
+evolve int decision_3_9 [1..10];
+evolve int decision_4_0 [1..10];
+evolve int decision_4_1 [1..10];
+evolve int decision_4_2 [1..10];
+evolve int decision_4_3 [1..10];
+evolve int decision_4_4 [1..10];
+evolve int decision_4_5 [1..10];
+evolve int decision_4_6 [1..10];
+evolve int decision_4_7 [1..10];
+evolve int decision_4_8 [1..10];
+evolve int decision_4_9 [1..10];
+evolve int decision_5_0 [1..10];
+evolve int decision_5_1 [1..10];
+evolve int decision_5_2 [1..10];
+evolve int decision_5_3 [1..10];
+evolve int decision_5_4 [1..10];
+evolve int decision_5_5 [1..10];
+evolve int decision_5_6 [1..10];
+evolve int decision_5_7 [1..10];
+evolve int decision_5_8 [1..10];
+evolve int decision_5_9 [1..10];
+evolve int decision_6_0 [1..10];
+evolve int decision_6_1 [1..10];
+evolve int decision_6_2 [1..10];
+evolve int decision_6_3 [1..10];
+evolve int decision_6_4 [1..10];
+evolve int decision_6_5 [1..10];
+evolve int decision_6_6 [1..10];
+evolve int decision_6_7 [1..10];
+evolve int decision_6_8 [1..10];
+evolve int decision_6_9 [1..10];
+evolve int decision_7_0 [1..10];
+evolve int decision_7_1 [1..10];
+evolve int decision_7_2 [1..10];
+evolve int decision_7_3 [1..10];
+evolve int decision_7_4 [1..10];
+evolve int decision_7_5 [1..10];
+evolve int decision_7_6 [1..10];
+evolve int decision_7_7 [1..10];
+evolve int decision_7_8 [1..10];
+evolve int decision_7_9 [1..10];
+evolve int decision_8_0 [1..10];
+evolve int decision_8_1 [1..10];
+evolve int decision_8_2 [1..10];
+evolve int decision_8_3 [1..10];
+evolve int decision_8_4 [1..10];
+evolve int decision_8_5 [1..10];
+evolve int decision_8_6 [1..10];
+evolve int decision_8_7 [1..10];
+evolve int decision_8_8 [1..10];
+evolve int decision_8_9 [1..10];
+evolve int decision_9_0 [1..10];
+evolve int decision_9_1 [1..10];
+evolve int decision_9_2 [1..10];
+evolve int decision_9_3 [1..10];
+evolve int decision_9_4 [1..10];
+evolve int decision_9_5 [1..10];
+evolve int decision_9_6 [1..10];
+evolve int decision_9_7 [1..10];
+evolve int decision_9_8 [1..10];
+evolve int decision_9_9 [1..10];
+module URC
+  max_interval_width : [4..19] init 4;
+  [URC] true & xhat=0 & yhat=0 -> (max_interval_width'=decision_0_0=1 ? 4 : decision_0_0=2 ? 6 : decision_0_0=3 ? 8 : decision_0_0=4 ? 12 : decision_0_0=5 ? 14 : decision_0_0=6 ? 15 : decision_0_0=7 ? 16 : decision_0_0=8 ? 17 : decision_0_0=9 ? 18 : 19);
+  [URC] true & xhat=0 & yhat=1 -> (max_interval_width'=decision_0_1=1 ? 4 : decision_0_1=2 ? 6 : decision_0_1=3 ? 8 : decision_0_1=4 ? 12 : decision_0_1=5 ? 14 : decision_0_1=6 ? 15 : decision_0_1=7 ? 16 : decision_0_1=8 ? 17 : decision_0_1=9 ? 18 : 19);
+  [URC] true & xhat=0 & yhat=2 -> (max_interval_width'=decision_0_2=1 ? 4 : decision_0_2=2 ? 6 : decision_0_2=3 ? 8 : decision_0_2=4 ? 12 : decision_0_2=5 ? 14 : decision_0_2=6 ? 15 : decision_0_2=7 ? 16 : decision_0_2=8 ? 17 : decision_0_2=9 ? 18 : 19);
+  [URC] true & xhat=0 & yhat=3 -> (max_interval_width'=decision_0_3=1 ? 4 : decision_0_3=2 ? 6 : decision_0_3=3 ? 8 : decision_0_3=4 ? 12 : decision_0_3=5 ? 14 : decision_0_3=6 ? 15 : decision_0_3=7 ? 16 : decision_0_3=8 ? 17 : decision_0_3=9 ? 18 : 19);
+  [URC] true & xhat=0 & yhat=4 -> (max_interval_width'=decision_0_4=1 ? 4 : decision_0_4=2 ? 6 : decision_0_4=3 ? 8 : decision_0_4=4 ? 12 : decision_0_4=5 ? 14 : decision_0_4=6 ? 15 : decision_0_4=7 ? 16 : decision_0_4=8 ? 17 : decision_0_4=9 ? 18 : 19);
+  [URC] true & xhat=0 & yhat=5 -> (max_interval_width'=decision_0_5=1 ? 4 : decision_0_5=2 ? 6 : decision_0_5=3 ? 8 : decision_0_5=4 ? 12 : decision_0_5=5 ? 14 : decision_0_5=6 ? 15 : decision_0_5=7 ? 16 : decision_0_5=8 ? 17 : decision_0_5=9 ? 18 : 19);
+  [URC] true & xhat=0 & yhat=6 -> (max_interval_width'=decision_0_6=1 ? 4 : decision_0_6=2 ? 6 : decision_0_6=3 ? 8 : decision_0_6=4 ? 12 : decision_0_6=5 ? 14 : decision_0_6=6 ? 15 : decision_0_6=7 ? 16 : decision_0_6=8 ? 17 : decision_0_6=9 ? 18 : 19);
+  [URC] true & xhat=0 & yhat=7 -> (max_interval_width'=decision_0_7=1 ? 4 : decision_0_7=2 ? 6 : decision_0_7=3 ? 8 : decision_0_7=4 ? 12 : decision_0_7=5 ? 14 : decision_0_7=6 ? 15 : decision_0_7=7 ? 16 : decision_0_7=8 ? 17 : decision_0_7=9 ? 18 : 19);
+  [URC] true & xhat=0 & yhat=8 -> (max_interval_width'=decision_0_8=1 ? 4 : decision_0_8=2 ? 6 : decision_0_8=3 ? 8 : decision_0_8=4 ? 12 : decision_0_8=5 ? 14 : decision_0_8=6 ? 15 : decision_0_8=7 ? 16 : decision_0_8=8 ? 17 : decision_0_8=9 ? 18 : 19);
+  [URC] true & xhat=0 & yhat=9 -> (max_interval_width'=decision_0_9=1 ? 4 : decision_0_9=2 ? 6 : decision_0_9=3 ? 8 : decision_0_9=4 ? 12 : decision_0_9=5 ? 14 : decision_0_9=6 ? 15 : decision_0_9=7 ? 16 : decision_0_9=8 ? 17 : decision_0_9=9 ? 18 : 19);
+  [URC] true & xhat=1 & yhat=0 -> (max_interval_width'=decision_1_0=1 ? 4 : decision_1_0=2 ? 6 : decision_1_0=3 ? 8 : decision_1_0=4 ? 12 : decision_1_0=5 ? 14 : decision_1_0=6 ? 15 : decision_1_0=7 ? 16 : decision_1_0=8 ? 17 : decision_1_0=9 ? 18 : 19);
+  [URC] true & xhat=1 & yhat=1 -> (max_interval_width'=decision_1_1=1 ? 4 : decision_1_1=2 ? 6 : decision_1_1=3 ? 8 : decision_1_1=4 ? 12 : decision_1_1=5 ? 14 : decision_1_1=6 ? 15 : decision_1_1=7 ? 16 : decision_1_1=8 ? 17 : decision_1_1=9 ? 18 : 19);
+  [URC] true & xhat=1 & yhat=2 -> (max_interval_width'=decision_1_2=1 ? 4 : decision_1_2=2 ? 6 : decision_1_2=3 ? 8 : decision_1_2=4 ? 12 : decision_1_2=5 ? 14 : decision_1_2=6 ? 15 : decision_1_2=7 ? 16 : decision_1_2=8 ? 17 : decision_1_2=9 ? 18 : 19);
+  [URC] true & xhat=1 & yhat=3 -> (max_interval_width'=decision_1_3=1 ? 4 : decision_1_3=2 ? 6 : decision_1_3=3 ? 8 : decision_1_3=4 ? 12 : decision_1_3=5 ? 14 : decision_1_3=6 ? 15 : decision_1_3=7 ? 16 : decision_1_3=8 ? 17 : decision_1_3=9 ? 18 : 19);
+  [URC] true & xhat=1 & yhat=4 -> (max_interval_width'=decision_1_4=1 ? 4 : decision_1_4=2 ? 6 : decision_1_4=3 ? 8 : decision_1_4=4 ? 12 : decision_1_4=5 ? 14 : decision_1_4=6 ? 15 : decision_1_4=7 ? 16 : decision_1_4=8 ? 17 : decision_1_4=9 ? 18 : 19);
+  [URC] true & xhat=1 & yhat=5 -> (max_interval_width'=decision_1_5=1 ? 4 : decision_1_5=2 ? 6 : decision_1_5=3 ? 8 : decision_1_5=4 ? 12 : decision_1_5=5 ? 14 : decision_1_5=6 ? 15 : decision_1_5=7 ? 16 : decision_1_5=8 ? 17 : decision_1_5=9 ? 18 : 19);
+  [URC] true & xhat=1 & yhat=6 -> (max_interval_width'=decision_1_6=1 ? 4 : decision_1_6=2 ? 6 : decision_1_6=3 ? 8 : decision_1_6=4 ? 12 : decision_1_6=5 ? 14 : decision_1_6=6 ? 15 : decision_1_6=7 ? 16 : decision_1_6=8 ? 17 : decision_1_6=9 ? 18 : 19);
+  [URC] true & xhat=1 & yhat=7 -> (max_interval_width'=decision_1_7=1 ? 4 : decision_1_7=2 ? 6 : decision_1_7=3 ? 8 : decision_1_7=4 ? 12 : decision_1_7=5 ? 14 : decision_1_7=6 ? 15 : decision_1_7=7 ? 16 : decision_1_7=8 ? 17 : decision_1_7=9 ? 18 : 19);
+  [URC] true & xhat=1 & yhat=8 -> (max_interval_width'=decision_1_8=1 ? 4 : decision_1_8=2 ? 6 : decision_1_8=3 ? 8 : decision_1_8=4 ? 12 : decision_1_8=5 ? 14 : decision_1_8=6 ? 15 : decision_1_8=7 ? 16 : decision_1_8=8 ? 17 : decision_1_8=9 ? 18 : 19);
+  [URC] true & xhat=1 & yhat=9 -> (max_interval_width'=decision_1_9=1 ? 4 : decision_1_9=2 ? 6 : decision_1_9=3 ? 8 : decision_1_9=4 ? 12 : decision_1_9=5 ? 14 : decision_1_9=6 ? 15 : decision_1_9=7 ? 16 : decision_1_9=8 ? 17 : decision_1_9=9 ? 18 : 19);
+  [URC] true & xhat=2 & yhat=0 -> (max_interval_width'=decision_2_0=1 ? 4 : decision_2_0=2 ? 6 : decision_2_0=3 ? 8 : decision_2_0=4 ? 12 : decision_2_0=5 ? 14 : decision_2_0=6 ? 15 : decision_2_0=7 ? 16 : decision_2_0=8 ? 17 : decision_2_0=9 ? 18 : 19);
+  [URC] true & xhat=2 & yhat=1 -> (max_interval_width'=decision_2_1=1 ? 4 : decision_2_1=2 ? 6 : decision_2_1=3 ? 8 : decision_2_1=4 ? 12 : decision_2_1=5 ? 14 : decision_2_1=6 ? 15 : decision_2_1=7 ? 16 : decision_2_1=8 ? 17 : decision_2_1=9 ? 18 : 19);
+  [URC] true & xhat=2 & yhat=2 -> (max_interval_width'=decision_2_2=1 ? 4 : decision_2_2=2 ? 6 : decision_2_2=3 ? 8 : decision_2_2=4 ? 12 : decision_2_2=5 ? 14 : decision_2_2=6 ? 15 : decision_2_2=7 ? 16 : decision_2_2=8 ? 17 : decision_2_2=9 ? 18 : 19);
+  [URC] true & xhat=2 & yhat=3 -> (max_interval_width'=decision_2_3=1 ? 4 : decision_2_3=2 ? 6 : decision_2_3=3 ? 8 : decision_2_3=4 ? 12 : decision_2_3=5 ? 14 : decision_2_3=6 ? 15 : decision_2_3=7 ? 16 : decision_2_3=8 ? 17 : decision_2_3=9 ? 18 : 19);
+  [URC] true & xhat=2 & yhat=4 -> (max_interval_width'=decision_2_4=1 ? 4 : decision_2_4=2 ? 6 : decision_2_4=3 ? 8 : decision_2_4=4 ? 12 : decision_2_4=5 ? 14 : decision_2_4=6 ? 15 : decision_2_4=7 ? 16 : decision_2_4=8 ? 17 : decision_2_4=9 ? 18 : 19);
+  [URC] true & xhat=2 & yhat=5 -> (max_interval_width'=decision_2_5=1 ? 4 : decision_2_5=2 ? 6 : decision_2_5=3 ? 8 : decision_2_5=4 ? 12 : decision_2_5=5 ? 14 : decision_2_5=6 ? 15 : decision_2_5=7 ? 16 : decision_2_5=8 ? 17 : decision_2_5=9 ? 18 : 19);
+  [URC] true & xhat=2 & yhat=6 -> (max_interval_width'=decision_2_6=1 ? 4 : decision_2_6=2 ? 6 : decision_2_6=3 ? 8 : decision_2_6=4 ? 12 : decision_2_6=5 ? 14 : decision_2_6=6 ? 15 : decision_2_6=7 ? 16 : decision_2_6=8 ? 17 : decision_2_6=9 ? 18 : 19);
+  [URC] true & xhat=2 & yhat=7 -> (max_interval_width'=decision_2_7=1 ? 4 : decision_2_7=2 ? 6 : decision_2_7=3 ? 8 : decision_2_7=4 ? 12 : decision_2_7=5 ? 14 : decision_2_7=6 ? 15 : decision_2_7=7 ? 16 : decision_2_7=8 ? 17 : decision_2_7=9 ? 18 : 19);
+  [URC] true & xhat=2 & yhat=8 -> (max_interval_width'=decision_2_8=1 ? 4 : decision_2_8=2 ? 6 : decision_2_8=3 ? 8 : decision_2_8=4 ? 12 : decision_2_8=5 ? 14 : decision_2_8=6 ? 15 : decision_2_8=7 ? 16 : decision_2_8=8 ? 17 : decision_2_8=9 ? 18 : 19);
+  [URC] true & xhat=2 & yhat=9 -> (max_interval_width'=decision_2_9=1 ? 4 : decision_2_9=2 ? 6 : decision_2_9=3 ? 8 : decision_2_9=4 ? 12 : decision_2_9=5 ? 14 : decision_2_9=6 ? 15 : decision_2_9=7 ? 16 : decision_2_9=8 ? 17 : decision_2_9=9 ? 18 : 19);
+  [URC] true & xhat=3 & yhat=0 -> (max_interval_width'=decision_3_0=1 ? 4 : decision_3_0=2 ? 6 : decision_3_0=3 ? 8 : decision_3_0=4 ? 12 : decision_3_0=5 ? 14 : decision_3_0=6 ? 15 : decision_3_0=7 ? 16 : decision_3_0=8 ? 17 : decision_3_0=9 ? 18 : 19);
+  [URC] true & xhat=3 & yhat=1 -> (max_interval_width'=decision_3_1=1 ? 4 : decision_3_1=2 ? 6 : decision_3_1=3 ? 8 : decision_3_1=4 ? 12 : decision_3_1=5 ? 14 : decision_3_1=6 ? 15 : decision_3_1=7 ? 16 : decision_3_1=8 ? 17 : decision_3_1=9 ? 18 : 19);
+  [URC] true & xhat=3 & yhat=2 -> (max_interval_width'=decision_3_2=1 ? 4 : decision_3_2=2 ? 6 : decision_3_2=3 ? 8 : decision_3_2=4 ? 12 : decision_3_2=5 ? 14 : decision_3_2=6 ? 15 : decision_3_2=7 ? 16 : decision_3_2=8 ? 17 : decision_3_2=9 ? 18 : 19);
+  [URC] true & xhat=3 & yhat=3 -> (max_interval_width'=decision_3_3=1 ? 4 : decision_3_3=2 ? 6 : decision_3_3=3 ? 8 : decision_3_3=4 ? 12 : decision_3_3=5 ? 14 : decision_3_3=6 ? 15 : decision_3_3=7 ? 16 : decision_3_3=8 ? 17 : decision_3_3=9 ? 18 : 19);
+  [URC] true & xhat=3 & yhat=4 -> (max_interval_width'=decision_3_4=1 ? 4 : decision_3_4=2 ? 6 : decision_3_4=3 ? 8 : decision_3_4=4 ? 12 : decision_3_4=5 ? 14 : decision_3_4=6 ? 15 : decision_3_4=7 ? 16 : decision_3_4=8 ? 17 : decision_3_4=9 ? 18 : 19);
+  [URC] true & xhat=3 & yhat=5 -> (max_interval_width'=decision_3_5=1 ? 4 : decision_3_5=2 ? 6 : decision_3_5=3 ? 8 : decision_3_5=4 ? 12 : decision_3_5=5 ? 14 : decision_3_5=6 ? 15 : decision_3_5=7 ? 16 : decision_3_5=8 ? 17 : decision_3_5=9 ? 18 : 19);
+  [URC] true & xhat=3 & yhat=6 -> (max_interval_width'=decision_3_6=1 ? 4 : decision_3_6=2 ? 6 : decision_3_6=3 ? 8 : decision_3_6=4 ? 12 : decision_3_6=5 ? 14 : decision_3_6=6 ? 15 : decision_3_6=7 ? 16 : decision_3_6=8 ? 17 : decision_3_6=9 ? 18 : 19);
+  [URC] true & xhat=3 & yhat=7 -> (max_interval_width'=decision_3_7=1 ? 4 : decision_3_7=2 ? 6 : decision_3_7=3 ? 8 : decision_3_7=4 ? 12 : decision_3_7=5 ? 14 : decision_3_7=6 ? 15 : decision_3_7=7 ? 16 : decision_3_7=8 ? 17 : decision_3_7=9 ? 18 : 19);
+  [URC] true & xhat=3 & yhat=8 -> (max_interval_width'=decision_3_8=1 ? 4 : decision_3_8=2 ? 6 : decision_3_8=3 ? 8 : decision_3_8=4 ? 12 : decision_3_8=5 ? 14 : decision_3_8=6 ? 15 : decision_3_8=7 ? 16 : decision_3_8=8 ? 17 : decision_3_8=9 ? 18 : 19);
+  [URC] true & xhat=3 & yhat=9 -> (max_interval_width'=decision_3_9=1 ? 4 : decision_3_9=2 ? 6 : decision_3_9=3 ? 8 : decision_3_9=4 ? 12 : decision_3_9=5 ? 14 : decision_3_9=6 ? 15 : decision_3_9=7 ? 16 : decision_3_9=8 ? 17 : decision_3_9=9 ? 18 : 19);
+  [URC] true & xhat=4 & yhat=0 -> (max_interval_width'=decision_4_0=1 ? 4 : decision_4_0=2 ? 6 : decision_4_0=3 ? 8 : decision_4_0=4 ? 12 : decision_4_0=5 ? 14 : decision_4_0=6 ? 15 : decision_4_0=7 ? 16 : decision_4_0=8 ? 17 : decision_4_0=9 ? 18 : 19);
+  [URC] true & xhat=4 & yhat=1 -> (max_interval_width'=decision_4_1=1 ? 4 : decision_4_1=2 ? 6 : decision_4_1=3 ? 8 : decision_4_1=4 ? 12 : decision_4_1=5 ? 14 : decision_4_1=6 ? 15 : decision_4_1=7 ? 16 : decision_4_1=8 ? 17 : decision_4_1=9 ? 18 : 19);
+  [URC] true & xhat=4 & yhat=2 -> (max_interval_width'=decision_4_2=1 ? 4 : decision_4_2=2 ? 6 : decision_4_2=3 ? 8 : decision_4_2=4 ? 12 : decision_4_2=5 ? 14 : decision_4_2=6 ? 15 : decision_4_2=7 ? 16 : decision_4_2=8 ? 17 : decision_4_2=9 ? 18 : 19);
+  [URC] true & xhat=4 & yhat=3 -> (max_interval_width'=decision_4_3=1 ? 4 : decision_4_3=2 ? 6 : decision_4_3=3 ? 8 : decision_4_3=4 ? 12 : decision_4_3=5 ? 14 : decision_4_3=6 ? 15 : decision_4_3=7 ? 16 : decision_4_3=8 ? 17 : decision_4_3=9 ? 18 : 19);
+  [URC] true & xhat=4 & yhat=4 -> (max_interval_width'=decision_4_4=1 ? 4 : decision_4_4=2 ? 6 : decision_4_4=3 ? 8 : decision_4_4=4 ? 12 : decision_4_4=5 ? 14 : decision_4_4=6 ? 15 : decision_4_4=7 ? 16 : decision_4_4=8 ? 17 : decision_4_4=9 ? 18 : 19);
+  [URC] true & xhat=4 & yhat=5 -> (max_interval_width'=decision_4_5=1 ? 4 : decision_4_5=2 ? 6 : decision_4_5=3 ? 8 : decision_4_5=4 ? 12 : decision_4_5=5 ? 14 : decision_4_5=6 ? 15 : decision_4_5=7 ? 16 : decision_4_5=8 ? 17 : decision_4_5=9 ? 18 : 19);
+  [URC] true & xhat=4 & yhat=6 -> (max_interval_width'=decision_4_6=1 ? 4 : decision_4_6=2 ? 6 : decision_4_6=3 ? 8 : decision_4_6=4 ? 12 : decision_4_6=5 ? 14 : decision_4_6=6 ? 15 : decision_4_6=7 ? 16 : decision_4_6=8 ? 17 : decision_4_6=9 ? 18 : 19);
+  [URC] true & xhat=4 & yhat=7 -> (max_interval_width'=decision_4_7=1 ? 4 : decision_4_7=2 ? 6 : decision_4_7=3 ? 8 : decision_4_7=4 ? 12 : decision_4_7=5 ? 14 : decision_4_7=6 ? 15 : decision_4_7=7 ? 16 : decision_4_7=8 ? 17 : decision_4_7=9 ? 18 : 19);
+  [URC] true & xhat=4 & yhat=8 -> (max_interval_width'=decision_4_8=1 ? 4 : decision_4_8=2 ? 6 : decision_4_8=3 ? 8 : decision_4_8=4 ? 12 : decision_4_8=5 ? 14 : decision_4_8=6 ? 15 : decision_4_8=7 ? 16 : decision_4_8=8 ? 17 : decision_4_8=9 ? 18 : 19);
+  [URC] true & xhat=4 & yhat=9 -> (max_interval_width'=decision_4_9=1 ? 4 : decision_4_9=2 ? 6 : decision_4_9=3 ? 8 : decision_4_9=4 ? 12 : decision_4_9=5 ? 14 : decision_4_9=6 ? 15 : decision_4_9=7 ? 16 : decision_4_9=8 ? 17 : decision_4_9=9 ? 18 : 19);
+  [URC] true & xhat=5 & yhat=0 -> (max_interval_width'=decision_5_0=1 ? 4 : decision_5_0=2 ? 6 : decision_5_0=3 ? 8 : decision_5_0=4 ? 12 : decision_5_0=5 ? 14 : decision_5_0=6 ? 15 : decision_5_0=7 ? 16 : decision_5_0=8 ? 17 : decision_5_0=9 ? 18 : 19);
+  [URC] true & xhat=5 & yhat=1 -> (max_interval_width'=decision_5_1=1 ? 4 : decision_5_1=2 ? 6 : decision_5_1=3 ? 8 : decision_5_1=4 ? 12 : decision_5_1=5 ? 14 : decision_5_1=6 ? 15 : decision_5_1=7 ? 16 : decision_5_1=8 ? 17 : decision_5_1=9 ? 18 : 19);
+  [URC] true & xhat=5 & yhat=2 -> (max_interval_width'=decision_5_2=1 ? 4 : decision_5_2=2 ? 6 : decision_5_2=3 ? 8 : decision_5_2=4 ? 12 : decision_5_2=5 ? 14 : decision_5_2=6 ? 15 : decision_5_2=7 ? 16 : decision_5_2=8 ? 17 : decision_5_2=9 ? 18 : 19);
+  [URC] true & xhat=5 & yhat=3 -> (max_interval_width'=decision_5_3=1 ? 4 : decision_5_3=2 ? 6 : decision_5_3=3 ? 8 : decision_5_3=4 ? 12 : decision_5_3=5 ? 14 : decision_5_3=6 ? 15 : decision_5_3=7 ? 16 : decision_5_3=8 ? 17 : decision_5_3=9 ? 18 : 19);
+  [URC] true & xhat=5 & yhat=4 -> (max_interval_width'=decision_5_4=1 ? 4 : decision_5_4=2 ? 6 : decision_5_4=3 ? 8 : decision_5_4=4 ? 12 : decision_5_4=5 ? 14 : decision_5_4=6 ? 15 : decision_5_4=7 ? 16 : decision_5_4=8 ? 17 : decision_5_4=9 ? 18 : 19);
+  [URC] true & xhat=5 & yhat=5 -> (max_interval_width'=decision_5_5=1 ? 4 : decision_5_5=2 ? 6 : decision_5_5=3 ? 8 : decision_5_5=4 ? 12 : decision_5_5=5 ? 14 : decision_5_5=6 ? 15 : decision_5_5=7 ? 16 : decision_5_5=8 ? 17 : decision_5_5=9 ? 18 : 19);
+  [URC] true & xhat=5 & yhat=6 -> (max_interval_width'=decision_5_6=1 ? 4 : decision_5_6=2 ? 6 : decision_5_6=3 ? 8 : decision_5_6=4 ? 12 : decision_5_6=5 ? 14 : decision_5_6=6 ? 15 : decision_5_6=7 ? 16 : decision_5_6=8 ? 17 : decision_5_6=9 ? 18 : 19);
+  [URC] true & xhat=5 & yhat=7 -> (max_interval_width'=decision_5_7=1 ? 4 : decision_5_7=2 ? 6 : decision_5_7=3 ? 8 : decision_5_7=4 ? 12 : decision_5_7=5 ? 14 : decision_5_7=6 ? 15 : decision_5_7=7 ? 16 : decision_5_7=8 ? 17 : decision_5_7=9 ? 18 : 19);
+  [URC] true & xhat=5 & yhat=8 -> (max_interval_width'=decision_5_8=1 ? 4 : decision_5_8=2 ? 6 : decision_5_8=3 ? 8 : decision_5_8=4 ? 12 : decision_5_8=5 ? 14 : decision_5_8=6 ? 15 : decision_5_8=7 ? 16 : decision_5_8=8 ? 17 : decision_5_8=9 ? 18 : 19);
+  [URC] true & xhat=5 & yhat=9 -> (max_interval_width'=decision_5_9=1 ? 4 : decision_5_9=2 ? 6 : decision_5_9=3 ? 8 : decision_5_9=4 ? 12 : decision_5_9=5 ? 14 : decision_5_9=6 ? 15 : decision_5_9=7 ? 16 : decision_5_9=8 ? 17 : decision_5_9=9 ? 18 : 19);
+  [URC] true & xhat=6 & yhat=0 -> (max_interval_width'=decision_6_0=1 ? 4 : decision_6_0=2 ? 6 : decision_6_0=3 ? 8 : decision_6_0=4 ? 12 : decision_6_0=5 ? 14 : decision_6_0=6 ? 15 : decision_6_0=7 ? 16 : decision_6_0=8 ? 17 : decision_6_0=9 ? 18 : 19);
+  [URC] true & xhat=6 & yhat=1 -> (max_interval_width'=decision_6_1=1 ? 4 : decision_6_1=2 ? 6 : decision_6_1=3 ? 8 : decision_6_1=4 ? 12 : decision_6_1=5 ? 14 : decision_6_1=6 ? 15 : decision_6_1=7 ? 16 : decision_6_1=8 ? 17 : decision_6_1=9 ? 18 : 19);
+  [URC] true & xhat=6 & yhat=2 -> (max_interval_width'=decision_6_2=1 ? 4 : decision_6_2=2 ? 6 : decision_6_2=3 ? 8 : decision_6_2=4 ? 12 : decision_6_2=5 ? 14 : decision_6_2=6 ? 15 : decision_6_2=7 ? 16 : decision_6_2=8 ? 17 : decision_6_2=9 ? 18 : 19);
+  [URC] true & xhat=6 & yhat=3 -> (max_interval_width'=decision_6_3=1 ? 4 : decision_6_3=2 ? 6 : decision_6_3=3 ? 8 : decision_6_3=4 ? 12 : decision_6_3=5 ? 14 : decision_6_3=6 ? 15 : decision_6_3=7 ? 16 : decision_6_3=8 ? 17 : decision_6_3=9 ? 18 : 19);
+  [URC] true & xhat=6 & yhat=4 -> (max_interval_width'=decision_6_4=1 ? 4 : decision_6_4=2 ? 6 : decision_6_4=3 ? 8 : decision_6_4=4 ? 12 : decision_6_4=5 ? 14 : decision_6_4=6 ? 15 : decision_6_4=7 ? 16 : decision_6_4=8 ? 17 : decision_6_4=9 ? 18 : 19);
+  [URC] true & xhat=6 & yhat=5 -> (max_interval_width'=decision_6_5=1 ? 4 : decision_6_5=2 ? 6 : decision_6_5=3 ? 8 : decision_6_5=4 ? 12 : decision_6_5=5 ? 14 : decision_6_5=6 ? 15 : decision_6_5=7 ? 16 : decision_6_5=8 ? 17 : decision_6_5=9 ? 18 : 19);
+  [URC] true & xhat=6 & yhat=6 -> (max_interval_width'=decision_6_6=1 ? 4 : decision_6_6=2 ? 6 : decision_6_6=3 ? 8 : decision_6_6=4 ? 12 : decision_6_6=5 ? 14 : decision_6_6=6 ? 15 : decision_6_6=7 ? 16 : decision_6_6=8 ? 17 : decision_6_6=9 ? 18 : 19);
+  [URC] true & xhat=6 & yhat=7 -> (max_interval_width'=decision_6_7=1 ? 4 : decision_6_7=2 ? 6 : decision_6_7=3 ? 8 : decision_6_7=4 ? 12 : decision_6_7=5 ? 14 : decision_6_7=6 ? 15 : decision_6_7=7 ? 16 : decision_6_7=8 ? 17 : decision_6_7=9 ? 18 : 19);
+  [URC] true & xhat=6 & yhat=8 -> (max_interval_width'=decision_6_8=1 ? 4 : decision_6_8=2 ? 6 : decision_6_8=3 ? 8 : decision_6_8=4 ? 12 : decision_6_8=5 ? 14 : decision_6_8=6 ? 15 : decision_6_8=7 ? 16 : decision_6_8=8 ? 17 : decision_6_8=9 ? 18 : 19);
+  [URC] true & xhat=6 & yhat=9 -> (max_interval_width'=decision_6_9=1 ? 4 : decision_6_9=2 ? 6 : decision_6_9=3 ? 8 : decision_6_9=4 ? 12 : decision_6_9=5 ? 14 : decision_6_9=6 ? 15 : decision_6_9=7 ? 16 : decision_6_9=8 ? 17 : decision_6_9=9 ? 18 : 19);
+  [URC] true & xhat=7 & yhat=0 -> (max_interval_width'=decision_7_0=1 ? 4 : decision_7_0=2 ? 6 : decision_7_0=3 ? 8 : decision_7_0=4 ? 12 : decision_7_0=5 ? 14 : decision_7_0=6 ? 15 : decision_7_0=7 ? 16 : decision_7_0=8 ? 17 : decision_7_0=9 ? 18 : 19);
+  [URC] true & xhat=7 & yhat=1 -> (max_interval_width'=decision_7_1=1 ? 4 : decision_7_1=2 ? 6 : decision_7_1=3 ? 8 : decision_7_1=4 ? 12 : decision_7_1=5 ? 14 : decision_7_1=6 ? 15 : decision_7_1=7 ? 16 : decision_7_1=8 ? 17 : decision_7_1=9 ? 18 : 19);
+  [URC] true & xhat=7 & yhat=2 -> (max_interval_width'=decision_7_2=1 ? 4 : decision_7_2=2 ? 6 : decision_7_2=3 ? 8 : decision_7_2=4 ? 12 : decision_7_2=5 ? 14 : decision_7_2=6 ? 15 : decision_7_2=7 ? 16 : decision_7_2=8 ? 17 : decision_7_2=9 ? 18 : 19);
+  [URC] true & xhat=7 & yhat=3 -> (max_interval_width'=decision_7_3=1 ? 4 : decision_7_3=2 ? 6 : decision_7_3=3 ? 8 : decision_7_3=4 ? 12 : decision_7_3=5 ? 14 : decision_7_3=6 ? 15 : decision_7_3=7 ? 16 : decision_7_3=8 ? 17 : decision_7_3=9 ? 18 : 19);
+  [URC] true & xhat=7 & yhat=4 -> (max_interval_width'=decision_7_4=1 ? 4 : decision_7_4=2 ? 6 : decision_7_4=3 ? 8 : decision_7_4=4 ? 12 : decision_7_4=5 ? 14 : decision_7_4=6 ? 15 : decision_7_4=7 ? 16 : decision_7_4=8 ? 17 : decision_7_4=9 ? 18 : 19);
+  [URC] true & xhat=7 & yhat=5 -> (max_interval_width'=decision_7_5=1 ? 4 : decision_7_5=2 ? 6 : decision_7_5=3 ? 8 : decision_7_5=4 ? 12 : decision_7_5=5 ? 14 : decision_7_5=6 ? 15 : decision_7_5=7 ? 16 : decision_7_5=8 ? 17 : decision_7_5=9 ? 18 : 19);
+  [URC] true & xhat=7 & yhat=6 -> (max_interval_width'=decision_7_6=1 ? 4 : decision_7_6=2 ? 6 : decision_7_6=3 ? 8 : decision_7_6=4 ? 12 : decision_7_6=5 ? 14 : decision_7_6=6 ? 15 : decision_7_6=7 ? 16 : decision_7_6=8 ? 17 : decision_7_6=9 ? 18 : 19);
+  [URC] true & xhat=7 & yhat=7 -> (max_interval_width'=decision_7_7=1 ? 4 : decision_7_7=2 ? 6 : decision_7_7=3 ? 8 : decision_7_7=4 ? 12 : decision_7_7=5 ? 14 : decision_7_7=6 ? 15 : decision_7_7=7 ? 16 : decision_7_7=8 ? 17 : decision_7_7=9 ? 18 : 19);
+  [URC] true & xhat=7 & yhat=8 -> (max_interval_width'=decision_7_8=1 ? 4 : decision_7_8=2 ? 6 : decision_7_8=3 ? 8 : decision_7_8=4 ? 12 : decision_7_8=5 ? 14 : decision_7_8=6 ? 15 : decision_7_8=7 ? 16 : decision_7_8=8 ? 17 : decision_7_8=9 ? 18 : 19);
+  [URC] true & xhat=7 & yhat=9 -> (max_interval_width'=decision_7_9=1 ? 4 : decision_7_9=2 ? 6 : decision_7_9=3 ? 8 : decision_7_9=4 ? 12 : decision_7_9=5 ? 14 : decision_7_9=6 ? 15 : decision_7_9=7 ? 16 : decision_7_9=8 ? 17 : decision_7_9=9 ? 18 : 19);
+  [URC] true & xhat=8 & yhat=0 -> (max_interval_width'=decision_8_0=1 ? 4 : decision_8_0=2 ? 6 : decision_8_0=3 ? 8 : decision_8_0=4 ? 12 : decision_8_0=5 ? 14 : decision_8_0=6 ? 15 : decision_8_0=7 ? 16 : decision_8_0=8 ? 17 : decision_8_0=9 ? 18 : 19);
+  [URC] true & xhat=8 & yhat=1 -> (max_interval_width'=decision_8_1=1 ? 4 : decision_8_1=2 ? 6 : decision_8_1=3 ? 8 : decision_8_1=4 ? 12 : decision_8_1=5 ? 14 : decision_8_1=6 ? 15 : decision_8_1=7 ? 16 : decision_8_1=8 ? 17 : decision_8_1=9 ? 18 : 19);
+  [URC] true & xhat=8 & yhat=2 -> (max_interval_width'=decision_8_2=1 ? 4 : decision_8_2=2 ? 6 : decision_8_2=3 ? 8 : decision_8_2=4 ? 12 : decision_8_2=5 ? 14 : decision_8_2=6 ? 15 : decision_8_2=7 ? 16 : decision_8_2=8 ? 17 : decision_8_2=9 ? 18 : 19);
+  [URC] true & xhat=8 & yhat=3 -> (max_interval_width'=decision_8_3=1 ? 4 : decision_8_3=2 ? 6 : decision_8_3=3 ? 8 : decision_8_3=4 ? 12 : decision_8_3=5 ? 14 : decision_8_3=6 ? 15 : decision_8_3=7 ? 16 : decision_8_3=8 ? 17 : decision_8_3=9 ? 18 : 19);
+  [URC] true & xhat=8 & yhat=4 -> (max_interval_width'=decision_8_4=1 ? 4 : decision_8_4=2 ? 6 : decision_8_4=3 ? 8 : decision_8_4=4 ? 12 : decision_8_4=5 ? 14 : decision_8_4=6 ? 15 : decision_8_4=7 ? 16 : decision_8_4=8 ? 17 : decision_8_4=9 ? 18 : 19);
+  [URC] true & xhat=8 & yhat=5 -> (max_interval_width'=decision_8_5=1 ? 4 : decision_8_5=2 ? 6 : decision_8_5=3 ? 8 : decision_8_5=4 ? 12 : decision_8_5=5 ? 14 : decision_8_5=6 ? 15 : decision_8_5=7 ? 16 : decision_8_5=8 ? 17 : decision_8_5=9 ? 18 : 19);
+  [URC] true & xhat=8 & yhat=6 -> (max_interval_width'=decision_8_6=1 ? 4 : decision_8_6=2 ? 6 : decision_8_6=3 ? 8 : decision_8_6=4 ? 12 : decision_8_6=5 ? 14 : decision_8_6=6 ? 15 : decision_8_6=7 ? 16 : decision_8_6=8 ? 17 : decision_8_6=9 ? 18 : 19);
+  [URC] true & xhat=8 & yhat=7 -> (max_interval_width'=decision_8_7=1 ? 4 : decision_8_7=2 ? 6 : decision_8_7=3 ? 8 : decision_8_7=4 ? 12 : decision_8_7=5 ? 14 : decision_8_7=6 ? 15 : decision_8_7=7 ? 16 : decision_8_7=8 ? 17 : decision_8_7=9 ? 18 : 19);
+  [URC] true & xhat=8 & yhat=8 -> (max_interval_width'=decision_8_8=1 ? 4 : decision_8_8=2 ? 6 : decision_8_8=3 ? 8 : decision_8_8=4 ? 12 : decision_8_8=5 ? 14 : decision_8_8=6 ? 15 : decision_8_8=7 ? 16 : decision_8_8=8 ? 17 : decision_8_8=9 ? 18 : 19);
+  [URC] true & xhat=8 & yhat=9 -> (max_interval_width'=decision_8_9=1 ? 4 : decision_8_9=2 ? 6 : decision_8_9=3 ? 8 : decision_8_9=4 ? 12 : decision_8_9=5 ? 14 : decision_8_9=6 ? 15 : decision_8_9=7 ? 16 : decision_8_9=8 ? 17 : decision_8_9=9 ? 18 : 19);
+  [URC] true & xhat=9 & yhat=0 -> (max_interval_width'=decision_9_0=1 ? 4 : decision_9_0=2 ? 6 : decision_9_0=3 ? 8 : decision_9_0=4 ? 12 : decision_9_0=5 ? 14 : decision_9_0=6 ? 15 : decision_9_0=7 ? 16 : decision_9_0=8 ? 17 : decision_9_0=9 ? 18 : 19);
+  [URC] true & xhat=9 & yhat=1 -> (max_interval_width'=decision_9_1=1 ? 4 : decision_9_1=2 ? 6 : decision_9_1=3 ? 8 : decision_9_1=4 ? 12 : decision_9_1=5 ? 14 : decision_9_1=6 ? 15 : decision_9_1=7 ? 16 : decision_9_1=8 ? 17 : decision_9_1=9 ? 18 : 19);
+  [URC] true & xhat=9 & yhat=2 -> (max_interval_width'=decision_9_2=1 ? 4 : decision_9_2=2 ? 6 : decision_9_2=3 ? 8 : decision_9_2=4 ? 12 : decision_9_2=5 ? 14 : decision_9_2=6 ? 15 : decision_9_2=7 ? 16 : decision_9_2=8 ? 17 : decision_9_2=9 ? 18 : 19);
+  [URC] true & xhat=9 & yhat=3 -> (max_interval_width'=decision_9_3=1 ? 4 : decision_9_3=2 ? 6 : decision_9_3=3 ? 8 : decision_9_3=4 ? 12 : decision_9_3=5 ? 14 : decision_9_3=6 ? 15 : decision_9_3=7 ? 16 : decision_9_3=8 ? 17 : decision_9_3=9 ? 18 : 19);
+  [URC] true & xhat=9 & yhat=4 -> (max_interval_width'=decision_9_4=1 ? 4 : decision_9_4=2 ? 6 : decision_9_4=3 ? 8 : decision_9_4=4 ? 12 : decision_9_4=5 ? 14 : decision_9_4=6 ? 15 : decision_9_4=7 ? 16 : decision_9_4=8 ? 17 : decision_9_4=9 ? 18 : 19);
+  [URC] true & xhat=9 & yhat=5 -> (max_interval_width'=decision_9_5=1 ? 4 : decision_9_5=2 ? 6 : decision_9_5=3 ? 8 : decision_9_5=4 ? 12 : decision_9_5=5 ? 14 : decision_9_5=6 ? 15 : decision_9_5=7 ? 16 : decision_9_5=8 ? 17 : decision_9_5=9 ? 18 : 19);
+  [URC] true & xhat=9 & yhat=6 -> (max_interval_width'=decision_9_6=1 ? 4 : decision_9_6=2 ? 6 : decision_9_6=3 ? 8 : decision_9_6=4 ? 12 : decision_9_6=5 ? 14 : decision_9_6=6 ? 15 : decision_9_6=7 ? 16 : decision_9_6=8 ? 17 : decision_9_6=9 ? 18 : 19);
+  [URC] true & xhat=9 & yhat=7 -> (max_interval_width'=decision_9_7=1 ? 4 : decision_9_7=2 ? 6 : decision_9_7=3 ? 8 : decision_9_7=4 ? 12 : decision_9_7=5 ? 14 : decision_9_7=6 ? 15 : decision_9_7=7 ? 16 : decision_9_7=8 ? 17 : decision_9_7=9 ? 18 : 19);
+  [URC] true & xhat=9 & yhat=8 -> (max_interval_width'=decision_9_8=1 ? 4 : decision_9_8=2 ? 6 : decision_9_8=3 ? 8 : decision_9_8=4 ? 12 : decision_9_8=5 ? 14 : decision_9_8=6 ? 15 : decision_9_8=7 ? 16 : decision_9_8=8 ? 17 : decision_9_8=9 ? 18 : 19);
+  [URC] true & xhat=9 & yhat=9 -> (max_interval_width'=decision_9_9=1 ? 4 : decision_9_9=2 ? 6 : decision_9_9=3 ? 8 : decision_9_9=4 ? 12 : decision_9_9=5 ? 14 : decision_9_9=6 ? 15 : decision_9_9=7 ? 16 : decision_9_9=8 ? 17 : decision_9_9=9 ? 18 : 19);
+endmodule
+module Turn
+  t : [0..2] init 0;
+  [east] (t=0) -> (t'=1);
+  [west] (t=0) -> (t'=1);
+  [north] (t=0) -> (t'=1);
+  [south] (t=0) -> (t'=1);
+
+  [URC] (t=1) -> (t'=2);
+
+  [update] (t=2) -> (t'=0);
+  [skip_update] (t=2) -> (t'=0);
+endmodule
