@@ -80,7 +80,7 @@ def add_controller(file_path, estimates, variables, possible_decisions, baseline
     __add_controller_prefix(file_path, possible_decisions, combinations, variables, baseline)
     with open(file_path, 'a') as file:
         # Ten decisions map to empirically calibrated interval thresholds.
-        file.write('  max_interval_width : [4..19] init 4;\n')
+        file.write('  max_interval_width : [3..19] init 3;\n')
 
         for combination in combinations:
             # combination describes a tuple of values, e.g., for ^x and ^y, such as (0, 0)
