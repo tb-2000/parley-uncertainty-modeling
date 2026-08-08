@@ -58,8 +58,8 @@ def main():
                      75, 76, 79, 81, 82, 83, 85, 86, 87, 89, 90, 97]
                     
     # maps()
-    maps = [29,30] # selected_maps
-    for i in maps: # lasse auf map 29,30 laufen
+    maps = [31,32] # selected_maps
+    for i in maps: # lasse auf map 31,32 laufen
         models(i)
         #baseline(i)
         print('Starting EvoChecker for map {0}'.format(str(i)))
