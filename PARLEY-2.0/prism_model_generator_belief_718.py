@@ -73,18 +73,15 @@ def preambel():
             f.write('| (x={0} & y={1}) '.format(str(x), str(y)))
         f.write(';\n\n')
 
-        # Top-4 masses are formulas derived from belief_state, not PRISM variables.
-        for value_index, name in enumerate(["b1", "b2", "b3", "b4", "other"]):
-            f.write(f'formula {name} = ')
-            for state_id in sorted(belief_automaton["states"]):
-                value = belief_automaton["states"][state_id]["signature"][value_index]
-                f.write(f'(belief_state={state_id} ? {value} : ')
-            f.write('0' + ')' * len(belief_automaton["states"]) + ';\n')
-
-        f.write(
-            'formula belief_uncertainty = 10000 - '
-            '(b1*b1 + b2*b2 + b3*b3 + b4*b4 + other*other);\n'
-        )
+        # PRISM 4.7 compatibility:
+        # Compute Gini uncertainty completely offline in Python and emit
+        # only one lookup formula over belief_state.  No b1..b4/other
+        # formulas are written to the PRISM model.
+        f.write('formula belief_uncertainty = ')
+        for state_id in sorted(belief_automaton["states"]):
+            gini = belief_automaton["states"][state_id]["gini"]
+            f.write(f'(belief_state={state_id} ? {gini} : ')
+        f.write('0' + ')' * len(belief_automaton["states"]) + ';\n')
 
         terminal_states = [
             state_id
