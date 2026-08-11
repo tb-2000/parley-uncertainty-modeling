@@ -2,339 +2,165 @@ import os
 import re
 import shutil
 
-
-# Ten threshold choices, analogous to the ten interval-model choices.
-#
-# These thresholds refer to:
-#     belief_uncertainty = 100-b1
-#
-# The exact list can later be calibrated empirically from the generated
-# belief-state catalogue.
-BELIEF_THRESHOLDS = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30]
+BELIEF_THRESHOLDS = [588, 1154, 1698, 2218, 2552, 3034, 3342, 3642, 4076, 4354]
 
 
-def manipulate_prism_model(
-    input_path,
-    output_path,
-    possible_decisions=[1, 10],
-    decision_variables=None,
-    before_actions=['east', 'west', 'north', 'south'],
-    after_actions=['update', 'skip_update'],
-    module_name='Knowledge',
-    baseline=False,
-):
-    """
-    Position-specific threshold policy.
-
-    One evolved decision_x_y is generated per MAP position.
-    That decision selects a belief-uncertainty threshold.
-
-    The full abstract Top-4 belief remains in the PRISM model:
-        belief_state
-        b1,b2,b3,b4,other
-
-    However, unlike B2 with decision_x_y_belief_state, the number of
-    evolved parameters stays the same order as in the point-estimate
-    model: one decision per (xhat,yhat).
-    """
-    if decision_variables is None:
-        decision_variables = ['xhat', 'yhat']
-
+def manipulate_prism_model(input_path, output_path, possible_decisions=[1, 10], decision_variables=[],
+                           before_actions=['east', 'west', 'north', 'south'], after_actions=['update', 'skip_update'], module_name='Knowledge', baseline=False):
     if os.path.abspath(input_path) == os.path.abspath(output_path):
         raise ValueError("Input and output files cannot be the same.")
 
     shutil.copyfile(input_path, output_path)
 
-    variables = get_policy_variables(
-        input_path,
-        decision_variables,
-    )
+    variables, estimates = get_variables(input_path, decision_variables)
 
-    remove_default_threshold_constant(output_path)
-    add_controller(
-        output_path,
-        variables,
-        possible_decisions,
-        baseline=baseline,
-    )
-    add_turn(
-        output_path,
-        before_actions,
-        after_actions,
-    )
+    remove_counter_from_module(output_path)
+
+    add_controller(output_path, estimates, variables, possible_decisions, baseline=baseline)
+
+    add_turn(output_path, before_actions, after_actions)
 
 
-def _read_int_constants(prism_model_path):
-    pattern = re.compile(
-        r'const\s+int\s+(\w+)\s*=\s*(-?\s*\d+)\s*;'
-    )
-    constants = {}
+def get_variables(prism_model_path, decision_variables):
+    # get all int constants
+    int_constants_pattern = re.compile(r'const\s+int\s+(\w+)\s*=\s*(-?\s*\d+)\s*;')
+    int_constants = {}
 
     with open(prism_model_path, 'r') as prism_model_file:
+        # Process the file line by line
         for line in prism_model_file:
-            for match in pattern.finditer(line):
-                constants[match.group(1)] = int(
-                    match.group(2).replace(" ", "")
-                )
+            # Match constants in each line
+            matches = int_constants_pattern.finditer(line)
+            for match in matches:
+                int_constants[match.group(1)] = int(match.group(2).replace(" ", ""))
 
-    return constants
-
-
-def _resolve_limit(token, constants):
-    token = token.replace(" ", "")
-
-    if token.lstrip("-").isdigit():
-        return int(token)
-
-    return constants[token]
-
-
-def get_policy_variables(prism_model_path, decision_variables):
-    constants = _read_int_constants(prism_model_path)
-
-    declaration_pattern = re.compile(
-        r'(\w+)\s*:\s*\[(-?\s*\w+)\s*\.\.\s*(-?\s*\w+)\]\s*'
-        r'init\s*(-?\s*\w+)\s*;'
-    )
-
-    found = {}
+    int_variable_declaration_pattern = re.compile(
+        r'(\w+)\s*:\s*\[(-?\s*\w+)\s*\.\.\s*(-?\s*\w+)\]\s*init\s*(-?\s*\w+)\s*;')
+    _vars = []
+    _bel = []
 
     with open(prism_model_path, 'r') as prism_model_file:
+        # Process the file line by line again
         for line in prism_model_file:
-            for match in declaration_pattern.finditer(line):
-                name = match.group(1)
-
-                if name not in decision_variables:
+            # Match variables in each line
+            matches = int_variable_declaration_pattern.finditer(line)
+            for match in matches:
+                if match.group(1)[-3:] == 'hat':
+                    _bel.append(match.group(1))
+                elif match.group(1) not in decision_variables:
                     continue
+                lower_limit = __get_limit(match.group(2).replace(" ", ""), int_constants)
+                upper_limit = __get_limit(match.group(3).replace(" ", ""), int_constants)
+                _vars.append([match.group(1), lower_limit, upper_limit])
 
-                lower = _resolve_limit(
-                    match.group(2),
-                    constants,
-                )
-                upper = _resolve_limit(
-                    match.group(3),
-                    constants,
-                )
-
-                found[name] = [
-                    name,
-                    lower,
-                    upper,
-                ]
-
-    missing = [
-        name
-        for name in decision_variables
-        if name not in found
-    ]
-
-    if missing:
-        raise ValueError(
-            "Could not find URC decision variables in PRISM model: "
-            + ", ".join(missing)
-        )
-
-    return [
-        found[name]
-        for name in decision_variables
-    ]
+    return _vars, _bel
 
 
-def remove_default_threshold_constant(output_path):
-    pattern = re.compile(
-        r"^\s*const\s+int\s+max_belief_uncertainty\s*=\s*\d+\s*;"
-    )
+def __get_limit(string, constants):
+    if not string.lstrip("-").isdigit():
+        return constants[string]
+    else:
+        return int(string)
 
+
+def remove_counter_from_module(output_path):
+    pattern = re.compile(r"^\s*const\s+int\s+max_belief_uncertainty\s*=\s*\d+\s*;")
     with open(output_path, 'r') as file:
         lines = file.readlines()
 
-    new_lines = [
-        line
-        for line in lines
-        if not pattern.match(line)
-    ]
+    # Filter out lines that match the regex pattern
+    new_lines = [line for line in lines if not pattern.match(line)]
 
+    # Write the modified content back to the file
     with open(output_path, 'w') as file:
         file.writelines(new_lines)
 
 
-def _decision_name(combination):
-    return (
-        'decision_'
-        + '_'.join(
-            str(value)
-            for value in combination
-        )
-    )
-
-
-def _threshold_expression(decision_name):
-    if len(BELIEF_THRESHOLDS) != 10:
-        raise ValueError(
-            "BELIEF_THRESHOLDS must contain exactly 10 values."
-        )
-
-    expression = ""
-
-    for index, threshold in enumerate(
-        BELIEF_THRESHOLDS[:-1],
-        start=1,
-    ):
-        expression += (
-            f"{decision_name}={index} ? {threshold} : "
-        )
-
-    expression += str(BELIEF_THRESHOLDS[-1])
-
-    return expression
-
-
-def add_controller(
-    file_path,
-    variables,
-    possible_decisions,
-    baseline,
-):
+def add_controller(file_path, estimates, variables, possible_decisions, baseline):
     combinations = generate_combinations_list(variables)
-
+    __add_controller_prefix(file_path, possible_decisions, combinations, variables, baseline)
     with open(file_path, 'a') as file:
-        file.write('\n')
-
-        for combination in combinations:
-            name = _decision_name(combination)
-
-            if baseline:
-                file.write(
-                    f'const int {name}=1;\n'
-                )
-            else:
-                file.write(
-                    f'evolve int {name} '
-                    f'[{possible_decisions[0]}..'
-                    f'{possible_decisions[1]}];\n'
-                )
-
-        file.write('\nmodule URC\n')
-
-        min_threshold = min(BELIEF_THRESHOLDS)
-        max_threshold = max(BELIEF_THRESHOLDS)
-
         file.write(
             f'  max_belief_uncertainty : '
-            f'[{min_threshold}..{max_threshold}] '
-            f'init {min_threshold};\n'
+            f'[{min(BELIEF_THRESHOLDS)}..{max(BELIEF_THRESHOLDS)}] '
+            f'init {BELIEF_THRESHOLDS[0]};\n'
         )
 
         for combination in combinations:
-            decision_name = _decision_name(combination)
+            new_line = '  [URC] true'
+            for c, estimate in zip(combination, estimates):
+                new_line += f' & {estimate}={c}'
 
-            guard = '  [URC] true'
+            decision_name = 'decision'
+            for c in combination:
+                decision_name += f'_{c}'
 
-            for value, variable in zip(
-                combination,
-                variables,
-            ):
-                guard += (
-                    f' & {variable[0]}={value}'
-                )
+            threshold_expression = ''
+            for i, threshold in enumerate(BELIEF_THRESHOLDS[:-1], start=1):
+                threshold_expression += f'{decision_name}={i} ? {threshold} : '
+            threshold_expression += str(BELIEF_THRESHOLDS[-1])
 
-            threshold_expression = _threshold_expression(
-                decision_name
-            )
-
-            file.write(
-                guard
-                + " -> "
-                + "(max_belief_uncertainty'="
-                + threshold_expression
-                + ");\n"
-            )
+            new_line += f" -> (max_belief_uncertainty'={threshold_expression});\n"
+            file.write(new_line)
 
         file.write('endmodule\n')
 
+def __add_controller_prefix(file_path, possible_decisions, combinations, variables, baseline):
+    # write decision variables
+    with open(file_path, 'a') as file:
+        for combination in combinations:
+            if baseline:
+                new_line = 'const int decision'
+            else:
+                new_line = 'evolve int decision'
+            for var in range(0, len(variables)):
+                new_line += '_' + str(combination[var])
+            if baseline:
+                new_line += '=1;'
+            else:
+                new_line += f' [{possible_decisions[0]}..{possible_decisions[1]}];'
+            file.write('\n' + new_line)
+        file.write('\nmodule URC\n')
 
-def add_turn(
-    file_path,
-    before_actions,
-    after_actions,
-):
+
+def add_turn(file_path, before_actions, after_actions):
     with open(file_path, 'a') as file:
         file.write('module Turn\n')
         file.write('  t : [0..2] init 0;\n')
-
+        # actions that precede
         for action in before_actions:
-            file.write(
-                f'  [{action}] (t=0) -> (t\'=1);\n'
-            )
-
+            file.write(f'  [{action}] (t=0) -> (t\'=1);\n')
         file.write('\n')
-        file.write(
-            '  [URC] (t=1) -> (t\'=2);\n'
-        )
+        file.write('  [URC] (t=1) -> (t\'=2);\n')
         file.write('\n')
-
         for action in after_actions:
-            file.write(
-                f'  [{action}] (t=2) -> (t\'=0);\n'
-            )
-
+            file.write(f'  [{action}] (t=2) -> (t\'=0);\n')
         if len(after_actions) == 0:
-            file.write(
-                '  [] (t=2) -> (t\'=0);\n'
-            )
-
+            file.write('  [] (t=2) -> (t\'=0);\n')
         file.write('endmodule\n')
 
 
 def generate_combinations_list(variables):
     result = []
 
-    def generate_combinations_recursive(
-        current_combination,
-        remaining_variables,
-    ):
+    def generate_combinations_recursive(current_combination, remaining_variables):
         if not remaining_variables:
-            result.append(
-                tuple(current_combination)
-            )
+            result.append(tuple(current_combination))
             return
 
         current_variable = remaining_variables[0]
-
-        for value in range(
-            current_variable[1],
-            current_variable[2] + 1,
-        ):
+        for value in range(current_variable[1], current_variable[2] + 1):
             generate_combinations_recursive(
                 current_combination + [value],
-                remaining_variables[1:],
+                remaining_variables[1:]
             )
 
-    generate_combinations_recursive(
-        [],
-        variables,
-    )
-
+    generate_combinations_recursive([], variables)
     return result
 
 
 if __name__ == "__main__":
-    # Minimal local test. Adjust these paths when testing inside PARLEY.
-    i=10
+    i = 10
     infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
     outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
-
-    if os.path.exists(infile):
-        manipulate_prism_model(
-            input_path=infile,
-            output_path=outfile,
-            possible_decisions=[1, 10],
-            decision_variables=['xhat', 'yhat'],
-            baseline=False,
-        )
-        print(f"generated: {outfile}")
-    else:
-        print(
-            "Test input not found. "
-            "Generate a base belief PRISM model first."
-        )
+    manipulate_prism_model(infile, outfile)
