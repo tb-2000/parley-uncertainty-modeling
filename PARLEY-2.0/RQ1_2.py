@@ -70,7 +70,7 @@ def main():
         print(f"Total runtime of EvoChecker for map {i} is {runtime:.3f} seconds")
 
         # time speichern
-        filename = "times.txt"
+        filename = "times_belief.txt"
         times = {}
         try:
             with open(filename, "r") as f:

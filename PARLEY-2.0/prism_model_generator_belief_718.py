@@ -85,9 +85,26 @@ def preambel():
             'formula belief_uncertainty = 10000 - '
             '(b1*b1 + b2*b2 + b3*b3 + b4*b4 + other*other);\n'
         )
+
+        terminal_states = [
+            state_id
+            for state_id, state in belief_automaton["states"].items()
+            if state["terminal"]
+        ]
+
+        f.write('formula terminal_belief = ')
+        if terminal_states:
+            f.write(' | '.join(
+                f'belief_state={state_id}'
+                for state_id in sorted(terminal_states)
+            ))
+        else:
+            f.write('false')
+        f.write(';\n')
+
         f.write(
             'formula update_required = '
-            '(belief_uncertainty>=max_belief_uncertainty);\n\n'
+            '(belief_uncertainty>=max_belief_uncertainty) | terminal_belief;\n\n'
         )
 
 
