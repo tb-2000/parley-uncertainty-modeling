@@ -7,6 +7,8 @@ def main():
         outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
         prism_model_generator.generate_model(i)
         print(f"generated: {infile}")
+        urc_synthesis.manipulate_prism_model(infile, outfile, baseline=False)
+        print(f"generated: {outfile}")
 
 
 if __name__ == '__main__':
