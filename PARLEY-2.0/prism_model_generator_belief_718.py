@@ -25,6 +25,7 @@ period = 1
 max_belief_steps = 10
 default_belief_threshold = 2552
 belief_automaton = None
+BELIEF_THRESHOLDS = [588, 1154, 1698, 2218, 2552, 3034, 3342, 3642, 4076, 4354]
 
 
 def build_map(filename):
@@ -73,15 +74,34 @@ def preambel():
             f.write('| (x={0} & y={1}) '.format(str(x), str(y)))
         f.write(';\n\n')
 
-        # PRISM 4.7 compatibility:
-        # Compute Gini uncertainty completely offline in Python and emit
-        # only one lookup formula over belief_state.  No b1..b4/other
-        # formulas are written to the PRISM model.
-        f.write('formula belief_uncertainty = ')
-        for state_id in sorted(belief_automaton["states"]):
-            gini = belief_automaton["states"][state_id]["gini"]
-            f.write(f'(belief_state={state_id} ? {gini} : ')
-        f.write('0' + ')' * len(belief_automaton["states"]) + ';\n')
+        # Map every belief_state offline to one of 10 uncertainty classes.
+        # Class 1 is the lowest uncertainty, class 10 the highest.
+        class_to_states = {i: [] for i in range(1, 11)}
+
+        for state_id, state in belief_automaton["states"].items():
+            gini = state["gini"]
+
+            belief_class = 10
+            for i, threshold in enumerate(BELIEF_THRESHOLDS, start=1):
+                if gini <= threshold:
+                    belief_class = i
+                    break
+
+            class_to_states[belief_class].append(state_id)
+
+        for belief_class in range(1, 11):
+            f.write(f'formula belief_class_{belief_class} = ')
+            states_in_class = sorted(class_to_states[belief_class])
+
+            if states_in_class:
+                f.write(' | '.join(
+                    f'belief_state={state_id}'
+                    for state_id in states_in_class
+                ))
+            else:
+                f.write('false')
+
+            f.write(';\n')
 
         terminal_states = [
             state_id
@@ -99,9 +119,26 @@ def preambel():
             f.write('false')
         f.write(';\n')
 
+        # max_belief_uncertainty is still selected by the URC using decision_x_y.
+        # We translate the selected empirical Gini threshold to a class index.
+        f.write('formula max_belief_class = ')
+        for i, threshold in enumerate(BELIEF_THRESHOLDS[:-1], start=1):
+            f.write(
+                f'(max_belief_uncertainty={threshold} ? {i} : '
+            )
+        f.write('10' + ')' * (len(BELIEF_THRESHOLDS) - 1) + ';\n')
+
+        # Current belief class is encoded without introducing a new state variable.
+        f.write('formula current_belief_class = ')
+        for belief_class in range(1, 10):
+            f.write(
+                f'(belief_class_{belief_class} ? {belief_class} : '
+            )
+        f.write('10' + ')' * 9 + ';\n')
+
         f.write(
             'formula update_required = '
-            '(belief_uncertainty>=max_belief_uncertainty) | terminal_belief;\n\n'
+            '(current_belief_class>=max_belief_class) | terminal_belief;\n\n'
         )
 
 
