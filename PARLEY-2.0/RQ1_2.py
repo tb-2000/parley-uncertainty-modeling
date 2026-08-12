@@ -58,8 +58,8 @@ def main():
                      75, 76, 79, 81, 82, 83, 85, 86, 87, 89, 90, 97]
                     
     # maps()
-    maps = [47, 48] # selected_maps
-    for i in maps: # lasse auf map 47,48 laufen
+    maps = [49] # selected_maps
+    for i in maps: # lasse auf map 49 laufen
         models(i)
         #baseline(i)
         print('Starting EvoChecker for map {0}'.format(str(i)))
@@ -70,7 +70,7 @@ def main():
         print(f"Total runtime of EvoChecker for map {i} is {runtime:.3f} seconds")
 
         # time speichern
-        filename = "times.txt"
+        filename = "times_interval.txt"
         times = {}
         try:
             with open(filename, "r") as f:
