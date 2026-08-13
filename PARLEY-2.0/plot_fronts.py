@@ -1,5 +1,6 @@
 import os
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 
 def pareto_front(data):
@@ -21,9 +22,25 @@ def plot_pareto_front(m=10, replication=0, header=True):
     data = []
     filename = ''
     file_path = f'Applications/EvoChecker-master/data/ROBOT{m}_REP{replication}/NSGAII/'
-    for f_name in os.listdir(file_path):
-        if "Front" in f_name:
-            filename = f_name
+    # for f_name in os.listdir(file_path):
+    #     if "Front" in f_name:
+    #         filename = f_name
+    front_files = [
+        f_name for f_name in os.listdir(file_path)
+        if f_name.endswith("_Front")
+    ]
+    if not front_files:
+        raise FileNotFoundError(
+            f"Keine Front-Datei für ROBOT{m}_REP{replication} gefunden."
+        )
+    def get_timestamp(filename):
+        # z.B. ROBOT49_REP9_NSGAII_005212_130826_Front
+        parts = filename.split("_")
+        time_str = parts[-3]   # 005212
+        date_str = parts[-2]   # 130826
+        return datetime.strptime(date_str + time_str, "%d%m%y%H%M%S")
+
+    filename = max(front_files, key=get_timestamp)
     with open(file_path + filename, 'r') as file:
         if header:
             next(file)  # Skip the header row
