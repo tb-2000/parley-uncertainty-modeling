@@ -56,10 +56,13 @@ def main():
                      40, 43, 44, 46, 47, 48, 49, 50, 52, 53, 54, 55,
                      56, 57, 61, 62, 63, 64, 65, 66, 67, 68, 69, 71, 73,
                      75, 76, 79, 81, 82, 83, 85, 86, 87, 89, 90, 97]
+
+    fewer_maps = [21, 23, 30, 31, 32, 40, 43, 44, 46, 47, 48, 49, 50, 
+     54, 55, 56, 57, 63, 66, 71, 75, 81, 82, 83, 85, 87, 89, 90, 97]
                     
     # maps()
-    maps = [49] # selected_maps
-    for i in maps: # lasse auf map 49 laufen
+    maps = [50,54] # selected_maps
+    for i in maps: # lasse auf map 50,54 laufen
         models(i)
         #baseline(i)
         print('Starting EvoChecker for map {0}'.format(str(i)))
