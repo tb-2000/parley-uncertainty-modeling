@@ -347,6 +347,280 @@ def simulate_model(
     return rows
 
 
+def add_actual_update_steps(rows, max_update_steps):
+    """Ergänzt den tatsächlichen Updatezeitpunkt mit zeitlichem Fallback.
+
+    Wenn die Intervallschwelle vor dem maximalen Updateabstand erreicht wird,
+    ist dieser First-Passage-Schritt der tatsächliche Updatezeitpunkt.
+    Andernfalls wird spätestens bei `max_update_steps` aktualisiert.
+    """
+    result = []
+
+    for row in rows:
+        reached = int(row["reached"]) == 1
+
+        if reached:
+            first_passage = int(row["first_passage_step"])
+            actual_update_step = min(first_passage, max_update_steps)
+            fallback_used = int(first_passage > max_update_steps)
+        else:
+            actual_update_step = max_update_steps
+            fallback_used = 1
+
+        result.append({
+            **row,
+            "actual_update_step": actual_update_step,
+            "fallback_used": fallback_used,
+        })
+
+    return result
+
+
+def summarize_actual_updates(rows, max_threshold):
+    """Berechnet Statistiken über den tatsächlichen Updatezeitpunkt.
+
+    Nicht erreichte Schwellen werden NICHT mehr ignoriert. Sie gehen mit dem
+    Fallback-Zeitpunkt (z.B. Schritt 10) in Median, Q1, Q3 und Mittelwert ein.
+    """
+    starts = {
+        (int(row["model"]), int(row["start_x"]), int(row["start_y"]))
+        for row in rows
+    }
+    total_starts = len(starts)
+
+    updates = defaultdict(list)
+    fallback_counts = defaultdict(int)
+    interval_counts = defaultdict(int)
+
+    for row in rows:
+        threshold = int(row["threshold"])
+        updates[threshold].append(int(row["actual_update_step"]))
+
+        if int(row["fallback_used"]) == 1:
+            fallback_counts[threshold] += 1
+        else:
+            interval_counts[threshold] += 1
+
+    result = []
+
+    for threshold in range(1, max_threshold + 1):
+        values = updates.get(threshold, [])
+        if not values:
+            continue
+
+        fallback_count = fallback_counts[threshold]
+        interval_count = interval_counts[threshold]
+
+        result.append({
+            "threshold": threshold,
+            "total_starts": total_starts,
+            "actual_update_min": min(values),
+            "actual_update_q1": linear_quantile(values, 0.25),
+            "actual_update_median": linear_quantile(values, 0.50),
+            "actual_update_mean": statistics.fmean(values),
+            "actual_update_q3": linear_quantile(values, 0.75),
+            "actual_update_max": max(values),
+            "actual_update_stddev": (
+                statistics.pstdev(values) if len(values) > 1 else 0.0
+            ),
+            "interval_trigger_count": interval_count,
+            "fallback_count": fallback_count,
+            "interval_trigger_fraction": (
+                interval_count / total_starts if total_starts else 0.0
+            ),
+            "fallback_fraction": (
+                fallback_count / total_starts if total_starts else 0.0
+            ),
+        })
+
+    return result
+
+
+def build_actual_update_groups(summary, fallback_tolerance=0.02):
+    """Gruppiert Schwellen nach ihrem tatsächlichen Updateverhalten.
+
+    Zwei Schwellen werden zusammengefasst, wenn:
+    - ihr Median des tatsächlichen Updatezeitpunkts gleich ist,
+    - ihr Q3 gleich ist,
+    - sich ihr Fallback-Anteil höchstens um `fallback_tolerance` unterscheidet.
+    """
+    groups = []
+
+    for row in summary:
+        threshold = int(row["threshold"])
+        median = float(row["actual_update_median"])
+        q3 = float(row["actual_update_q3"])
+        fallback = float(row["fallback_fraction"])
+
+        matching_group = None
+
+        for group in groups:
+            same_timing = (
+                float(group["actual_update_median"]) == median
+                and float(group["actual_update_q3"]) == q3
+            )
+            similar_fallback = abs(
+                float(group["representative_fallback_fraction"]) - fallback
+            ) <= fallback_tolerance
+
+            if same_timing and similar_fallback:
+                matching_group = group
+                break
+
+        if matching_group is None:
+            groups.append({
+                "actual_update_median": median,
+                "actual_update_q3": q3,
+                "representative_fallback_fraction": fallback,
+                "threshold_values": [threshold],
+                "fallback_values": [fallback],
+            })
+        else:
+            matching_group["threshold_values"].append(threshold)
+            matching_group["fallback_values"].append(fallback)
+            matching_group["representative_fallback_fraction"] = (
+                statistics.fmean(matching_group["fallback_values"])
+            )
+
+    groups.sort(
+        key=lambda group: (
+            float(group["actual_update_median"]),
+            float(group["actual_update_q3"]),
+            float(group["representative_fallback_fraction"]),
+        )
+    )
+
+    output = []
+
+    for group_number, group in enumerate(groups, start=1):
+        thresholds = sorted(group["threshold_values"])
+        fallback_values = group["fallback_values"]
+
+        output.append({
+            "group": group_number,
+            "actual_update_median": group["actual_update_median"],
+            "actual_update_q3": group["actual_update_q3"],
+            "mean_fallback_fraction": statistics.fmean(fallback_values),
+            "minimum_fallback_fraction": min(fallback_values),
+            "maximum_fallback_fraction": max(fallback_values),
+            "fallback_tolerance": fallback_tolerance,
+            "thresholds": ",".join(str(v) for v in thresholds),
+            "minimum_threshold": min(thresholds),
+            "maximum_threshold": max(thresholds),
+        })
+
+    return output
+
+
+def choose_actual_group_representative(group, summary_by_threshold):
+    """Wählt den repräsentativsten Threshold aus einer Updategruppe."""
+    thresholds = [
+        int(v)
+        for v in str(group["thresholds"]).split(",")
+        if str(v).strip()
+    ]
+    group_fallback = float(group["mean_fallback_fraction"])
+
+    return min(
+        thresholds,
+        key=lambda threshold: (
+            abs(
+                float(summary_by_threshold[threshold]["fallback_fraction"])
+                - group_fallback
+            ),
+            -threshold,
+        ),
+    )
+
+
+def choose_thresholds_from_actual_groups(
+    summary,
+    behavior_groups,
+    number_thresholds=10,
+):
+    """Wählt 10 möglichst unterschiedliche Schwellen pro Map.
+
+    Es wird NICHT erzwungen, dass die Schwellen exakt Updateabstände 1..10
+    darstellen. Stattdessen werden möglichst unterschiedliche empirische
+    Updateverhaltensklassen über den Bereich 1..10 ausgewählt.
+    """
+    summary_by_threshold = {
+        int(row["threshold"]): row
+        for row in summary
+    }
+
+    selected = []
+
+    if len(behavior_groups) >= number_thresholds:
+        indices = evenly_spaced_indices(
+            len(behavior_groups),
+            number_thresholds,
+        )
+        chosen_groups = [
+            behavior_groups[index]
+            for index in indices
+        ]
+        selected = [
+            choose_actual_group_representative(group, summary_by_threshold)
+            for group in chosen_groups
+        ]
+    else:
+        for group in behavior_groups:
+            selected.append(
+                choose_actual_group_representative(
+                    group,
+                    summary_by_threshold,
+                )
+            )
+
+        extra_candidates = []
+
+        for group in reversed(behavior_groups):
+            thresholds = sorted(
+                (
+                    int(v)
+                    for v in str(group["thresholds"]).split(",")
+                    if str(v).strip()
+                ),
+                reverse=True,
+            )
+
+            representative = choose_actual_group_representative(
+                group,
+                summary_by_threshold,
+            )
+
+            for threshold in thresholds:
+                if threshold != representative:
+                    extra_candidates.append(threshold)
+
+        for threshold in extra_candidates:
+            if threshold not in selected:
+                selected.append(threshold)
+            if len(selected) == number_thresholds:
+                break
+
+    selected = sorted(set(selected))
+
+    if len(selected) < number_thresholds:
+        for threshold in sorted(summary_by_threshold, reverse=True):
+            if threshold not in selected:
+                selected.append(threshold)
+            if len(selected) == number_thresholds:
+                break
+        selected.sort()
+
+    if len(selected) > number_thresholds:
+        indices = evenly_spaced_indices(
+            len(selected),
+            number_thresholds,
+        )
+        selected = [selected[index] for index in indices]
+
+    return selected
+
+
+
 def summarize(
     rows: Sequence[Mapping[str, object]],
     max_threshold: int,
@@ -808,12 +1082,12 @@ def write_csv(
         writer.writerows(rows)
 
 
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
-            "Berechnet für model_10.prism bis model_99.prism "
-            "map-spezifische Intervallschwellen anhand unterschiedlicher "
-            "First-Passage-Verhaltensklassen."
+            "Berechnet map-spezifische Intervallschwellen anhand des "
+            "tatsächlichen Updateverhaltens mit maximalem Updateabstand."
         )
     )
     parser.add_argument(
@@ -824,8 +1098,8 @@ def main() -> None:
     parser.add_argument(
         "--max-steps",
         type=int,
-        default=20,
-        help="Maximal simulierte Schritte, Standard: 20",
+        default=10,
+        help="Maximaler Updateabstand / Fallback-Zeitpunkt. Standard: 10",
     )
     parser.add_argument(
         "--number-thresholds",
@@ -834,18 +1108,18 @@ def main() -> None:
         help="Anzahl Schwellen pro Map, Standard: 10",
     )
     parser.add_argument(
-        "--not-reached-tolerance",
+        "--fallback-tolerance",
         type=float,
         default=0.02,
         help=(
-            "Maximale Differenz des Anteils nicht erreichter Zustände "
-            "innerhalb einer Verhaltensgruppe. Standard: 0.02."
+            "Maximale Differenz des Fallback-Anteils innerhalb einer "
+            "Verhaltensgruppe. Standard: 0.02."
         ),
     )
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("interval_thresholds_per_map"),
+        default=Path("interval_thresholds_actual_updates"),
         help="Ausgabeordner",
     )
     args = parser.parse_args()
@@ -856,12 +1130,12 @@ def main() -> None:
     if args.max_steps < 1:
         parser.error("--max-steps muss mindestens 1 sein.")
 
-    if args.number_thresholds < 2:
-        parser.error("--number-thresholds muss mindestens 2 sein.")
+    if args.number_thresholds < 1:
+        parser.error("--number-thresholds muss mindestens 1 sein.")
 
-    if not 0.0 <= args.not_reached_tolerance <= 1.0:
+    if not 0.0 <= args.fallback_tolerance <= 1.0:
         parser.error(
-            "--not-reached-tolerance muss zwischen 0 und 1 liegen."
+            "--fallback-tolerance muss zwischen 0 und 1 liegen."
         )
 
     model_paths = discover_models(args.models_dir)
@@ -871,67 +1145,61 @@ def main() -> None:
             "Keine Dateien model_10.prism bis model_99.prism gefunden."
         )
 
-    models: list[ModelData] = []
-    skipped_models: list[dict[str, object]] = []
+    models = []
+    skipped_models = []
 
     for path in model_paths:
         try:
             models.append(parse_model(path))
         except (ValueError, OSError, UnicodeError) as error:
-            skipped_models.append(
-                {
-                    "model": path.name,
-                    "reason": str(error),
-                }
-            )
+            skipped_models.append({
+                "model": path.name,
+                "reason": str(error),
+            })
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
-    all_selected_rows: list[dict[str, object]] = []
-    all_statistics_rows: list[dict[str, object]] = []
-    all_group_rows: list[dict[str, object]] = []
-    thresholds_per_map: dict[int, list[int]] = {}
+    all_selected_rows = []
+    all_statistics_rows = []
+    all_group_rows = []
+    all_actual_rows = []
+    thresholds_per_map = {}
 
-    # Jede Map wird vollständig unabhängig von den anderen Maps analysiert.
-    # Dadurch können unterschiedliche MAPE-Routen zu unterschiedlichen
-    # Schwellenmengen führen.
     for model in models:
-        # Für eine N=9-Karte kann die abgeschnittene Breite höchstens 18 sein.
-        # 2*N+1 = 19 wird zusätzlich als nicht erreichbarer Extremwert geprüft.
         max_threshold = 2 * model.n + 1
 
-        # Schritt 1: First-Passage-Zeit jeder möglichen Schwelle für alle
-        # MAPE-Startpositionen dieser Map bestimmen.
+        # 1) First-Passage der Intervallschwellen bestimmen.
         passage_rows = simulate_model(
             model=model,
             max_steps=args.max_steps,
             max_threshold=max_threshold,
         )
 
-        # Schritt 2: First-Passage-Zeiten pro Schwelle statistisch
-        # zusammenfassen.
-        map_summary = summarize(
+        # 2) In den tatsächlichen Updatezeitpunkt mit Fallback umwandeln.
+        actual_rows = add_actual_update_steps(
             passage_rows,
+            max_update_steps=args.max_steps,
+        )
+
+        # 3) Tatsächliches Updateverhalten jeder Schwelle zusammenfassen.
+        map_summary = summarize_actual_updates(
+            actual_rows,
             max_threshold=max_threshold,
         )
 
-        # Schritt 3: Schwellen mit nahezu gleichem Updateverhalten
-        # zu Verhaltensgruppen zusammenfassen.
-        map_groups = build_behavior_groups(
+        # 4) Ähnliche tatsächliche Updateverhalten gruppieren.
+        map_groups = build_actual_update_groups(
             map_summary,
-            not_reached_tolerance=args.not_reached_tolerance,
+            fallback_tolerance=args.fallback_tolerance,
         )
 
-        # Schritt 4: Aus den Gruppen 10 möglichst unterschiedliche
-        # map-spezifische Schwellen auswählen.
-        selected_thresholds = choose_thresholds_from_groups(
+        # 5) 10 möglichst unterschiedliche Schwellen auswählen.
+        selected_thresholds = choose_thresholds_from_actual_groups(
             summary=map_summary,
             behavior_groups=map_groups,
             number_thresholds=args.number_thresholds,
         )
 
-        # Endergebnis dieser Map, z.B.:
-        #   14: [3, 5, 9, 12, 13, 14, 16, 17, 18, 19]
         thresholds_per_map[model.number] = selected_thresholds
 
         summary_by_threshold = {
@@ -939,21 +1207,23 @@ def main() -> None:
             for row in map_summary
         }
 
+        for row in actual_rows:
+            all_actual_rows.append({
+                "model": model.number,
+                **row,
+            })
+
         for row in map_summary:
-            all_statistics_rows.append(
-                {
-                    "model": model.number,
-                    **row,
-                }
-            )
+            all_statistics_rows.append({
+                "model": model.number,
+                **row,
+            })
 
         for row in map_groups:
-            all_group_rows.append(
-                {
-                    "model": model.number,
-                    **row,
-                }
-            )
+            all_group_rows.append({
+                "model": model.number,
+                **row,
+            })
 
         for decision, threshold in enumerate(
             selected_thresholds,
@@ -961,19 +1231,19 @@ def main() -> None:
         ):
             stats = summary_by_threshold[threshold]
 
-            all_selected_rows.append(
-                {
-                    "model": model.number,
-                    "decision": decision,
-                    "threshold": threshold,
-                    "first_step_q1": stats["first_step_q1"],
-                    "first_step_median": stats["first_step_median"],
-                    "first_step_mean": stats["first_step_mean"],
-                    "first_step_q3": stats["first_step_q3"],
-                    "reached_fraction": stats["reached_fraction"],
-                    "not_reached_fraction": stats["not_reached_fraction"],
-                }
-            )
+            all_selected_rows.append({
+                "model": model.number,
+                "decision": decision,
+                "threshold": threshold,
+                "actual_update_q1": stats["actual_update_q1"],
+                "actual_update_median": stats["actual_update_median"],
+                "actual_update_mean": stats["actual_update_mean"],
+                "actual_update_q3": stats["actual_update_q3"],
+                "interval_trigger_fraction": (
+                    stats["interval_trigger_fraction"]
+                ),
+                "fallback_fraction": stats["fallback_fraction"],
+            })
 
         print(
             f"Map {model.number}: thresholds = "
@@ -985,21 +1255,22 @@ def main() -> None:
         all_selected_rows,
     )
     write_csv(
-        args.output_dir / "threshold_statistics_per_map.csv",
+        args.output_dir / "actual_update_statistics_per_map.csv",
         all_statistics_rows,
     )
     write_csv(
-        args.output_dir / "behavior_groups_per_map.csv",
+        args.output_dir / "actual_update_groups_per_map.csv",
         all_group_rows,
+    )
+    write_csv(
+        args.output_dir / "actual_update_by_start.csv",
+        all_actual_rows,
     )
     write_csv(
         args.output_dir / "skipped_models.csv",
         skipped_models,
     )
 
-    # Zusätzlich wird eine direkt importierbare Python-Datei erzeugt.
-    # Diese kann anschließend von prism_model_generator_interval.py und
-    # urc_synthesis_interval.py verwendet werden.
     mapping_path = args.output_dir / "thresholds_per_map.py"
     with mapping_path.open("w", encoding="utf-8") as file:
         file.write("THRESHOLDS_PER_MAP = {\n")
@@ -1019,8 +1290,9 @@ def main() -> None:
     print("Wichtigste Dateien:")
     print("  thresholds_per_map.py")
     print("  selected_thresholds_per_map.csv")
-    print("  behavior_groups_per_map.csv")
-    print("  threshold_statistics_per_map.csv")
+    print("  actual_update_statistics_per_map.csv")
+    print("  actual_update_groups_per_map.csv")
+    print("  actual_update_by_start.csv")
 
 
 if __name__ == "__main__":

@@ -1,5 +1,3 @@
-# sind von analyze_interval_thresholds_per_map_actual_updates ermittelt
-
 THRESHOLDS_PER_MAP = {
     10: [3, 5, 9, 10, 12, 14, 15, 16, 18, 19],
     11: [3, 5, 8, 9, 12, 13, 15, 16, 18, 19],
