@@ -10,7 +10,7 @@ def main():
     #     outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
     #     prism_model_generator_interval.generate_model(i)
     #     urc_synthesis_interval.manipulate_prism_model(infile, outfile, baseline=False)
-    i=10
+    i=63
     infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
     outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
     prism_model_generator_interval_per_map.generate_model(i)
