@@ -61,8 +61,8 @@ def main():
      54, 55, 56, 57, 63, 66, 71, 75, 81, 82, 83, 85, 87, 89, 90, 97]
                     
     # maps()
-    maps = [66, 71] # selected_maps
-    for i in maps: # lasse auf map 66,71 laufen
+    maps = [75, 81, 82] # selected_maps
+    for i in maps: # lasse auf map 75,81,82 laufen
         models(i)
         #baseline(i)
         print('Starting EvoChecker for map {0}'.format(str(i)))
@@ -72,21 +72,27 @@ def main():
         runtime = end - start
         print(f"Total runtime of EvoChecker for map {i} is {runtime:.3f} seconds")
 
-        # time speichern
-        filename = "times_interval.txt"
-        times = {}
-        try:
-            with open(filename, "r") as f:
-                for line in f:
-                    map_str, time_str = line.strip().split(": ")
-                    map_id = int(map_str.replace("Map ", ""))
-                    times[map_id] = float(time_str)
-        except FileNotFoundError:
-            pass
-        times[i] = runtime
-        with open(filename, "w") as f:
-            for map_id in sorted(times):
-                f.write(f"Map {map_id}: {times[map_id]:.3f}\n")
+        # # time speichern
+        # filename = "times_interval.txt"
+        # times = {}
+        # try:
+        #     with open(filename, "r") as f:
+        #         for line in f:
+        #             map_str, time_str = line.strip().split(": ")
+        #             map_id = int(map_str.replace("Map ", ""))
+        #             times[map_id] = float(time_str)
+        # except FileNotFoundError:
+        #     pass
+        # times[i] = runtime
+        # with open(filename, "w") as f:
+        #     for map_id in sorted(times):
+        #         f.write(f"Map {map_id}: {times[map_id]:.3f}\n")
+        
+        times_dir = "times_interval"
+        os.makedirs(times_dir, exist_ok=True)
+        times_file = os.path.join(times_dir, f"map_{i}.txt")
+        with open(times_file, "w") as f:
+            f.write(f"{runtime:.3f}\n")
         
         fronts(i)
         print(f'Finished map {i}')
