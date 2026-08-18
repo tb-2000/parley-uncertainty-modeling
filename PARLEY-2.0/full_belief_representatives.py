@@ -156,7 +156,17 @@ def _distance_matrix(vectors):
     return matrix
 
 
-def _cluster(candidates, k):
+def _cluster(
+    candidates,
+    k,
+    max_iter=100,
+):
+    """
+    Weighted k-medoids-style quantisation with farthest-first initialisation.
+
+    The refinement now runs until the medoid set no longer changes.
+    max_iter is only a safety limit.
+    """
     vectors = [item["vector"] for item in candidates]
     weights = [item["weight"] for item in candidates]
 
@@ -177,6 +187,7 @@ def _cluster(candidates, k):
             ),
         )
 
+        # Farthest-first initialisation.
         medoids = [zero_index]
         nearest = [
             matrix[i][zero_index]
@@ -185,37 +196,59 @@ def _cluster(candidates, k):
 
         while len(medoids) < k:
             nxt = max(
-                (i for i in range(len(vectors)) if i not in medoids),
-                key=lambda i: (nearest[i], -i),
+                (
+                    i
+                    for i in range(len(vectors))
+                    if i not in medoids
+                ),
+                key=lambda i: (
+                    nearest[i],
+                    -i,
+                ),
             )
             medoids.append(nxt)
-            for i in range(len(vectors)):
-                nearest[i] = min(nearest[i], matrix[i][nxt])
 
-        # A few deterministic k-medoids refinement rounds.
-        for _ in range(5):
-            clusters = {m: [] for m in medoids}
             for i in range(len(vectors)):
-                m = min(
+                nearest[i] = min(
+                    nearest[i],
+                    matrix[i][nxt],
+                )
+
+        # Refine until convergence.
+        converged = False
+
+        for _ in range(max_iter):
+            clusters = {
+                medoid: []
+                for medoid in medoids
+            }
+
+            for i in range(len(vectors)):
+                medoid = min(
                     medoids,
                     key=lambda candidate: (
                         matrix[i][candidate],
                         candidate,
                     ),
                 )
-                clusters[m].append(i)
+                clusters[medoid].append(i)
 
             refined = []
-            for m in medoids:
-                members = clusters[m]
-                if m == zero_index:
-                    refined.append(m)
+
+            for medoid in medoids:
+                members = clusters[medoid]
+
+                # Keep the exact certainty belief fixed.
+                if medoid == zero_index:
+                    refined.append(medoid)
                     continue
+
                 best = min(
                     members,
                     key=lambda candidate: (
                         sum(
-                            weights[j] * matrix[candidate][j]
+                            weights[j]
+                            * matrix[candidate][j]
                             for j in members
                         ),
                         candidate,
@@ -225,19 +258,35 @@ def _cluster(candidates, k):
 
             if set(refined) == set(medoids):
                 medoids = refined
+                converged = True
                 break
+
             medoids = refined
 
-    # Put certainty representative first.
-    certain = min(
-        medoids,
-        key=lambda i: max(vectors[i])
-    )
-    # Correct certainty detection: max probability closest to 1.
-    certain = max(medoids, key=lambda i: max(vectors[i]))
-    medoids = [certain] + sorted(m for m in medoids if m != certain)
+        if not converged:
+            print(
+                f"Warning: k-medoids did not converge "
+                f"within max_iter={max_iter}"
+            )
 
-    return [vectors[i] for i in medoids]
+    # Put certainty representative first.
+    certain = max(
+        medoids,
+        key=lambda i: max(vectors[i]),
+    )
+
+    medoids = [
+        certain
+    ] + sorted(
+        medoid
+        for medoid in medoids
+        if medoid != certain
+    )
+
+    return [
+        vectors[i]
+        for i in medoids
+    ]
 
 
 def _nearest(vector, representatives):
@@ -338,22 +387,18 @@ def build_belief_model(
     cache_dir.mkdir(parents=True, exist_ok=True)
     cache_path = cache_dir / f"map_{map_id}.json"
 
-    if cache_path.exists():
-        with open(cache_path, "r", encoding="utf-8") as file:
-            cached = json.load(file)
-        if (
-            cached.get("k") == k
-            and cached.get("max_steps") == max_steps
-            and abs(cached.get("p", -1) - p) < 1e-15
-        ):
-            return cached
+    # Always rebuild the belief model so existing map_X.json files
+    # are overwritten with the newly converged medoids.
+
 
     candidates, gini_by_age, controller = _generate_records(
         map_data, target, p, max_steps
     )
 
     representatives = _cluster(
-        candidates, min(k, len(candidates))
+        candidates,
+        min(k, len(candidates)),
+        max_iter=100,
     )
 
     # If fewer than K unique reachable beliefs exist, keep the real count.
