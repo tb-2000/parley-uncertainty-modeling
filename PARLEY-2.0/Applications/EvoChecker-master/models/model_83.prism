@@ -1,5 +1,5 @@
 dtmc
-const int max_interval_width = 4;
+const int c = 1;
 const int N=9;
 const int xstart = 0;
 const int ystart = 0;
@@ -8,13 +8,6 @@ const int ytarget = 9;
 const double p = 0.01;
  
 formula hasCrashed = (1=0) | (x=0 & y=1) | (x=0 & y=2) | (x=0 & y=5) | (x=0 & y=8) | (x=1 & y=1) | (x=1 & y=2) | (x=1 & y=4) | (x=1 & y=7) | (x=1 & y=9) | (x=2 & y=1) | (x=2 & y=2) | (x=3 & y=2) | (x=3 & y=4) | (x=3 & y=6) | (x=3 & y=8) | (x=3 & y=9) | (x=4 & y=1) | (x=4 & y=2) | (x=4 & y=4) | (x=5 & y=6) | (x=5 & y=8) | (x=6 & y=2) | (x=6 & y=6) | (x=7 & y=2) | (x=7 & y=6) | (x=7 & y=8) | (x=7 & y=9) | (x=8 & y=2) | (x=8 & y=3) | (x=8 & y=5) | (x=8 & y=9) | (x=9 & y=4) ;
-
-formula xlow = max(xhat-xradius, 0);
-formula xhigh = min(xhat+xradius, N);
-formula ylow = max(yhat-yradius, 0);
-formula yhigh = min(yhat+yradius, N);
-formula interval_width = (xhigh-xlow) + (yhigh-ylow);
-formula update_required = interval_width>=max_interval_width;
 
 module Robot 
   x : [0..N] init xstart;
@@ -119,36 +112,15 @@ endmodule
 module Knowledge
   xhat : [0..N] init xstart;
   yhat : [0..N] init ystart;
-  xradius : [0..N] init 0;
-  yradius : [0..N] init 0;
+  step : [1..20] init 1;
+
   ready : [0..1] init 1;
-
-  [west] ready=1 ->
-    (xhat'=max(xhat-1, 0)) &
-    (xradius'=min(xradius+2, N)) &
-    (yradius'=min(yradius+1, N)) &
-    (ready'=0);
-  [east] ready=1 ->
-    (xhat'=min(xhat+1, N)) &
-    (xradius'=min(xradius+2, N)) &
-    (yradius'=min(yradius+1, N)) &
-    (ready'=0);
-  [south] ready=1 ->
-    (yhat'=max(yhat-1, 0)) &
-    (xradius'=min(xradius+1, N)) &
-    (yradius'=min(yradius+2, N)) &
-    (ready'=0);
-  [north] ready=1 ->
-    (yhat'=min(yhat+1, N)) &
-    (xradius'=min(xradius+1, N)) &
-    (yradius'=min(yradius+2, N)) &
-    (ready'=0);
-
-  [update] update_required & ready=0 ->
-    (xhat'=x) & (yhat'=y) &
-    (xradius'=0) & (yradius'=0) &
-    (ready'=1);
-  [skip_update] !update_required & ready=0 -> (ready'=1);
+  [west] ready=1 -> (xhat'=max(xhat-1, 0)) & (ready'=0);
+  [east] ready=1 -> (xhat'=min(xhat+1, N)) & (ready'=0);
+  [south] ready=1 -> (yhat'=max(yhat-1, 0)) & (ready'=0);
+  [north] ready=1 -> (yhat'=min(yhat+1, N)) & (ready'=0);
+  [update] step>=c & ready=0 -> (xhat'=x) & (yhat'=y) & (step'=1) & (ready'=1);
+  [skip_update] step<c & ready=0 -> (ready'=1) & (step'=step+1);
 endmodule
 
 rewards "cost" 
