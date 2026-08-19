@@ -197,7 +197,10 @@ def generate_model(i):
     global prism_file, max_interval_width
     prism_file = "Applications/EvoChecker-master/models/model_" + str(i) + ".prism"
     read_params_from_file()
-    max_interval_width = THRESHOLDS_PER_MAP[i][0]
+    thresholds = THRESHOLDS_PER_MAP[i]
+    if not thresholds:
+        raise ValueError(f"No interval thresholds configured for map {i}")
+    max_interval_width = thresholds[0]
     build_map("maps/map_" + str(i) + ".csv")
     target_pos = (targetX, targetY)
     _d = dijkstra.compute_directions(map_data, target_pos)

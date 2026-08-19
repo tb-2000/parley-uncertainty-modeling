@@ -14,12 +14,14 @@ def manipulate_prism_model(input_path, output_path, possible_decisions=[1, 10], 
     variables, estimates = get_variables(input_path, decision_variables)
 
     remove_counter_from_module(output_path)
-    add_max_update_distance(output_path)
 
     map_match = re.search(r'model_(\d+)', os.path.basename(input_path))
     if not map_match:
         raise ValueError(f'Could not determine map number from {input_path}')
     thresholds = THRESHOLDS_PER_MAP[int(map_match.group(1))]
+    if not thresholds:
+        raise ValueError(f'No interval thresholds configured for {input_path}')
+    possible_decisions = [1, len(thresholds)]
 
     add_controller(output_path, estimates, variables, possible_decisions, thresholds, baseline=baseline)
 
@@ -83,118 +85,11 @@ def remove_counter_from_module(output_path):
 
 
 
-def add_max_update_distance(output_path):
-    # Interval width remains the primary trigger. The Knowledge module also
-    # stores how many movements occurred since the last update and forces an
-    # update after at most 10 movements.
-    update_formula_pattern = re.compile(
-        r"^\s*formula\s+update_required\s*=\s*interval_width\s*>=\s*max_interval_width\s*;\s*$"
-    )
-    ready_declaration_pattern = re.compile(
-        r"^\s*ready\s*:\s*\[0\.\.1\]\s*init\s*1\s*;\s*$"
-    )
-    movement_pattern = re.compile(
-        r"^\s*\[(west|east|south|north)\]\s+ready=1\s*->"
-    )
-    update_pattern = re.compile(
-        r"^\s*\[update\]\s+update_required\s*&\s*ready=0\s*->"
-    )
-
-    with open(output_path, 'r') as file:
-        lines = file.readlines()
-
-    new_lines = []
-    in_knowledge = False
-    movement_command = None
-    in_update_command = False
-    inserted_counter = False
-    replaced_formula = False
-
-    for line in lines:
-        stripped = line.strip()
-
-        if stripped == "module Knowledge":
-            in_knowledge = True
-
-        if update_formula_pattern.match(line):
-            new_lines.append(
-                "formula update_required = "
-                "interval_width>=max_interval_width | steps_since_update>=10;\n"
-            )
-            replaced_formula = True
-            continue
-
-        if in_knowledge and ready_declaration_pattern.match(line):
-            new_lines.append(line)
-            new_lines.append(
-                "  steps_since_update : [0..10] init 0;\n"
-            )
-            inserted_counter = True
-            continue
-
-        if in_knowledge and movement_pattern.match(line):
-            movement_command = True
-            new_lines.append(line)
-            continue
-
-        if in_knowledge and movement_command:
-            # Insert before the final (ready'=0); line of each movement command.
-            if "(ready'=0);" in line:
-                indent = line[:len(line) - len(line.lstrip())]
-                new_lines.append(
-                    indent
-                    + "(steps_since_update'=min(steps_since_update+1,10)) &\n"
-                )
-                new_lines.append(line)
-                movement_command = None
-            else:
-                new_lines.append(line)
-            continue
-
-        if in_knowledge and update_pattern.match(line):
-            in_update_command = True
-            new_lines.append(line)
-            continue
-
-        if in_knowledge and in_update_command:
-            # Insert reset before the final (ready'=1); line of [update].
-            if "(ready'=1);" in line:
-                indent = line[:len(line) - len(line.lstrip())]
-                new_lines.append(
-                    indent + "(steps_since_update'=0) &\n"
-                )
-                new_lines.append(line)
-                in_update_command = False
-            else:
-                new_lines.append(line)
-            continue
-
-        new_lines.append(line)
-
-        if in_knowledge and stripped == "endmodule":
-            in_knowledge = False
-
-    if not replaced_formula:
-        raise ValueError(
-            "Could not find the expected update_required formula in "
-            f"{output_path}"
-        )
-    if not inserted_counter:
-        raise ValueError(
-            "Could not insert steps_since_update into Knowledge module in "
-            f"{output_path}"
-        )
-
-    with open(output_path, 'w') as file:
-        file.writelines(new_lines)
-
-
-
 def add_controller(file_path, estimates, variables, possible_decisions, thresholds, baseline):
     combinations = generate_combinations_list(variables)
     __add_controller_prefix(file_path, possible_decisions, combinations, variables, baseline)
     with open(file_path, 'a') as file:
-        # Ten decisions map to the thresholds calibrated for this map.
+        # The number of decisions matches the number of distinct thresholds for this map.
         file.write(
             f'  max_interval_width : [{min(thresholds)}..{max(thresholds)}] '
             f'init {thresholds[0]};\n'
