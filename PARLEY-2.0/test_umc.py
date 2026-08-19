@@ -13,7 +13,7 @@ def main():
     #     urc_synthesis.manipulate_prism_model(infile, outfile, baseline=False)
     #     print(f"generated: {outfile}")
 
-    i=32
+    i=48
     infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
     outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
     prism_model_generator_belief_full.generate_model(i)
