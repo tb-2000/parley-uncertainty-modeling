@@ -155,7 +155,6 @@ def _distance_matrix(vectors):
             matrix[j][i] = d
     return matrix
 
-
 def _cluster(
     candidates,
     k,
@@ -167,6 +166,7 @@ def _cluster(
     The refinement now runs until the medoid set no longer changes.
     max_iter is only a safety limit.
     """
+    
     vectors = [item["vector"] for item in candidates]
     weights = [item["weight"] for item in candidates]
 
@@ -216,13 +216,56 @@ def _cluster(
 
         # Refine until convergence.
         converged = False
+        cycle_detected = False
 
-        for _ in range(max_iter):
+
+        def objective(current_medoids):
+            """
+            Weighted clustering objective:
+            sum of the weighted distances of every candidate
+            to its nearest medoid.
+            """
+            return sum(
+                weights[i] * min(
+                    matrix[i][medoid]
+                    for medoid in current_medoids
+                )
+                for i in range(len(vectors))
+            )
+
+
+        # Best configuration observed so far.
+        best_medoids = list(medoids)
+        best_objective = objective(medoids)
+
+        seen = {}
+        counter = 0
+
+        for iteration in range(max_iter):
+            counter += 1
+
+            # Detect repeated medoid configurations.
+            key = tuple(sorted(medoids))
+
+            if key in seen:
+                print(
+                    f"Medoid cycle detected: "
+                    f"iteration {seen[key]} -> {iteration}, "
+                    f"cycle length = {iteration - seen[key]}"
+                )
+
+                cycle_detected = True
+                medoids = best_medoids
+                break
+
+            seen[key] = iteration
+
             clusters = {
                 medoid: []
                 for medoid in medoids
             }
 
+            # Assign each candidate to its nearest medoid.
             for i in range(len(vectors)):
                 medoid = min(
                     medoids,
@@ -235,6 +278,7 @@ def _cluster(
 
             refined = []
 
+            # Find the weighted medoid of each cluster.
             for medoid in medoids:
                 members = clusters[medoid]
 
@@ -256,6 +300,14 @@ def _cluster(
                 )
                 refined.append(best)
 
+            # Evaluate the newly generated medoid configuration.
+            refined_objective = objective(refined)
+
+            if refined_objective < best_objective:
+                best_objective = refined_objective
+                best_medoids = list(refined)
+
+            # Fixed point reached.
             if set(refined) == set(medoids):
                 medoids = refined
                 converged = True
@@ -263,10 +315,27 @@ def _cluster(
 
             medoids = refined
 
-        if not converged:
+
+        # Always use the best configuration encountered.
+        medoids = best_medoids
+
+        print(f"Refinement iterations: {counter}")
+
+        if converged:
+            print(
+                f"k-medoids converged; "
+                f"best objective = {best_objective}"
+            )
+        elif cycle_detected:
+            print(
+                f"k-medoids stopped due to cycle; "
+                f"using best objective = {best_objective}"
+            )
+        else:
             print(
                 f"Warning: k-medoids did not converge "
-                f"within max_iter={max_iter}"
+                f"within max_iter={max_iter}; "
+                f"using best objective = {best_objective}"
             )
 
     # Put certainty representative first.
