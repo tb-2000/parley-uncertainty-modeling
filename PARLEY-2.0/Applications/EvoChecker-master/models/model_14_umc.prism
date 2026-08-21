@@ -202,6 +202,7 @@ endmodule
 module Knowledge
   xhat : [0..N] init xstart;
   yhat : [0..N] init ystart;
+<<<<<<< HEAD
   belief_state : [0..99] init 0;
 
   ready : [0..1] init 1;
@@ -7607,6 +7608,17 @@ module Knowledge
   [north] ready=1 & xhat=9 & yhat=8 & belief_state=99 -> (yhat'=min(yhat+1, N)) & (belief_state'=83) & (ready'=0);
   [update] update_required & ready=0 -> (xhat'=x) & (yhat'=y) & (belief_state'=0) & (ready'=1);
   [skip_update] !update_required & ready=0 -> (ready'=1);
+=======
+  step : [1..20] init 1;
+
+  ready : [0..1] init 1;
+  [west] ready=1 -> (xhat'=max(xhat-1, 0)) & (ready'=0);
+  [east] ready=1 -> (xhat'=min(xhat+1, N)) & (ready'=0);
+  [south] ready=1 -> (yhat'=max(yhat-1, 0)) & (ready'=0);
+  [north] ready=1 -> (yhat'=min(yhat+1, N)) & (ready'=0);
+  [update] step>=c & ready=0 -> (xhat'=x) & (yhat'=y) & (step'=1) & (ready'=1);
+  [skip_update] step<c & ready=0 -> (ready'=1) & (step'=step+1);
+>>>>>>> 9f236002892fec5e3bc6f93b7d6f30ef9eaf93c6
 endmodule
 
 rewards "cost" 
@@ -7719,6 +7731,7 @@ evolve int decision_9_7 [1..10];
 evolve int decision_9_8 [1..10];
 evolve int decision_9_9 [1..10];
 module URC
+<<<<<<< HEAD
   max_belief_uncertainty : [588..4419] init 588;
   [URC] true & xhat=0 & yhat=0 & decision_0_0=1 -> (max_belief_uncertainty'=588);
   [URC] true & xhat=0 & yhat=0 & decision_0_0=2 -> (max_belief_uncertainty'=1136);
@@ -8720,6 +8733,109 @@ module URC
   [URC] true & xhat=9 & yhat=9 & decision_9_9=8 -> (max_belief_uncertainty'=3746);
   [URC] true & xhat=9 & yhat=9 & decision_9_9=9 -> (max_belief_uncertainty'=4092);
   [URC] true & xhat=9 & yhat=9 & decision_9_9=10 -> (max_belief_uncertainty'=4419);
+=======
+  c : [1..10] init 1;
+  [URC] true & xhat=0 & yhat=0 -> (c'=decision_0_0);
+  [URC] true & xhat=0 & yhat=1 -> (c'=decision_0_1);
+  [URC] true & xhat=0 & yhat=2 -> (c'=decision_0_2);
+  [URC] true & xhat=0 & yhat=3 -> (c'=decision_0_3);
+  [URC] true & xhat=0 & yhat=4 -> (c'=decision_0_4);
+  [URC] true & xhat=0 & yhat=5 -> (c'=decision_0_5);
+  [URC] true & xhat=0 & yhat=6 -> (c'=decision_0_6);
+  [URC] true & xhat=0 & yhat=7 -> (c'=decision_0_7);
+  [URC] true & xhat=0 & yhat=8 -> (c'=decision_0_8);
+  [URC] true & xhat=0 & yhat=9 -> (c'=decision_0_9);
+  [URC] true & xhat=1 & yhat=0 -> (c'=decision_1_0);
+  [URC] true & xhat=1 & yhat=1 -> (c'=decision_1_1);
+  [URC] true & xhat=1 & yhat=2 -> (c'=decision_1_2);
+  [URC] true & xhat=1 & yhat=3 -> (c'=decision_1_3);
+  [URC] true & xhat=1 & yhat=4 -> (c'=decision_1_4);
+  [URC] true & xhat=1 & yhat=5 -> (c'=decision_1_5);
+  [URC] true & xhat=1 & yhat=6 -> (c'=decision_1_6);
+  [URC] true & xhat=1 & yhat=7 -> (c'=decision_1_7);
+  [URC] true & xhat=1 & yhat=8 -> (c'=decision_1_8);
+  [URC] true & xhat=1 & yhat=9 -> (c'=decision_1_9);
+  [URC] true & xhat=2 & yhat=0 -> (c'=decision_2_0);
+  [URC] true & xhat=2 & yhat=1 -> (c'=decision_2_1);
+  [URC] true & xhat=2 & yhat=2 -> (c'=decision_2_2);
+  [URC] true & xhat=2 & yhat=3 -> (c'=decision_2_3);
+  [URC] true & xhat=2 & yhat=4 -> (c'=decision_2_4);
+  [URC] true & xhat=2 & yhat=5 -> (c'=decision_2_5);
+  [URC] true & xhat=2 & yhat=6 -> (c'=decision_2_6);
+  [URC] true & xhat=2 & yhat=7 -> (c'=decision_2_7);
+  [URC] true & xhat=2 & yhat=8 -> (c'=decision_2_8);
+  [URC] true & xhat=2 & yhat=9 -> (c'=decision_2_9);
+  [URC] true & xhat=3 & yhat=0 -> (c'=decision_3_0);
+  [URC] true & xhat=3 & yhat=1 -> (c'=decision_3_1);
+  [URC] true & xhat=3 & yhat=2 -> (c'=decision_3_2);
+  [URC] true & xhat=3 & yhat=3 -> (c'=decision_3_3);
+  [URC] true & xhat=3 & yhat=4 -> (c'=decision_3_4);
+  [URC] true & xhat=3 & yhat=5 -> (c'=decision_3_5);
+  [URC] true & xhat=3 & yhat=6 -> (c'=decision_3_6);
+  [URC] true & xhat=3 & yhat=7 -> (c'=decision_3_7);
+  [URC] true & xhat=3 & yhat=8 -> (c'=decision_3_8);
+  [URC] true & xhat=3 & yhat=9 -> (c'=decision_3_9);
+  [URC] true & xhat=4 & yhat=0 -> (c'=decision_4_0);
+  [URC] true & xhat=4 & yhat=1 -> (c'=decision_4_1);
+  [URC] true & xhat=4 & yhat=2 -> (c'=decision_4_2);
+  [URC] true & xhat=4 & yhat=3 -> (c'=decision_4_3);
+  [URC] true & xhat=4 & yhat=4 -> (c'=decision_4_4);
+  [URC] true & xhat=4 & yhat=5 -> (c'=decision_4_5);
+  [URC] true & xhat=4 & yhat=6 -> (c'=decision_4_6);
+  [URC] true & xhat=4 & yhat=7 -> (c'=decision_4_7);
+  [URC] true & xhat=4 & yhat=8 -> (c'=decision_4_8);
+  [URC] true & xhat=4 & yhat=9 -> (c'=decision_4_9);
+  [URC] true & xhat=5 & yhat=0 -> (c'=decision_5_0);
+  [URC] true & xhat=5 & yhat=1 -> (c'=decision_5_1);
+  [URC] true & xhat=5 & yhat=2 -> (c'=decision_5_2);
+  [URC] true & xhat=5 & yhat=3 -> (c'=decision_5_3);
+  [URC] true & xhat=5 & yhat=4 -> (c'=decision_5_4);
+  [URC] true & xhat=5 & yhat=5 -> (c'=decision_5_5);
+  [URC] true & xhat=5 & yhat=6 -> (c'=decision_5_6);
+  [URC] true & xhat=5 & yhat=7 -> (c'=decision_5_7);
+  [URC] true & xhat=5 & yhat=8 -> (c'=decision_5_8);
+  [URC] true & xhat=5 & yhat=9 -> (c'=decision_5_9);
+  [URC] true & xhat=6 & yhat=0 -> (c'=decision_6_0);
+  [URC] true & xhat=6 & yhat=1 -> (c'=decision_6_1);
+  [URC] true & xhat=6 & yhat=2 -> (c'=decision_6_2);
+  [URC] true & xhat=6 & yhat=3 -> (c'=decision_6_3);
+  [URC] true & xhat=6 & yhat=4 -> (c'=decision_6_4);
+  [URC] true & xhat=6 & yhat=5 -> (c'=decision_6_5);
+  [URC] true & xhat=6 & yhat=6 -> (c'=decision_6_6);
+  [URC] true & xhat=6 & yhat=7 -> (c'=decision_6_7);
+  [URC] true & xhat=6 & yhat=8 -> (c'=decision_6_8);
+  [URC] true & xhat=6 & yhat=9 -> (c'=decision_6_9);
+  [URC] true & xhat=7 & yhat=0 -> (c'=decision_7_0);
+  [URC] true & xhat=7 & yhat=1 -> (c'=decision_7_1);
+  [URC] true & xhat=7 & yhat=2 -> (c'=decision_7_2);
+  [URC] true & xhat=7 & yhat=3 -> (c'=decision_7_3);
+  [URC] true & xhat=7 & yhat=4 -> (c'=decision_7_4);
+  [URC] true & xhat=7 & yhat=5 -> (c'=decision_7_5);
+  [URC] true & xhat=7 & yhat=6 -> (c'=decision_7_6);
+  [URC] true & xhat=7 & yhat=7 -> (c'=decision_7_7);
+  [URC] true & xhat=7 & yhat=8 -> (c'=decision_7_8);
+  [URC] true & xhat=7 & yhat=9 -> (c'=decision_7_9);
+  [URC] true & xhat=8 & yhat=0 -> (c'=decision_8_0);
+  [URC] true & xhat=8 & yhat=1 -> (c'=decision_8_1);
+  [URC] true & xhat=8 & yhat=2 -> (c'=decision_8_2);
+  [URC] true & xhat=8 & yhat=3 -> (c'=decision_8_3);
+  [URC] true & xhat=8 & yhat=4 -> (c'=decision_8_4);
+  [URC] true & xhat=8 & yhat=5 -> (c'=decision_8_5);
+  [URC] true & xhat=8 & yhat=6 -> (c'=decision_8_6);
+  [URC] true & xhat=8 & yhat=7 -> (c'=decision_8_7);
+  [URC] true & xhat=8 & yhat=8 -> (c'=decision_8_8);
+  [URC] true & xhat=8 & yhat=9 -> (c'=decision_8_9);
+  [URC] true & xhat=9 & yhat=0 -> (c'=decision_9_0);
+  [URC] true & xhat=9 & yhat=1 -> (c'=decision_9_1);
+  [URC] true & xhat=9 & yhat=2 -> (c'=decision_9_2);
+  [URC] true & xhat=9 & yhat=3 -> (c'=decision_9_3);
+  [URC] true & xhat=9 & yhat=4 -> (c'=decision_9_4);
+  [URC] true & xhat=9 & yhat=5 -> (c'=decision_9_5);
+  [URC] true & xhat=9 & yhat=6 -> (c'=decision_9_6);
+  [URC] true & xhat=9 & yhat=7 -> (c'=decision_9_7);
+  [URC] true & xhat=9 & yhat=8 -> (c'=decision_9_8);
+  [URC] true & xhat=9 & yhat=9 -> (c'=decision_9_9);
+>>>>>>> 9f236002892fec5e3bc6f93b7d6f30ef9eaf93c6
 endmodule
 module Turn
   t : [0..2] init 0;

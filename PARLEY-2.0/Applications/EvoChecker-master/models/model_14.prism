@@ -203,6 +203,7 @@ endmodule
 module Knowledge
   xhat : [0..N] init xstart;
   yhat : [0..N] init ystart;
+<<<<<<< HEAD
   belief_state : [0..99] init 0;
 
   ready : [0..1] init 1;
@@ -7608,6 +7609,17 @@ module Knowledge
   [north] ready=1 & xhat=9 & yhat=8 & belief_state=99 -> (yhat'=min(yhat+1, N)) & (belief_state'=83) & (ready'=0);
   [update] update_required & ready=0 -> (xhat'=x) & (yhat'=y) & (belief_state'=0) & (ready'=1);
   [skip_update] !update_required & ready=0 -> (ready'=1);
+=======
+  step : [1..20] init 1;
+
+  ready : [0..1] init 1;
+  [west] ready=1 -> (xhat'=max(xhat-1, 0)) & (ready'=0);
+  [east] ready=1 -> (xhat'=min(xhat+1, N)) & (ready'=0);
+  [south] ready=1 -> (yhat'=max(yhat-1, 0)) & (ready'=0);
+  [north] ready=1 -> (yhat'=min(yhat+1, N)) & (ready'=0);
+  [update] step>=c & ready=0 -> (xhat'=x) & (yhat'=y) & (step'=1) & (ready'=1);
+  [skip_update] step<c & ready=0 -> (ready'=1) & (step'=step+1);
+>>>>>>> 9f236002892fec5e3bc6f93b7d6f30ef9eaf93c6
 endmodule
 
 rewards "cost" 

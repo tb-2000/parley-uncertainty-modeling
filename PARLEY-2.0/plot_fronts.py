@@ -46,33 +46,33 @@ def plot_pareto_front(m=10, replication=0, header=True):
             next(file)  # Skip the header row
         for line in file:
             x, y = map(float, line.strip().split('\t'))
-            #x, y = map(float, line.split())
+            # x, y = map(float, line.split())
             data.append((x, y))
 
     pareto_data = pareto_front(data)
 
-    x_values = [x for x, y in pareto_data]
-    y_values = [y for x, y in pareto_data]
+    x_values = [x for x, _ in pareto_data]
+    y_values = [y for _, y in pareto_data]
 
-    data = []
-    with open(f'Applications/EvoChecker-master/data/ROBOT{m}_BASELINE/Front', 'r') as file:
-        for line in file:
-            x, y = map(float, line.strip().split('	'))
-            #x, y = map(float, line.split())
-            data.append((x, y))
+    # data = []
+    # with open(f'Applications/EvoChecker-master/data/ROBOT{m}_BASELINE/Front', 'r') as file:
+    #     for line in file:
+    #         x, y = map(float, line.strip().split('	'))
+    #         # x, y = map(float, line.split())
+    #         data.append((x, y))
 
-    baseline_data = pareto_front(data[:20])
+    # baseline_data = pareto_front(data[:20])
 
-    x_values_b = [x for x, y in baseline_data]
+    # x_values_b = [x for x, y in baseline_data]
 
-    y_values_b = [y for x, y in baseline_data]
+    # y_values_b = [y for x, y in baseline_data]
 
     plt.figure(figsize=(8, 6))
 
     plt.scatter(x_values, y_values, color='blue', label='URC')
 
-    # Add red crosses for the baseline
-    plt.scatter(x_values_b, y_values_b, color='red', marker='x', label='Baseline')
+    # # Add red crosses for the baseline
+    # plt.scatter(x_values_b, y_values_b, color='red', marker='x', label='Baseline')
 
     plt.xlabel('Probability of mission success')
     plt.ylabel('Cost')
