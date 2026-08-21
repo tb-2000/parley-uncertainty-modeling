@@ -13,21 +13,15 @@ def manipulate_prism_model(
         module_name='Knowledge',
         baseline=False):
     """
-    Adds the evolvable URC controller to a PRISM model.
+    Adds the URC controller to a PRISM model.
 
-    Gaussian model:
-      If ``gvar`` exists and no explicit decision_variables are supplied,
-      gvar is automatically used as the URC decision variable.
+    Gaussian refined model:
+      - gstate is the technical Markov state.
+      - gvar is the quantized Gaussian uncertainty class.
+      - the URC synthesizes one update interval c in [1..10] per gvar.
 
-      This creates:
-          evolve int decision_0 [1..10];
-          ...
-          [URC] true & gvar=0 -> (c'=decision_0);
-          ...
-
-    Legacy models:
-      If decision_variables=['x','y'] is supplied and xhat/yhat exist,
-      the guards use xhat/yhat.
+    If gvar exists and no explicit decision_variables are supplied,
+    gvar is automatically used.
     """
     if os.path.abspath(input_path) == os.path.abspath(output_path):
         raise ValueError("Input and output files cannot be the same.")
@@ -96,21 +90,25 @@ def _parse_int_variables(prism_model_path, int_constants):
 def get_variables(prism_model_path, decision_variables=None):
     """
     Returns:
-        variables:
-            ranges synthesized by EvoChecker
-        guard_variables:
-            PRISM variables used in [URC] guards
+      variables:
+        value ranges used to create evolve decision_* parameters
+      guard_variables:
+        model variables used in [URC] guards
 
-    Gaussian example:
-        variables       = [['gvar', 0, GMAX]]
+    Refined Gaussian model:
+        variables       = [['gvar', 0, GVAR_MAX]]
         guard_variables = ['gvar']
 
-    Legacy example:
-        decision_variables=['x','y']
-        guard_variables = ['xhat','yhat']
+    Thus the URC learns:
+        gvar -> c in [1..10]
+
+    gstate is intentionally NOT used as a decision variable.
     """
     int_constants = _parse_int_constants(prism_model_path)
-    declared = _parse_int_variables(prism_model_path, int_constants)
+    declared = _parse_int_variables(
+        prism_model_path,
+        int_constants
+    )
 
     if decision_variables is None:
         decision_variables = []
@@ -133,8 +131,10 @@ def get_variables(prism_model_path, decision_variables=None):
 
         variables.append(declared[name])
 
-        # Preserve x -> xhat / y -> yhat behavior for older models.
+        # Legacy behavior for x/y:
+        # x -> xhat, y -> yhat.
         estimated_name = name + 'hat'
+
         if estimated_name in declared:
             guard_variables.append(estimated_name)
         else:
@@ -155,12 +155,18 @@ def __get_limit(string, constants):
 
 
 def remove_counter_from_module(output_path):
-    pattern = re.compile(r"^\s*const\s+int\s+c\d*\s*=\s*\d+\s*;")
+    pattern = re.compile(
+        r"^\s*const\s+int\s+c\d*\s*=\s*\d+\s*;"
+    )
 
     with open(output_path, 'r') as file:
         lines = file.readlines()
 
-    new_lines = [line for line in lines if not pattern.match(line)]
+    new_lines = [
+        line
+        for line in lines
+        if not pattern.match(line)
+    ]
 
     with open(output_path, 'w') as file:
         file.writelines(new_lines)
@@ -189,14 +195,18 @@ def add_controller(
             new_line = '  [URC] true'
 
             for value, guard_variable in zip(
-                    combination, guard_variables):
-                new_line += f' & {guard_variable}={value}'
+                    combination,
+                    guard_variables):
+                new_line += (
+                    f' & {guard_variable}={value}'
+                )
 
             new_line += ' -> (c\'=decision'
+
             for value in combination:
                 new_line += f'_{value}'
-            new_line += ');\n'
 
+            new_line += ');\n'
             file.write(new_line)
 
         file.write('endmodule\n')
@@ -216,7 +226,10 @@ def __add_controller_prefix(
                 new_line = 'evolve int decision'
 
             for var in range(0, len(variables)):
-                new_line += '_' + str(combination[var])
+                new_line += (
+                    '_'
+                    + str(combination[var])
+                )
 
             if baseline:
                 new_line += '=1;'
@@ -231,23 +244,34 @@ def __add_controller_prefix(
         file.write('\nmodule URC\n')
 
 
-def add_turn(file_path, before_actions, after_actions):
+def add_turn(
+        file_path,
+        before_actions,
+        after_actions):
     with open(file_path, 'a') as file:
         file.write('module Turn\n')
         file.write('  t : [0..2] init 0;\n')
 
         for action in before_actions:
-            file.write(f'  [{action}] (t=0) -> (t\'=1);\n')
+            file.write(
+                f'  [{action}] (t=0) -> (t\'=1);\n'
+            )
 
         file.write('\n')
-        file.write('  [URC] (t=1) -> (t\'=2);\n')
+        file.write(
+            '  [URC] (t=1) -> (t\'=2);\n'
+        )
         file.write('\n')
 
         for action in after_actions:
-            file.write(f'  [{action}] (t=2) -> (t\'=0);\n')
+            file.write(
+                f'  [{action}] (t=2) -> (t\'=0);\n'
+            )
 
         if len(after_actions) == 0:
-            file.write('  [] (t=2) -> (t\'=0);\n')
+            file.write(
+                '  [] (t=2) -> (t\'=0);\n'
+            )
 
         file.write('endmodule\n')
 
@@ -259,7 +283,9 @@ def generate_combinations_list(variables):
             current_combination,
             remaining_variables):
         if not remaining_variables:
-            result.append(tuple(current_combination))
+            result.append(
+                tuple(current_combination)
+            )
             return
 
         current_variable = remaining_variables[0]
@@ -272,5 +298,9 @@ def generate_combinations_list(variables):
                 remaining_variables[1:]
             )
 
-    generate_combinations_recursive([], variables)
+    generate_combinations_recursive(
+        [],
+        variables
+    )
+
     return result
