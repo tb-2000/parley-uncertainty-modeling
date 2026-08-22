@@ -97,14 +97,21 @@ def get_belief_thresholds(file_path):
     return [thresholds[i] for i in range(1, 11)]
 
 
-def add_controller(file_path, estimates, variables, possible_decisions, baseline):
+def add_controller(
+    file_path,
+    estimates,
+    variables,
+    possible_decisions,
+    baseline,
+):
     combinations = generate_combinations_list(variables)
+
     __add_controller_prefix(
         file_path,
         possible_decisions,
         combinations,
         variables,
-        baseline
+        baseline,
     )
 
     thresholds = get_belief_thresholds(file_path)
@@ -116,28 +123,68 @@ def add_controller(file_path, estimates, variables, possible_decisions, baseline
             f'init {thresholds[0]};\n'
         )
 
+        # Helpful map-specific documentation.
+        file.write(
+            '  // decision value -> map-specific '
+            'max_belief_uncertainty\n'
+        )
+        for index, threshold in enumerate(
+            thresholds,
+            start=1,
+        ):
+            file.write(
+                f'  // {index} -> {threshold}\n'
+            )
+
         for combination in combinations:
             decision_name = 'decision'
-            for c in combination:
-                decision_name += f'_{c}'
+            for value in combination:
+                decision_name += f'_{value}'
 
             position_guard = ''
-            for c, estimate in zip(combination, estimates):
-                position_guard += f' & {estimate}={c}'
-
-            # PRISM 4.7-friendly: ten simple commands instead of one
-            # deeply nested ternary expression.
-            for index, threshold in enumerate(
-                thresholds,
-                start=1
+            for value, estimate in zip(
+                combination,
+                estimates,
             ):
-                file.write(
-                    f'  [URC] true{position_guard} '
-                    f'& {decision_name}={index} -> '
-                    f"(max_belief_uncertainty'={threshold});\n"
+                position_guard += (
+                    f' & {estimate}={value}'
                 )
 
+            # One compact URC command per position.
+            #
+            # Example:
+            # decision=1 ? threshold_1 :
+            # decision=2 ? threshold_2 :
+            # ...
+            # threshold_10
+            #
+            # This keeps the decision parameter on the RHS, as in the
+            # point-estimate/interval PARLEY encoding, while still mapping
+            # decision 1..10 to map-specific belief thresholds.
+            ternary_parts = []
+
+            for index, threshold in enumerate(
+                thresholds[:-1],
+                start=1,
+            ):
+                ternary_parts.append(
+                    f'{decision_name}={index} ? '
+                    f'{threshold} : '
+                )
+
+            ternary_expression = (
+                ''.join(ternary_parts)
+                + str(thresholds[-1])
+            )
+
+            file.write(
+                f'  [URC] true{position_guard} -> '
+                f"(max_belief_uncertainty'="
+                f"{ternary_expression});\n"
+            )
+
         file.write('endmodule\n')
+
 
 
 def __add_controller_prefix(file_path, possible_decisions, combinations, variables, baseline):
