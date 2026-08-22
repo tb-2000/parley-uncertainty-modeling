@@ -29,6 +29,7 @@ period = 1
 
 # Output directory of refine_gaussian_markov_states.py
 gaussian_refined_dir = "gaussian_refined"
+gaussian_trace_dir = "gaussian_trace"
 
 gaussian_gvars = []
 gaussian_gstates = []
@@ -39,6 +40,8 @@ gstate_max = 0
 
 # Position-dependent gstate used after a perfect update.
 reset_gstate_by_position = {}
+gaussian_trace_thresholds = []
+gaussian_trace_groups = {}
 
 
 def build_map(filename):
@@ -231,79 +234,106 @@ def load_gaussian_refined(map_id):
     reset_gstate_by_position = reset_mapping
 
 
+
+def load_gaussian_trace(map_id):
+    path = os.path.join(
+        gaussian_trace_dir,
+        f"gaussian_trace_{map_id}.json"
+    )
+
+    if not os.path.exists(path):
+        raise FileNotFoundError(
+            f"Gaussian trace file not found: {path}. "
+            "Run compute_gaussian_trace_thresholds.py first."
+        )
+
+    with open(path, 'r') as file:
+        data = json.load(file)
+
+    thresholds_raw = data.get("thresholds", {})
+    thresholds = [
+        int(thresholds_raw[str(i)])
+        for i in range(1, 11)
+    ]
+
+    if any(
+        thresholds[i] > thresholds[i + 1]
+        for i in range(len(thresholds) - 1)
+    ):
+        raise ValueError(
+            f"{path}: Gaussian trace thresholds are not monotonic."
+        )
+
+    groups_raw = data.get("trace_groups", {})
+    groups = {
+        int(trace_value): [int(g) for g in gvars]
+        for trace_value, gvars in groups_raw.items()
+    }
+
+    if not groups:
+        raise ValueError(
+            f"{path}: no trace_groups found."
+        )
+
+    global gaussian_trace_thresholds
+    global gaussian_trace_groups
+
+    gaussian_trace_thresholds = thresholds
+    gaussian_trace_groups = groups
+
 def preambel():
     with open(prism_file, 'a') as f:
         f.write('dtmc\n')
-        f.write(
-            f'const int c = {period};\n'
-        )
-        f.write(
-            'const int N='
-            + str(mapSize - 1)
-            + ';\n'
-        )
-        f.write(
-            'const int xstart = '
-            + str(startX)
-            + ';\n'
-        )
-        f.write(
-            'const int ystart = '
-            + str(startY)
-            + ';\n'
-        )
-        f.write(
-            'const int xtarget = '
-            + str(targetX)
-            + ';\n'
-        )
-        f.write(
-            'const int ytarget = '
-            + str(targetY)
-            + ';\n'
-        )
-        f.write(
-            'const double p = '
-            + str(p)
-            + ';\n'
-        )
-        f.write(
-            'const int GVAR_MAX = '
-            + str(gvar_max)
-            + ';\n'
-        )
-        f.write(
-            'const int GSTATE_MAX = '
-            + str(gstate_max)
-            + ';\n'
-        )
-        f.write('\n')
 
-        f.write(
-            'formula hasCrashed = (1=0) '
-        )
-
-        for x, y in obstacles:
+        for i, threshold in enumerate(
+                gaussian_trace_thresholds, start=1):
             f.write(
-                '| (x={0} & y={1}) '.format(
-                    str(x),
-                    str(y)
-                )
+                f'const int gaussian_threshold_{i} = '
+                f'{threshold};\n'
             )
 
+        f.write('const int N=' + str(mapSize - 1) + ';\n')
+        f.write('const int xstart = ' + str(startX) + ';\n')
+        f.write('const int ystart = ' + str(startY) + ';\n')
+        f.write('const int xtarget = ' + str(targetX) + ';\n')
+        f.write('const int ytarget = ' + str(targetY) + ';\n')
+        f.write('const double p = ' + str(p) + ';\n')
+        f.write('const int GVAR_MAX = ' + str(gvar_max) + ';\n')
+        f.write('const int GSTATE_MAX = ' + str(gstate_max) + ';\n\n')
+
+        f.write('formula hasCrashed = (1=0) ')
+        for x, y in obstacles:
+            f.write('| (x={0} & y={1}) '.format(str(x), str(y)))
         f.write(';\n\n')
 
+        sorted_trace_values = sorted(gaussian_trace_groups.keys())
+
+        for index, trace_value in enumerate(sorted_trace_values):
+            gvars = gaussian_trace_groups[trace_value]
+            expression = ' | '.join(
+                f'gvar={gvar}' for gvar in gvars
+            )
+            f.write(
+                f'formula gaussian_u_{index} = '
+                f'{expression};\n'
+            )
+
+        terms = []
+        for index, trace_value in enumerate(sorted_trace_values):
+            terms.append(
+                f'(gaussian_u_{index} & '
+                f'max_gaussian_uncertainty<={trace_value})'
+            )
+
         f.write(
-            '// Gaussian covariance quantization: h=0.1\n'
+            'formula update_required = '
+            + ' | '.join(terms)
+            + ';\n\n'
         )
-        f.write(
-            '// gvar  = quantized Gaussian uncertainty class '
-            '(URC input)\n'
-        )
-        f.write(
-            '// gstate = refined technical Markov state '
-            '(Knowledge transition state)\n\n'
-        )
+
+        f.write('// Gaussian covariance quantization: h=0.1\n')
+        f.write('// trace(Sigma)=var_x+var_y, integer-scaled offline\n')
+        f.write('// gstate = refined Markov state; gvar = quantized covariance class\n\n')
 
 
 def robot():
@@ -398,65 +428,48 @@ def adaptation_mape_controller(d):
 
 def knowledge():
     """
-    Refined Gaussian Knowledge module.
+    Refined Gaussian Knowledge module with trace-based uncertainty updates.
 
-    gstate:
-      technical Markov-compatible state used in motion guards.
-
-    gvar:
-      quantized covariance class used by the URC.
-      It is updated consistently with gstate according to the refined lookup.
+    The URC chooses a position-dependent Gaussian trace threshold.
+    The current quantized covariance trace is compared with this threshold.
+    A hard cap at 10 moves is retained because the refined lookup was
+    constructed for at most 10 steps since the last update.
     """
     with open(prism_file, 'a') as f:
         f.write('module Knowledge\n')
+        f.write('  xhat : [0..N] init xstart;\n')
+        f.write('  yhat : [0..N] init ystart;\n')
 
-        f.write(
-            '  xhat : [0..N] init xstart;\n'
-        )
-        f.write(
-            '  yhat : [0..N] init ystart;\n'
-        )
         start_reset_gstate = reset_gstate_by_position.get((startX, startY))
         if start_reset_gstate is None:
             raise ValueError(
                 f'No reset gstate for start position ({startX},{startY}).'
             )
+
         f.write(
             '  gstate : [0..GSTATE_MAX] init '
             + str(start_reset_gstate)
             + ';\n'
         )
-        f.write(
-            '  gvar : [0..GVAR_MAX] init 0;\n'
-        )
-        f.write(
-            '  step : [1..20] init 1;\n\n'
-        )
-        f.write(
-            '  ready : [0..1] init 1;\n\n'
-        )
+        f.write('  gvar : [0..GVAR_MAX] init 0;\n')
+        f.write('  step : [1..10] init 1;\n\n')
+        f.write('  ready : [0..1] init 1;\n\n')
 
-        f.write(
-            '  // Refined Gaussian Markov transitions (h=0.1)\n'
-        )
+        f.write('  // Refined Gaussian Markov transitions (h=0.1)\n')
 
         for row in gaussian_lookup:
             action = str(row["action"])
             xhat = int(row["xhat"])
             yhat = int(row["yhat"])
             gstate = int(row["gstate"])
-
             xhat_next = int(row["xhat_next"])
             yhat_next = int(row["yhat_next"])
             gstate_next = int(row["gstate_next"])
             gvar_next = int(row["gvar_next"])
 
             f.write(
-                f'  [{action}] '
-                f'ready=1 '
-                f'& xhat={xhat} '
-                f'& yhat={yhat} '
-                f'& gstate={gstate} -> '
+                f'  [{action}] ready=1 '
+                f'& xhat={xhat} & yhat={yhat} & gstate={gstate} -> '
                 f'(xhat\'={xhat_next}) & '
                 f'(yhat\'={yhat_next}) & '
                 f'(gstate\'={gstate_next}) & '
@@ -466,13 +479,10 @@ def knowledge():
 
         f.write('\n')
 
-        # Perfect observation:
-        # Sigma resets to zero (gvar=0), while the refined gstate is
-        # position-dependent to preserve the Markov property.
         for (reset_x, reset_y), reset_state in sorted(
                 reset_gstate_by_position.items()):
             f.write(
-                f'  [update] step>=c & ready=0 '
+                f'  [update] ready=0 & (update_required | step>=10) '
                 f'& x={reset_x} & y={reset_y} -> '
                 f'(xhat\'={reset_x}) & '
                 f'(yhat\'={reset_y}) & '
@@ -482,11 +492,9 @@ def knowledge():
                 f'(ready\'=1);\n'
             )
 
-        # gstate/gvar were already advanced by the movement command.
         f.write(
-            '  [skip_update] step<c & ready=0 -> '
-            '(ready\'=1) & '
-            '(step\'=step+1);\n'
+            '  [skip_update] ready=0 & !update_required & step<10 -> '
+            '(ready\'=1) & (step\'=step+1);\n'
         )
 
         f.write('endmodule\n\n')
@@ -552,6 +560,7 @@ def generate_model(i):
     )
 
     load_gaussian_refined(i)
+    load_gaussian_trace(i)
 
     target_pos = (
         targetX,
