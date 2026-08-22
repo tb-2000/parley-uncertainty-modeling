@@ -1,0 +1,153 @@
+{
+  "map": 97,
+  "h": 0.1,
+  "trace_scale": 1000,
+  "metric": "trace(Sigma)=var_x+var_y",
+  "threshold_method": "cumulative maximum quantized trace across all update-start positions at exact steps 1..10",
+  "thresholds": {
+    "1": 100,
+    "2": 200,
+    "3": 300,
+    "4": 400,
+    "5": 400,
+    "6": 500,
+    "7": 600,
+    "8": 700,
+    "9": 700,
+    "10": 800
+  },
+  "per_step_statistics": {
+    "1": {
+      "min_trace": 0,
+      "mean_trace": 87.5,
+      "max_trace": 100,
+      "threshold": 100,
+      "samples": 64
+    },
+    "2": {
+      "min_trace": 0,
+      "mean_trace": 133.33333333333334,
+      "max_trace": 200,
+      "threshold": 200,
+      "samples": 63
+    },
+    "3": {
+      "min_trace": 100,
+      "mean_trace": 206.4516129032258,
+      "max_trace": 300,
+      "threshold": 300,
+      "samples": 62
+    },
+    "4": {
+      "min_trace": 200,
+      "mean_trace": 315.0,
+      "max_trace": 400,
+      "threshold": 400,
+      "samples": 60
+    },
+    "5": {
+      "min_trace": 300,
+      "mean_trace": 383.0508474576271,
+      "max_trace": 400,
+      "threshold": 400,
+      "samples": 59
+    },
+    "6": {
+      "min_trace": 400,
+      "mean_trace": 446.55172413793105,
+      "max_trace": 500,
+      "threshold": 500,
+      "samples": 58
+    },
+    "7": {
+      "min_trace": 400,
+      "mean_trace": 540.3508771929825,
+      "max_trace": 600,
+      "threshold": 600,
+      "samples": 57
+    },
+    "8": {
+      "min_trace": 500,
+      "mean_trace": 612.5,
+      "max_trace": 700,
+      "threshold": 700,
+      "samples": 56
+    },
+    "9": {
+      "min_trace": 600,
+      "mean_trace": 692.5925925925926,
+      "max_trace": 700,
+      "threshold": 700,
+      "samples": 54
+    },
+    "10": {
+      "min_trace": 700,
+      "mean_trace": 776.4705882352941,
+      "max_trace": 800,
+      "threshold": 800,
+      "samples": 51
+    }
+  },
+  "gvar_trace": {
+    "0": 0,
+    "1": 100,
+    "2": 100,
+    "3": 200,
+    "4": 200,
+    "5": 300,
+    "6": 300,
+    "7": 400,
+    "8": 400,
+    "9": 400,
+    "10": 500,
+    "11": 500,
+    "12": 500,
+    "13": 600,
+    "14": 600,
+    "15": 600,
+    "16": 700,
+    "17": 700,
+    "18": 800,
+    "19": 800
+  },
+  "trace_groups": {
+    "0": [
+      0
+    ],
+    "100": [
+      1,
+      2
+    ],
+    "200": [
+      3,
+      4
+    ],
+    "300": [
+      5,
+      6
+    ],
+    "400": [
+      7,
+      8,
+      9
+    ],
+    "500": [
+      10,
+      11,
+      12
+    ],
+    "600": [
+      13,
+      14,
+      15
+    ],
+    "700": [
+      16,
+      17
+    ],
+    "800": [
+      18,
+      19
+    ]
+  }
+}
