@@ -53,7 +53,7 @@ from pathlib import Path
 from typing import Dict, Iterable, List, Sequence, Tuple
 
 
-DEFAULT_H_VALUES = [0.01, 0.025, 0.05, 0.10, 0.20]
+DEFAULT_H_VALUES = [0.01, 0.025, 0.05, 0.075, 0.10]
 
 
 def h_label(h: float) -> str:
@@ -435,7 +435,7 @@ def parse_args() -> argparse.Namespace:
         nargs="+",
         type=float,
         default=DEFAULT_H_VALUES,
-        help="Zu vergleichende Rasterweiten, z.B. --h 0.01 0.025 0.05 0.1 0.2",
+        help="Rasterweiten für Sensitivitätsanalyse; Produktionskandidat ist h=0.05.",
     )
     parser.add_argument(
         "--save-mappings",

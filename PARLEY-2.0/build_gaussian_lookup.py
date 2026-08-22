@@ -3,7 +3,7 @@
 build_gaussian_lookup.py
 
 Erzeugt für Maps 10..99 eine Lookup-Tabelle für das spätere
-GaussianKnowledge-PRISM-Modul mit fester Grid-Quantisierung h=0.1.
+GaussianKnowledge-PRISM-Modul mit fester Grid-Quantisierung h=0.05.
 
 Lookup-Semantik
 ---------------
@@ -17,7 +17,7 @@ vorgibt, wird berechnet:
 mit
 
     Sigma_raw_next = Sigma_raw + Q(xhat, yhat, action)
-    Sigma_next_q   = Q_h(Sigma_raw_next),   h = 0.1
+    Sigma_next_q   = Q_h(Sigma_raw_next),   h = 0.05
 
 Sigma_raw wird intern unquantisiert fortgeführt; gvar ist nur die
 diskrete Repräsentation.
@@ -69,7 +69,7 @@ from typing import Dict, List, Sequence, Set, Tuple
 import dijkstra
 
 
-H = 0.1
+H = 0.05
 MAX_STEPS = 10
 P = 0.01
 
@@ -565,7 +565,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Erzeugt map-spezifische GaussianKnowledge-Lookup-Tabellen "
-            "mit h=0.1."
+            "mit h=0.05."
         )
     )
     parser.add_argument(
@@ -607,7 +607,7 @@ def parse_args() -> argparse.Namespace:
         "--h",
         type=float,
         default=H,
-        help="Grid-Breite. Für die geplante Implementierung: 0.1.",
+        help="Grid-Breite. Standard für die Gaussian-Implementierung: 0.05.",
     )
     parser.add_argument(
         "--max-steps",

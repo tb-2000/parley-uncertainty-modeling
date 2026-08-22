@@ -7,7 +7,7 @@
     9
   ],
   "p": 0.01,
-  "max_steps_without_update": 10,
+  "max_steps_without_update": 20,
   "q_mode": "position",
   "round_digits": 10,
   "sensor_covariance": {
@@ -17,8 +17,8 @@
   },
   "number_of_mape_states": 66,
   "number_of_update_start_positions": 68,
-  "number_of_unique_sigma_states": 258,
-  "gvar_max": 257,
+  "number_of_unique_sigma_states": 431,
+  "gvar_max": 430,
   "gaussian_states": [
     {
       "gvar": 0,
@@ -4782,6 +4782,26 @@
     },
     {
       "gvar": 238,
+      "var_x": 0.314,
+      "var_y": 0.4191,
+      "cov_xy": 0.0097,
+      "trace": 0.7331,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          3
+        ],
+        "position": [
+          5,
+          4
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 239,
       "var_x": 0.3152,
       "var_y": 0.4193,
       "cov_xy": -0.0192,
@@ -4801,7 +4821,7 @@
       }
     },
     {
-      "gvar": 239,
+      "gvar": 240,
       "var_x": 0.3152,
       "var_y": 0.4193,
       "cov_xy": 0.0192,
@@ -4821,7 +4841,27 @@
       }
     },
     {
-      "gvar": 240,
+      "gvar": 241,
+      "var_x": 0.3241,
+      "var_y": 0.4191,
+      "cov_xy": 0.0193,
+      "trace": 0.7432,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          2
+        ],
+        "position": [
+          5,
+          5
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 242,
       "var_x": 0.3152,
       "var_y": 0.4294,
       "cov_xy": -0.0096,
@@ -4841,7 +4881,7 @@
       }
     },
     {
-      "gvar": 241,
+      "gvar": 243,
       "var_x": 0.3152,
       "var_y": 0.4294,
       "cov_xy": 0.0096,
@@ -4861,7 +4901,7 @@
       }
     },
     {
-      "gvar": 242,
+      "gvar": 244,
       "var_x": 0.4587,
       "var_y": 0.2859,
       "cov_xy": 0.0096,
@@ -4881,7 +4921,7 @@
       }
     },
     {
-      "gvar": 243,
+      "gvar": 245,
       "var_x": 0.4678,
       "var_y": 0.2768,
       "cov_xy": 0.0096,
@@ -4901,7 +4941,7 @@
       }
     },
     {
-      "gvar": 244,
+      "gvar": 246,
       "var_x": 0.3526,
       "var_y": 0.392,
       "cov_xy": 0.0096,
@@ -4921,7 +4961,47 @@
       }
     },
     {
-      "gvar": 245,
+      "gvar": 247,
+      "var_x": 0.3726,
+      "var_y": 0.3807,
+      "cov_xy": 0.0289,
+      "trace": 0.7533,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          1
+        ],
+        "position": [
+          4,
+          5
+        ],
+        "step": 11,
+        "action": "west"
+      }
+    },
+    {
+      "gvar": 248,
+      "var_x": 0.4211,
+      "var_y": 0.3322,
+      "cov_xy": -0.0481,
+      "trace": 0.7533,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          0
+        ],
+        "position": [
+          4,
+          5
+        ],
+        "step": 11,
+        "action": "west"
+      }
+    },
+    {
+      "gvar": 249,
       "var_x": 0.3152,
       "var_y": 0.4395,
       "cov_xy": 0.0,
@@ -4941,7 +5021,7 @@
       }
     },
     {
-      "gvar": 246,
+      "gvar": 250,
       "var_x": 0.5163,
       "var_y": 0.2384,
       "cov_xy": 0.0,
@@ -4961,7 +5041,7 @@
       }
     },
     {
-      "gvar": 247,
+      "gvar": 251,
       "var_x": 0.4011,
       "var_y": 0.3536,
       "cov_xy": 0.0,
@@ -4981,7 +5061,27 @@
       }
     },
     {
-      "gvar": 248,
+      "gvar": 252,
+      "var_x": 0.3827,
+      "var_y": 0.3807,
+      "cov_xy": 0.0385,
+      "trace": 0.7634,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          0
+        ],
+        "position": [
+          4,
+          6
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 253,
       "var_x": 0.4102,
       "var_y": 0.3536,
       "cov_xy": 0.0192,
@@ -5001,7 +5101,7 @@
       }
     },
     {
-      "gvar": 249,
+      "gvar": 254,
       "var_x": 0.4486,
       "var_y": 0.3152,
       "cov_xy": 0.0192,
@@ -5021,7 +5121,7 @@
       }
     },
     {
-      "gvar": 250,
+      "gvar": 255,
       "var_x": 0.4203,
       "var_y": 0.3536,
       "cov_xy": 0.0096,
@@ -5041,7 +5141,7 @@
       }
     },
     {
-      "gvar": 251,
+      "gvar": 256,
       "var_x": 0.4587,
       "var_y": 0.3152,
       "cov_xy": 0.0096,
@@ -5061,7 +5161,7 @@
       }
     },
     {
-      "gvar": 252,
+      "gvar": 257,
       "var_x": 0.4971,
       "var_y": 0.2768,
       "cov_xy": 0.0096,
@@ -5081,7 +5181,7 @@
       }
     },
     {
-      "gvar": 253,
+      "gvar": 258,
       "var_x": 0.3536,
       "var_y": 0.4304,
       "cov_xy": 0.0,
@@ -5101,7 +5201,7 @@
       }
     },
     {
-      "gvar": 254,
+      "gvar": 259,
       "var_x": 0.392,
       "var_y": 0.392,
       "cov_xy": 0.0,
@@ -5121,7 +5221,7 @@
       }
     },
     {
-      "gvar": 255,
+      "gvar": 260,
       "var_x": 0.4304,
       "var_y": 0.3536,
       "cov_xy": 0.0,
@@ -5141,7 +5241,7 @@
       }
     },
     {
-      "gvar": 256,
+      "gvar": 261,
       "var_x": 0.4688,
       "var_y": 0.3152,
       "cov_xy": 0.0,
@@ -5161,7 +5261,7 @@
       }
     },
     {
-      "gvar": 257,
+      "gvar": 262,
       "var_x": 0.5072,
       "var_y": 0.2768,
       "cov_xy": 0.0,
@@ -5179,6 +5279,3366 @@
         "step": 10,
         "action": "east"
       }
+    },
+    {
+      "gvar": 263,
+      "var_x": 0.412,
+      "var_y": 0.3807,
+      "cov_xy": -0.0384,
+      "trace": 0.7927,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          1,
+          0
+        ],
+        "position": [
+          4,
+          6
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 264,
+      "var_x": 0.3736,
+      "var_y": 0.4292,
+      "cov_xy": -0.0288,
+      "trace": 0.8028,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          2,
+          0
+        ],
+        "position": [
+          4,
+          7
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 265,
+      "var_x": 0.3736,
+      "var_y": 0.4292,
+      "cov_xy": 0.0288,
+      "trace": 0.8028,
+      "occurrences": 2,
+      "first_example": {
+        "start": [
+          8,
+          0
+        ],
+        "position": [
+          4,
+          7
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 266,
+      "var_x": 0.334,
+      "var_y": 0.4775,
+      "cov_xy": 0.0097,
+      "trace": 0.8115,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          3
+        ],
+        "position": [
+          5,
+          5
+        ],
+        "step": 12,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 267,
+      "var_x": 0.3352,
+      "var_y": 0.4777,
+      "cov_xy": -0.0192,
+      "trace": 0.8129,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          1
+        ],
+        "position": [
+          4,
+          7
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 268,
+      "var_x": 0.3352,
+      "var_y": 0.4777,
+      "cov_xy": 0.0192,
+      "trace": 0.8129,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          1
+        ],
+        "position": [
+          4,
+          7
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 269,
+      "var_x": 0.3736,
+      "var_y": 0.4393,
+      "cov_xy": -0.0192,
+      "trace": 0.8129,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          0
+        ],
+        "position": [
+          5,
+          7
+        ],
+        "step": 11,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 270,
+      "var_x": 0.3736,
+      "var_y": 0.4393,
+      "cov_xy": 0.0192,
+      "trace": 0.8129,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          0
+        ],
+        "position": [
+          5,
+          7
+        ],
+        "step": 11,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 271,
+      "var_x": 0.4686,
+      "var_y": 0.3443,
+      "cov_xy": 0.0192,
+      "trace": 0.8129,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          2,
+          9
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 272,
+      "var_x": 0.3825,
+      "var_y": 0.4391,
+      "cov_xy": 0.0193,
+      "trace": 0.8216,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          2
+        ],
+        "position": [
+          4,
+          5
+        ],
+        "step": 12,
+        "action": "west"
+      }
+    },
+    {
+      "gvar": 273,
+      "var_x": 0.3736,
+      "var_y": 0.4494,
+      "cov_xy": -0.0096,
+      "trace": 0.823,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          4,
+          0
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 11,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 274,
+      "var_x": 0.3736,
+      "var_y": 0.4494,
+      "cov_xy": 0.0096,
+      "trace": 0.823,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          6,
+          0
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 11,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 275,
+      "var_x": 0.411,
+      "var_y": 0.412,
+      "cov_xy": 0.0096,
+      "trace": 0.823,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          4
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 11,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 276,
+      "var_x": 0.5262,
+      "var_y": 0.2968,
+      "cov_xy": 0.0096,
+      "trace": 0.823,
+      "occurrences": 2,
+      "first_example": {
+        "start": [
+          0,
+          6
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 277,
+      "var_x": 0.3926,
+      "var_y": 0.4391,
+      "cov_xy": 0.0289,
+      "trace": 0.8317,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          1
+        ],
+        "position": [
+          4,
+          6
+        ],
+        "step": 12,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 278,
+      "var_x": 0.4411,
+      "var_y": 0.3906,
+      "cov_xy": -0.0481,
+      "trace": 0.8317,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          0
+        ],
+        "position": [
+          4,
+          6
+        ],
+        "step": 12,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 279,
+      "var_x": 0.3736,
+      "var_y": 0.4595,
+      "cov_xy": 0.0,
+      "trace": 0.8331,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          5,
+          0
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 11,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 280,
+      "var_x": 0.4595,
+      "var_y": 0.3736,
+      "cov_xy": 0.0,
+      "trace": 0.8331,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          3
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 11,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 281,
+      "var_x": 0.4027,
+      "var_y": 0.4391,
+      "cov_xy": 0.0385,
+      "trace": 0.8418,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          0
+        ],
+        "position": [
+          4,
+          7
+        ],
+        "step": 12,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 282,
+      "var_x": 0.4302,
+      "var_y": 0.412,
+      "cov_xy": 0.0192,
+      "trace": 0.8422000000000001,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          5,
+          4
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 283,
+      "var_x": 0.4686,
+      "var_y": 0.3736,
+      "cov_xy": 0.0192,
+      "trace": 0.8422000000000001,
+      "occurrences": 2,
+      "first_example": {
+        "start": [
+          2,
+          5
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 284,
+      "var_x": 0.507,
+      "var_y": 0.3352,
+      "cov_xy": 0.0192,
+      "trace": 0.8422000000000001,
+      "occurrences": 2,
+      "first_example": {
+        "start": [
+          1,
+          6
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 285,
+      "var_x": 0.4403,
+      "var_y": 0.412,
+      "cov_xy": 0.0096,
+      "trace": 0.8523000000000001,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          5,
+          3
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 286,
+      "var_x": 0.4787,
+      "var_y": 0.3736,
+      "cov_xy": 0.0096,
+      "trace": 0.8523000000000001,
+      "occurrences": 2,
+      "first_example": {
+        "start": [
+          2,
+          4
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 287,
+      "var_x": 0.5171,
+      "var_y": 0.3352,
+      "cov_xy": 0.0096,
+      "trace": 0.8523000000000001,
+      "occurrences": 2,
+      "first_example": {
+        "start": [
+          1,
+          5
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 11,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 288,
+      "var_x": 0.412,
+      "var_y": 0.4504,
+      "cov_xy": 0.0,
+      "trace": 0.8624,
+      "occurrences": 2,
+      "first_example": {
+        "start": [
+          5,
+          1
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 11,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 289,
+      "var_x": 0.4504,
+      "var_y": 0.412,
+      "cov_xy": 0.0,
+      "trace": 0.8624,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          5,
+          2
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 11,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 290,
+      "var_x": 0.4888,
+      "var_y": 0.3736,
+      "cov_xy": 0.0,
+      "trace": 0.8624,
+      "occurrences": 6,
+      "first_example": {
+        "start": [
+          1,
+          3
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 11,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 291,
+      "var_x": 0.5272,
+      "var_y": 0.3352,
+      "cov_xy": 0.0,
+      "trace": 0.8624,
+      "occurrences": 2,
+      "first_example": {
+        "start": [
+          7,
+          4
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 11,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 292,
+      "var_x": 0.432,
+      "var_y": 0.4391,
+      "cov_xy": -0.0384,
+      "trace": 0.8711,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          1,
+          0
+        ],
+        "position": [
+          4,
+          7
+        ],
+        "step": 12,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 293,
+      "var_x": 0.3936,
+      "var_y": 0.4876,
+      "cov_xy": 0.0288,
+      "trace": 0.8812,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          1
+        ],
+        "position": [
+          4,
+          7
+        ],
+        "step": 12,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 294,
+      "var_x": 0.432,
+      "var_y": 0.4492,
+      "cov_xy": -0.0288,
+      "trace": 0.8812,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          2,
+          0
+        ],
+        "position": [
+          5,
+          7
+        ],
+        "step": 12,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 295,
+      "var_x": 0.432,
+      "var_y": 0.4492,
+      "cov_xy": 0.0288,
+      "trace": 0.8812,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          0
+        ],
+        "position": [
+          5,
+          7
+        ],
+        "step": 12,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 296,
+      "var_x": 0.3924,
+      "var_y": 0.4975,
+      "cov_xy": 0.0097,
+      "trace": 0.8899,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          3
+        ],
+        "position": [
+          4,
+          5
+        ],
+        "step": 13,
+        "action": "west"
+      }
+    },
+    {
+      "gvar": 297,
+      "var_x": 0.3936,
+      "var_y": 0.4977,
+      "cov_xy": -0.0192,
+      "trace": 0.8913,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          1
+        ],
+        "position": [
+          5,
+          7
+        ],
+        "step": 12,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 298,
+      "var_x": 0.3936,
+      "var_y": 0.4977,
+      "cov_xy": 0.0192,
+      "trace": 0.8913,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          1
+        ],
+        "position": [
+          5,
+          7
+        ],
+        "step": 12,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 299,
+      "var_x": 0.432,
+      "var_y": 0.4593,
+      "cov_xy": -0.0192,
+      "trace": 0.8913,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          0
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 12,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 300,
+      "var_x": 0.432,
+      "var_y": 0.4593,
+      "cov_xy": 0.0192,
+      "trace": 0.8913,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          0
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 12,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 301,
+      "var_x": 0.5361,
+      "var_y": 0.3552,
+      "cov_xy": 0.0192,
+      "trace": 0.8913,
+      "occurrences": 2,
+      "first_example": {
+        "start": [
+          0,
+          6
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 12,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 302,
+      "var_x": 0.4025,
+      "var_y": 0.4975,
+      "cov_xy": 0.0193,
+      "trace": 0.9,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          2
+        ],
+        "position": [
+          4,
+          6
+        ],
+        "step": 13,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 303,
+      "var_x": 0.432,
+      "var_y": 0.4694,
+      "cov_xy": -0.0096,
+      "trace": 0.9014,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          4,
+          0
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 12,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 304,
+      "var_x": 0.432,
+      "var_y": 0.4694,
+      "cov_xy": 0.0096,
+      "trace": 0.9014,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          6,
+          0
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 12,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 305,
+      "var_x": 0.4694,
+      "var_y": 0.432,
+      "cov_xy": 0.0096,
+      "trace": 0.9014,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          4
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 12,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 306,
+      "var_x": 0.4126,
+      "var_y": 0.4975,
+      "cov_xy": 0.0289,
+      "trace": 0.9101,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          1
+        ],
+        "position": [
+          4,
+          7
+        ],
+        "step": 13,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 307,
+      "var_x": 0.4611,
+      "var_y": 0.449,
+      "cov_xy": -0.0481,
+      "trace": 0.9101,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          0
+        ],
+        "position": [
+          4,
+          7
+        ],
+        "step": 13,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 308,
+      "var_x": 0.432,
+      "var_y": 0.4795,
+      "cov_xy": 0.0,
+      "trace": 0.9115,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          5,
+          0
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 12,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 309,
+      "var_x": 0.5179,
+      "var_y": 0.3936,
+      "cov_xy": 0.0,
+      "trace": 0.9115,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          3
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 12,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 310,
+      "var_x": 0.4611,
+      "var_y": 0.4591,
+      "cov_xy": 0.0385,
+      "trace": 0.9202,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          0
+        ],
+        "position": [
+          5,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 311,
+      "var_x": 0.4502,
+      "var_y": 0.4704,
+      "cov_xy": 0.0192,
+      "trace": 0.9206,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          5,
+          3
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 12,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 312,
+      "var_x": 0.4886,
+      "var_y": 0.432,
+      "cov_xy": 0.0192,
+      "trace": 0.9206,
+      "occurrences": 2,
+      "first_example": {
+        "start": [
+          2,
+          4
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 12,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 313,
+      "var_x": 0.527,
+      "var_y": 0.3936,
+      "cov_xy": 0.0192,
+      "trace": 0.9206000000000001,
+      "occurrences": 2,
+      "first_example": {
+        "start": [
+          1,
+          5
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 12,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 314,
+      "var_x": 0.4603,
+      "var_y": 0.4704,
+      "cov_xy": 0.0096,
+      "trace": 0.9307,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          5,
+          2
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 12,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 315,
+      "var_x": 0.4987,
+      "var_y": 0.432,
+      "cov_xy": 0.0096,
+      "trace": 0.9307,
+      "occurrences": 3,
+      "first_example": {
+        "start": [
+          2,
+          3
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 12,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 316,
+      "var_x": 0.5371,
+      "var_y": 0.3936,
+      "cov_xy": 0.0096,
+      "trace": 0.9307000000000001,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          4
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 12,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 317,
+      "var_x": 0.4704,
+      "var_y": 0.4704,
+      "cov_xy": 0.0,
+      "trace": 0.9408,
+      "occurrences": 2,
+      "first_example": {
+        "start": [
+          5,
+          1
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 12,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 318,
+      "var_x": 0.5472,
+      "var_y": 0.3936,
+      "cov_xy": 0.0,
+      "trace": 0.9408000000000001,
+      "occurrences": 3,
+      "first_example": {
+        "start": [
+          1,
+          3
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 12,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 319,
+      "var_x": 0.5856,
+      "var_y": 0.3552,
+      "cov_xy": 0.0,
+      "trace": 0.9408000000000001,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          4
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 12,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 320,
+      "var_x": 0.4904,
+      "var_y": 0.4591,
+      "cov_xy": -0.0384,
+      "trace": 0.9495,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          1,
+          0
+        ],
+        "position": [
+          5,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 321,
+      "var_x": 0.452,
+      "var_y": 0.5076,
+      "cov_xy": 0.0288,
+      "trace": 0.9596,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          1
+        ],
+        "position": [
+          5,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 322,
+      "var_x": 0.4904,
+      "var_y": 0.4692,
+      "cov_xy": -0.0288,
+      "trace": 0.9596,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          2,
+          0
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 323,
+      "var_x": 0.4904,
+      "var_y": 0.4692,
+      "cov_xy": 0.0288,
+      "trace": 0.9596,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          0
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 324,
+      "var_x": 0.546,
+      "var_y": 0.4136,
+      "cov_xy": 0.0288,
+      "trace": 0.9596,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          7
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 13,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 325,
+      "var_x": 0.4124,
+      "var_y": 0.5559,
+      "cov_xy": 0.0097,
+      "trace": 0.9682999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          3
+        ],
+        "position": [
+          4,
+          6
+        ],
+        "step": 14,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 326,
+      "var_x": 0.452,
+      "var_y": 0.5177,
+      "cov_xy": -0.0192,
+      "trace": 0.9697,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          1
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 327,
+      "var_x": 0.452,
+      "var_y": 0.5177,
+      "cov_xy": 0.0192,
+      "trace": 0.9697,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          1
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 328,
+      "var_x": 0.4904,
+      "var_y": 0.4793,
+      "cov_xy": -0.0192,
+      "trace": 0.9697,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          0
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 329,
+      "var_x": 0.4904,
+      "var_y": 0.4793,
+      "cov_xy": 0.0192,
+      "trace": 0.9697,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          0
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 330,
+      "var_x": 0.4225,
+      "var_y": 0.5559,
+      "cov_xy": 0.0193,
+      "trace": 0.9783999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          2
+        ],
+        "position": [
+          4,
+          7
+        ],
+        "step": 14,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 331,
+      "var_x": 0.4904,
+      "var_y": 0.4894,
+      "cov_xy": -0.0096,
+      "trace": 0.9798,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          4,
+          0
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 332,
+      "var_x": 0.4904,
+      "var_y": 0.4894,
+      "cov_xy": 0.0096,
+      "trace": 0.9798,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          6,
+          0
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 333,
+      "var_x": 0.5278,
+      "var_y": 0.452,
+      "cov_xy": 0.0096,
+      "trace": 0.9798,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          4
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 334,
+      "var_x": 0.471,
+      "var_y": 0.5175,
+      "cov_xy": 0.0289,
+      "trace": 0.9884999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          1
+        ],
+        "position": [
+          5,
+          7
+        ],
+        "step": 14,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 335,
+      "var_x": 0.5195,
+      "var_y": 0.469,
+      "cov_xy": -0.0481,
+      "trace": 0.9884999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          0
+        ],
+        "position": [
+          5,
+          7
+        ],
+        "step": 14,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 336,
+      "var_x": 0.4904,
+      "var_y": 0.4995,
+      "cov_xy": 0.0,
+      "trace": 0.9899,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          5,
+          0
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 337,
+      "var_x": 0.5763,
+      "var_y": 0.4136,
+      "cov_xy": 0.0,
+      "trace": 0.9899,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          3
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 338,
+      "var_x": 0.5195,
+      "var_y": 0.4791,
+      "cov_xy": 0.0385,
+      "trace": 0.9985999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          0
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 14,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 339,
+      "var_x": 0.4702,
+      "var_y": 0.5288,
+      "cov_xy": 0.0192,
+      "trace": 0.9990000000000001,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          5,
+          2
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 13,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 340,
+      "var_x": 0.5086,
+      "var_y": 0.4904,
+      "cov_xy": 0.0192,
+      "trace": 0.9990000000000001,
+      "occurrences": 3,
+      "first_example": {
+        "start": [
+          2,
+          3
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 13,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 341,
+      "var_x": 0.547,
+      "var_y": 0.452,
+      "cov_xy": 0.0192,
+      "trace": 0.9990000000000001,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          4
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 13,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 342,
+      "var_x": 0.4803,
+      "var_y": 0.5288,
+      "cov_xy": 0.0096,
+      "trace": 1.0091,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          5,
+          1
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 13,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 343,
+      "var_x": 0.5571,
+      "var_y": 0.452,
+      "cov_xy": 0.0096,
+      "trace": 1.0091,
+      "occurrences": 3,
+      "first_example": {
+        "start": [
+          1,
+          3
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 13,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 344,
+      "var_x": 0.5955,
+      "var_y": 0.4136,
+      "cov_xy": 0.0096,
+      "trace": 1.0091,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          4
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 13,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 345,
+      "var_x": 0.5288,
+      "var_y": 0.4904,
+      "cov_xy": 0.0,
+      "trace": 1.0192,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          6,
+          1
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 13,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 346,
+      "var_x": 0.5488,
+      "var_y": 0.4791,
+      "cov_xy": -0.0384,
+      "trace": 1.0279,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          1,
+          0
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 14,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 347,
+      "var_x": 0.5104,
+      "var_y": 0.5276,
+      "cov_xy": 0.0288,
+      "trace": 1.0379999999999998,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          1
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 14,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 348,
+      "var_x": 0.5488,
+      "var_y": 0.4892,
+      "cov_xy": -0.0288,
+      "trace": 1.038,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          2,
+          0
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 14,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 349,
+      "var_x": 0.5488,
+      "var_y": 0.4892,
+      "cov_xy": 0.0288,
+      "trace": 1.038,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          0
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 14,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 350,
+      "var_x": 0.4324,
+      "var_y": 0.6143,
+      "cov_xy": 0.0097,
+      "trace": 1.0467,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          3
+        ],
+        "position": [
+          4,
+          7
+        ],
+        "step": 15,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 351,
+      "var_x": 0.5104,
+      "var_y": 0.5377,
+      "cov_xy": -0.0192,
+      "trace": 1.0480999999999998,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          1
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 14,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 352,
+      "var_x": 0.5104,
+      "var_y": 0.5377,
+      "cov_xy": 0.0192,
+      "trace": 1.0480999999999998,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          1
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 14,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 353,
+      "var_x": 0.5488,
+      "var_y": 0.4993,
+      "cov_xy": -0.0192,
+      "trace": 1.0481,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          0
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 14,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 354,
+      "var_x": 0.5488,
+      "var_y": 0.4993,
+      "cov_xy": 0.0192,
+      "trace": 1.0481,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          0
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 14,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 355,
+      "var_x": 0.4809,
+      "var_y": 0.5759,
+      "cov_xy": 0.0193,
+      "trace": 1.0568,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          2
+        ],
+        "position": [
+          5,
+          7
+        ],
+        "step": 15,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 356,
+      "var_x": 0.5003,
+      "var_y": 0.5579,
+      "cov_xy": 0.0096,
+      "trace": 1.0581999999999998,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          5,
+          0
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 14,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 357,
+      "var_x": 0.5488,
+      "var_y": 0.5094,
+      "cov_xy": -0.0096,
+      "trace": 1.0581999999999998,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          4,
+          0
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 14,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 358,
+      "var_x": 0.5488,
+      "var_y": 0.5094,
+      "cov_xy": 0.0096,
+      "trace": 1.0581999999999998,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          6,
+          0
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 14,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 359,
+      "var_x": 0.5862,
+      "var_y": 0.472,
+      "cov_xy": 0.0096,
+      "trace": 1.0582,
+      "occurrences": 2,
+      "first_example": {
+        "start": [
+          0,
+          3
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 14,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 360,
+      "var_x": 0.5294,
+      "var_y": 0.5375,
+      "cov_xy": 0.0289,
+      "trace": 1.0669,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          1
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 15,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 361,
+      "var_x": 0.5779,
+      "var_y": 0.489,
+      "cov_xy": -0.0481,
+      "trace": 1.0669,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          0
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 15,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 362,
+      "var_x": 0.5779,
+      "var_y": 0.4991,
+      "cov_xy": 0.0385,
+      "trace": 1.077,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          0
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 15,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 363,
+      "var_x": 0.567,
+      "var_y": 0.5104,
+      "cov_xy": 0.0192,
+      "trace": 1.0774,
+      "occurrences": 3,
+      "first_example": {
+        "start": [
+          1,
+          3
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 14,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 364,
+      "var_x": 0.6054,
+      "var_y": 0.472,
+      "cov_xy": 0.0192,
+      "trace": 1.0774,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          4
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 14,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 365,
+      "var_x": 0.4902,
+      "var_y": 0.5872,
+      "cov_xy": 0.0192,
+      "trace": 1.0774000000000001,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          5,
+          1
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 14,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 366,
+      "var_x": 0.5387,
+      "var_y": 0.5488,
+      "cov_xy": 0.0096,
+      "trace": 1.0875,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          6,
+          1
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 14,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 367,
+      "var_x": 0.6072,
+      "var_y": 0.4991,
+      "cov_xy": -0.0384,
+      "trace": 1.1063,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          1,
+          0
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 15,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 368,
+      "var_x": 0.5688,
+      "var_y": 0.5476,
+      "cov_xy": 0.0288,
+      "trace": 1.1164,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          1
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 15,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 369,
+      "var_x": 0.6072,
+      "var_y": 0.5092,
+      "cov_xy": -0.0288,
+      "trace": 1.1164,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          2,
+          0
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 15,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 370,
+      "var_x": 0.6072,
+      "var_y": 0.5092,
+      "cov_xy": 0.0288,
+      "trace": 1.1164,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          0
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 15,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 371,
+      "var_x": 0.4908,
+      "var_y": 0.6343,
+      "cov_xy": 0.0097,
+      "trace": 1.1251,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          3
+        ],
+        "position": [
+          5,
+          7
+        ],
+        "step": 16,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 372,
+      "var_x": 0.5102,
+      "var_y": 0.6163,
+      "cov_xy": 0.0192,
+      "trace": 1.1265,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          5,
+          0
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 15,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 373,
+      "var_x": 0.5587,
+      "var_y": 0.5678,
+      "cov_xy": 0.0,
+      "trace": 1.1265,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          4,
+          0
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 15,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 374,
+      "var_x": 0.5587,
+      "var_y": 0.5678,
+      "cov_xy": 0.0192,
+      "trace": 1.1265,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          6,
+          0
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 15,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 375,
+      "var_x": 0.5688,
+      "var_y": 0.5577,
+      "cov_xy": -0.0192,
+      "trace": 1.1265,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          1
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 15,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 376,
+      "var_x": 0.5688,
+      "var_y": 0.5577,
+      "cov_xy": 0.0192,
+      "trace": 1.1265,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          1
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 15,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 377,
+      "var_x": 0.5961,
+      "var_y": 0.5304,
+      "cov_xy": 0.0192,
+      "trace": 1.1265,
+      "occurrences": 2,
+      "first_example": {
+        "start": [
+          0,
+          3
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 15,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 378,
+      "var_x": 0.6072,
+      "var_y": 0.5193,
+      "cov_xy": -0.0192,
+      "trace": 1.1265,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          0
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 15,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 379,
+      "var_x": 0.6072,
+      "var_y": 0.5193,
+      "cov_xy": 0.0192,
+      "trace": 1.1265,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          0
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 15,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 380,
+      "var_x": 0.5393,
+      "var_y": 0.5959,
+      "cov_xy": 0.0193,
+      "trace": 1.1352,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          2
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 16,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 381,
+      "var_x": 0.5878,
+      "var_y": 0.5575,
+      "cov_xy": 0.0289,
+      "trace": 1.1453,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          1
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 16,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 382,
+      "var_x": 0.6363,
+      "var_y": 0.509,
+      "cov_xy": -0.0481,
+      "trace": 1.1453,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          0
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 16,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 383,
+      "var_x": 0.6363,
+      "var_y": 0.5191,
+      "cov_xy": 0.0385,
+      "trace": 1.1554,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          0
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 16,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 384,
+      "var_x": 0.5486,
+      "var_y": 0.6072,
+      "cov_xy": 0.0192,
+      "trace": 1.1558,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          6,
+          1
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 15,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 385,
+      "var_x": 0.6656,
+      "var_y": 0.5191,
+      "cov_xy": -0.0384,
+      "trace": 1.1846999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          1,
+          0
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 16,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 386,
+      "var_x": 0.5686,
+      "var_y": 0.6262,
+      "cov_xy": 0.0096,
+      "trace": 1.1947999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          4,
+          0
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 16,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 387,
+      "var_x": 0.5686,
+      "var_y": 0.6262,
+      "cov_xy": 0.0288,
+      "trace": 1.1947999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          6,
+          0
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 16,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 388,
+      "var_x": 0.606,
+      "var_y": 0.5888,
+      "cov_xy": 0.0288,
+      "trace": 1.1947999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          4
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 16,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 389,
+      "var_x": 0.6171,
+      "var_y": 0.5777,
+      "cov_xy": -0.0096,
+      "trace": 1.1947999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          0
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 16,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 390,
+      "var_x": 0.6171,
+      "var_y": 0.5777,
+      "cov_xy": 0.0288,
+      "trace": 1.1947999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          0
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 16,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 391,
+      "var_x": 0.6272,
+      "var_y": 0.5676,
+      "cov_xy": 0.0288,
+      "trace": 1.1947999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          1
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 16,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 392,
+      "var_x": 0.6656,
+      "var_y": 0.5292,
+      "cov_xy": -0.0288,
+      "trace": 1.1947999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          2,
+          0
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 16,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 393,
+      "var_x": 0.6656,
+      "var_y": 0.5292,
+      "cov_xy": 0.0288,
+      "trace": 1.1947999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          0
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 16,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 394,
+      "var_x": 0.5492,
+      "var_y": 0.6543,
+      "cov_xy": 0.0097,
+      "trace": 1.2035,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          3
+        ],
+        "position": [
+          6,
+          7
+        ],
+        "step": 17,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 395,
+      "var_x": 0.6272,
+      "var_y": 0.5777,
+      "cov_xy": -0.0192,
+      "trace": 1.2048999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          1
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 16,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 396,
+      "var_x": 0.6272,
+      "var_y": 0.5777,
+      "cov_xy": 0.0192,
+      "trace": 1.2048999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          1
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 16,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 397,
+      "var_x": 0.5977,
+      "var_y": 0.6159,
+      "cov_xy": 0.0193,
+      "trace": 1.2136,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          2
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 17,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 398,
+      "var_x": 0.6462,
+      "var_y": 0.5775,
+      "cov_xy": 0.0289,
+      "trace": 1.2237,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          1
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 17,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 399,
+      "var_x": 0.6947,
+      "var_y": 0.529,
+      "cov_xy": -0.0481,
+      "trace": 1.2237,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          0
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 17,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 400,
+      "var_x": 0.6947,
+      "var_y": 0.5391,
+      "cov_xy": 0.0385,
+      "trace": 1.2338,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          0
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 17,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 401,
+      "var_x": 0.627,
+      "var_y": 0.6361,
+      "cov_xy": 0.0,
+      "trace": 1.2631000000000001,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          0
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 17,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 402,
+      "var_x": 0.627,
+      "var_y": 0.6361,
+      "cov_xy": 0.0384,
+      "trace": 1.2631000000000001,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          0
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 17,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 403,
+      "var_x": 0.6755,
+      "var_y": 0.5876,
+      "cov_xy": -0.0192,
+      "trace": 1.2631000000000001,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          2,
+          0
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 17,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 404,
+      "var_x": 0.6755,
+      "var_y": 0.5876,
+      "cov_xy": 0.0384,
+      "trace": 1.2631000000000001,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          0
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 17,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 405,
+      "var_x": 0.724,
+      "var_y": 0.5391,
+      "cov_xy": -0.0384,
+      "trace": 1.2631000000000001,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          1,
+          0
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 17,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 406,
+      "var_x": 0.6371,
+      "var_y": 0.6361,
+      "cov_xy": -0.0096,
+      "trace": 1.2732,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          1
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 17,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 407,
+      "var_x": 0.6371,
+      "var_y": 0.6361,
+      "cov_xy": 0.0288,
+      "trace": 1.2732,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          1
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 17,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 408,
+      "var_x": 0.6856,
+      "var_y": 0.5876,
+      "cov_xy": 0.0288,
+      "trace": 1.2732,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          1
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 17,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 409,
+      "var_x": 0.6076,
+      "var_y": 0.6743,
+      "cov_xy": 0.0097,
+      "trace": 1.2819,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          3
+        ],
+        "position": [
+          7,
+          7
+        ],
+        "step": 18,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 410,
+      "var_x": 0.6561,
+      "var_y": 0.6359,
+      "cov_xy": 0.0193,
+      "trace": 1.292,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          2
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 18,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 411,
+      "var_x": 0.7046,
+      "var_y": 0.5975,
+      "cov_xy": 0.0289,
+      "trace": 1.3021,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          1
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 18,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 412,
+      "var_x": 0.7046,
+      "var_y": 0.5975,
+      "cov_xy": 0.0481,
+      "trace": 1.3021,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          0
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 18,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 413,
+      "var_x": 0.7531,
+      "var_y": 0.549,
+      "cov_xy": -0.0481,
+      "trace": 1.3021,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          0
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 18,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 414,
+      "var_x": 0.6854,
+      "var_y": 0.646,
+      "cov_xy": -0.0096,
+      "trace": 1.3314,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          2,
+          0
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 18,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 415,
+      "var_x": 0.6854,
+      "var_y": 0.646,
+      "cov_xy": 0.048,
+      "trace": 1.3314,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          0
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 18,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 416,
+      "var_x": 0.7339,
+      "var_y": 0.5975,
+      "cov_xy": -0.0288,
+      "trace": 1.3314,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          1,
+          0
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 18,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 417,
+      "var_x": 0.647,
+      "var_y": 0.6945,
+      "cov_xy": 0.0,
+      "trace": 1.3415,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          3,
+          1
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 18,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 418,
+      "var_x": 0.647,
+      "var_y": 0.6945,
+      "cov_xy": 0.0384,
+      "trace": 1.3415,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          7,
+          1
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 18,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 419,
+      "var_x": 0.6955,
+      "var_y": 0.646,
+      "cov_xy": 0.0384,
+      "trace": 1.3415,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          1
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 18,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 420,
+      "var_x": 0.666,
+      "var_y": 0.6943,
+      "cov_xy": 0.0097,
+      "trace": 1.3603,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          3
+        ],
+        "position": [
+          8,
+          7
+        ],
+        "step": 19,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 421,
+      "var_x": 0.7145,
+      "var_y": 0.6559,
+      "cov_xy": 0.0193,
+      "trace": 1.3704,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          2
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 19,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 422,
+      "var_x": 0.7145,
+      "var_y": 0.6559,
+      "cov_xy": 0.0385,
+      "trace": 1.3704,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          1
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 19,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 423,
+      "var_x": 0.7145,
+      "var_y": 0.6559,
+      "cov_xy": 0.0577,
+      "trace": 1.3704,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          0
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 19,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 424,
+      "var_x": 0.763,
+      "var_y": 0.6074,
+      "cov_xy": -0.0385,
+      "trace": 1.3704,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          0
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 19,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 425,
+      "var_x": 0.7438,
+      "var_y": 0.6559,
+      "cov_xy": -0.0192,
+      "trace": 1.3997000000000002,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          1,
+          0
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 19,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 426,
+      "var_x": 0.7054,
+      "var_y": 0.7044,
+      "cov_xy": 0.048,
+      "trace": 1.4098000000000002,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          8,
+          1
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 19,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 427,
+      "var_x": 0.7729,
+      "var_y": 0.6658,
+      "cov_xy": -0.0289,
+      "trace": 1.4386999999999999,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          0,
+          0
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 20,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 428,
+      "var_x": 0.7244,
+      "var_y": 0.7143,
+      "cov_xy": 0.0097,
+      "trace": 1.4387,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          3
+        ],
+        "position": [
+          9,
+          7
+        ],
+        "step": 20,
+        "action": "east"
+      }
+    },
+    {
+      "gvar": 429,
+      "var_x": 0.7244,
+      "var_y": 0.7143,
+      "cov_xy": 0.0289,
+      "trace": 1.4387,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          2
+        ],
+        "position": [
+          9,
+          8
+        ],
+        "step": 20,
+        "action": "north"
+      }
+    },
+    {
+      "gvar": 430,
+      "var_x": 0.7244,
+      "var_y": 0.7143,
+      "cov_xy": 0.0481,
+      "trace": 1.4387,
+      "occurrences": 1,
+      "first_example": {
+        "start": [
+          9,
+          1
+        ],
+        "position": [
+          9,
+          9
+        ],
+        "step": 20,
+        "action": "north"
+      }
     }
   ],
   "gvar_sequences_per_update_position": {
@@ -5193,7 +8653,17 @@
       127,
       157,
       189,
-      219
+      219,
+      248,
+      278,
+      307,
+      335,
+      361,
+      382,
+      399,
+      413,
+      424,
+      427
     ],
     "0,3": [
       0,
@@ -5206,7 +8676,12 @@
       159,
       191,
       221,
-      247
+      251,
+      280,
+      309,
+      337,
+      359,
+      377
     ],
     "0,4": [
       0,
@@ -5219,7 +8694,13 @@
       152,
       183,
       217,
-      244
+      246,
+      275,
+      305,
+      333,
+      359,
+      377,
+      388
     ],
     "0,6": [
       0,
@@ -5232,7 +8713,9 @@
       161,
       193,
       223,
-      246
+      250,
+      276,
+      301
     ],
     "0,7": [
       0,
@@ -5245,7 +8728,10 @@
       155,
       187,
       216,
-      243
+      245,
+      276,
+      301,
+      324
     ],
     "0,9": [
       0
@@ -5261,7 +8747,16 @@
       143,
       173,
       205,
-      235
+      235,
+      263,
+      292,
+      320,
+      346,
+      367,
+      385,
+      405,
+      416,
+      425
     ],
     "1,3": [
       0,
@@ -5274,7 +8769,11 @@
       168,
       201,
       231,
-      255
+      260,
+      290,
+      318,
+      343,
+      363
     ],
     "1,5": [
       0,
@@ -5287,7 +8786,9 @@
       170,
       203,
       233,
-      257
+      262,
+      287,
+      313
     ],
     "1,6": [
       0,
@@ -5300,7 +8801,8 @@
       171,
       204,
       234,
-      252
+      257,
+      284
     ],
     "1,8": [
       0,
@@ -5313,7 +8815,8 @@
       171,
       204,
       234,
-      252
+      257,
+      284
     ],
     "2,0": [
       0,
@@ -5326,7 +8829,15 @@
       144,
       174,
       207,
-      236
+      236,
+      264,
+      294,
+      322,
+      348,
+      369,
+      392,
+      403,
+      414
     ],
     "2,3": [
       0,
@@ -5339,7 +8850,10 @@
       168,
       201,
       231,
-      255
+      260,
+      290,
+      315,
+      340
     ],
     "2,4": [
       0,
@@ -5352,7 +8866,9 @@
       169,
       202,
       232,
-      256
+      261,
+      286,
+      312
     ],
     "2,5": [
       0,
@@ -5365,7 +8881,8 @@
       170,
       203,
       233,
-      251
+      256,
+      283
     ],
     "2,6": [
       0,
@@ -5378,7 +8895,7 @@
       171,
       204,
       228,
-      249
+      254
     ],
     "2,7": [
       0,
@@ -5403,7 +8920,7 @@
       171,
       204,
       228,
-      249
+      254
     ],
     "2,9": [
       0,
@@ -5416,7 +8933,8 @@
       160,
       192,
       222,
-      242
+      244,
+      271
     ],
     "3,0": [
       0,
@@ -5429,7 +8947,14 @@
       147,
       180,
       210,
-      238
+      239,
+      269,
+      299,
+      328,
+      353,
+      378,
+      389,
+      401
     ],
     "3,1": [
       0,
@@ -5442,7 +8967,15 @@
       147,
       178,
       210,
-      238
+      239,
+      267,
+      297,
+      326,
+      351,
+      375,
+      395,
+      406,
+      417
     ],
     "3,3": [
       0,
@@ -5455,7 +8988,11 @@
       168,
       201,
       231,
-      255
+      260,
+      290,
+      318,
+      343,
+      363
     ],
     "3,5": [
       0,
@@ -5468,7 +9005,7 @@
       170,
       203,
       227,
-      248
+      253
     ],
     "3,7": [
       0,
@@ -5492,7 +9029,13 @@
       153,
       184,
       214,
-      240
+      242,
+      273,
+      303,
+      331,
+      357,
+      373,
+      386
     ],
     "4,3": [
       0,
@@ -5505,7 +9048,10 @@
       168,
       201,
       231,
-      255
+      260,
+      290,
+      315,
+      340
     ],
     "4,5": [
       0,
@@ -5574,7 +9120,12 @@
       158,
       190,
       220,
-      245
+      249,
+      279,
+      308,
+      336,
+      356,
+      372
     ],
     "5,1": [
       0,
@@ -5587,7 +9138,11 @@
       166,
       199,
       229,
-      253
+      258,
+      288,
+      317,
+      342,
+      365
     ],
     "5,2": [
       0,
@@ -5600,7 +9155,10 @@
       167,
       200,
       230,
-      254
+      259,
+      289,
+      314,
+      339
     ],
     "5,3": [
       0,
@@ -5613,7 +9171,9 @@
       168,
       201,
       231,
-      255
+      260,
+      285,
+      311
     ],
     "5,4": [
       0,
@@ -5626,7 +9186,8 @@
       169,
       202,
       232,
-      250
+      255,
+      282
     ],
     "5,5": [
       0,
@@ -5639,7 +9200,7 @@
       170,
       203,
       227,
-      248
+      253
     ],
     "5,7": [
       0,
@@ -5672,7 +9233,13 @@
       154,
       185,
       215,
-      241
+      243,
+      274,
+      304,
+      332,
+      358,
+      374,
+      387
     ],
     "6,1": [
       0,
@@ -5685,7 +9252,12 @@
       167,
       199,
       229,
-      253
+      258,
+      288,
+      317,
+      345,
+      366,
+      384
     ],
     "6,3": [
       0,
@@ -5698,7 +9270,10 @@
       168,
       201,
       231,
-      255
+      260,
+      290,
+      315,
+      340
     ],
     "6,4": [
       0,
@@ -5711,7 +9286,9 @@
       169,
       202,
       232,
-      256
+      261,
+      286,
+      312
     ],
     "6,5": [
       0,
@@ -5724,7 +9301,8 @@
       170,
       203,
       233,
-      251
+      256,
+      283
     ],
     "6,7": [
       0,
@@ -5764,7 +9342,14 @@
       148,
       181,
       211,
-      239
+      240,
+      270,
+      300,
+      329,
+      354,
+      379,
+      390,
+      402
     ],
     "7,1": [
       0,
@@ -5777,7 +9362,15 @@
       148,
       179,
       211,
-      239
+      240,
+      268,
+      298,
+      327,
+      352,
+      376,
+      396,
+      407,
+      418
     ],
     "7,3": [
       0,
@@ -5790,7 +9383,11 @@
       168,
       201,
       231,
-      255
+      260,
+      290,
+      318,
+      343,
+      363
     ],
     "7,4": [
       0,
@@ -5803,7 +9400,10 @@
       169,
       202,
       232,
-      256
+      261,
+      291,
+      316,
+      341
     ],
     "7,5": [
       0,
@@ -5816,7 +9416,9 @@
       170,
       203,
       233,
-      257
+      262,
+      287,
+      313
     ],
     "7,7": [
       0,
@@ -5836,7 +9438,15 @@
       145,
       175,
       208,
-      237
+      237,
+      265,
+      295,
+      323,
+      349,
+      370,
+      393,
+      404,
+      415
     ],
     "8,1": [
       0,
@@ -5849,7 +9459,16 @@
       145,
       175,
       206,
-      237
+      237,
+      265,
+      293,
+      321,
+      347,
+      368,
+      391,
+      408,
+      419,
+      426
     ],
     "8,4": [
       0,
@@ -5862,7 +9481,11 @@
       169,
       202,
       232,
-      256
+      261,
+      291,
+      319,
+      344,
+      364
     ],
     "8,6": [
       0,
@@ -5893,7 +9516,16 @@
       133,
       162,
       194,
-      224
+      224,
+      252,
+      281,
+      310,
+      338,
+      362,
+      383,
+      400,
+      412,
+      423
     ],
     "9,1": [
       0,
@@ -5906,7 +9538,17 @@
       126,
       156,
       188,
-      218
+      218,
+      247,
+      277,
+      306,
+      334,
+      360,
+      381,
+      398,
+      411,
+      422,
+      430
     ],
     "9,2": [
       0,
@@ -5919,7 +9561,17 @@
       119,
       151,
       182,
-      213
+      213,
+      241,
+      272,
+      302,
+      330,
+      355,
+      380,
+      397,
+      410,
+      421,
+      429
     ],
     "9,3": [
       0,
@@ -5932,7 +9584,17 @@
       132,
       146,
       177,
-      209
+      209,
+      238,
+      266,
+      296,
+      325,
+      350,
+      371,
+      394,
+      409,
+      420,
+      428
     ],
     "9,5": [
       0,

@@ -42,6 +42,7 @@ gstate_max = 0
 reset_gstate_by_position = {}
 gaussian_trace_thresholds = []
 gaussian_trace_groups = {}
+gaussian_quantization_h = None
 
 
 def build_map(filename):
@@ -224,6 +225,7 @@ def load_gaussian_refined(map_id):
     global gvar_max
     global gstate_max
     global reset_gstate_by_position
+    global gaussian_quantization_h
 
     gaussian_gvars = gvars
     gaussian_gstates = gstates
@@ -232,6 +234,7 @@ def load_gaussian_refined(map_id):
     gvar_max = max(gvar_ids)
     gstate_max = max(gstate_to_gvar)
     reset_gstate_by_position = reset_mapping
+    gaussian_quantization_h = float(data.get('h', 0.05))
 
 
 
@@ -249,6 +252,13 @@ def load_gaussian_trace(map_id):
 
     with open(path, 'r') as file:
         data = json.load(file)
+
+    trace_h = float(data.get("h", 0.05))
+    if gaussian_quantization_h is not None and abs(trace_h - gaussian_quantization_h) > 1e-12:
+        raise ValueError(
+            f"{path}: trace h={trace_h} does not match refined "
+            f"h={gaussian_quantization_h}."
+        )
 
     thresholds_raw = data.get("thresholds", {})
     thresholds = [
@@ -331,7 +341,7 @@ def preambel():
             + ';\n\n'
         )
 
-        f.write('// Gaussian covariance quantization: h=0.1\n')
+        f.write('// Gaussian covariance quantization: h=0.05\n')
         f.write('// trace(Sigma)=var_x+var_y, integer-scaled offline\n')
         f.write('// gstate = refined Markov state; gvar = quantized covariance class\n\n')
 
@@ -455,7 +465,7 @@ def knowledge():
         f.write('  step : [1..10] init 1;\n\n')
         f.write('  ready : [0..1] init 1;\n\n')
 
-        f.write('  // Refined Gaussian Markov transitions (h=0.1)\n')
+        f.write('  // Refined Gaussian Markov transitions (h=0.05)\n')
 
         for row in gaussian_lookup:
             action = str(row["action"])

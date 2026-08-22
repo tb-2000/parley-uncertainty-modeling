@@ -15,6 +15,9 @@ def manipulate_prism_model(
     """
     Gaussian trace URC, analogous to the Belief-State URC.
 
+    The URC logic is independent of the concrete grid width h;
+    for the current pipeline the thresholds come from h=0.05 models.
+
     The search space remains position-based:
         decision_x_y in [1..10]
 

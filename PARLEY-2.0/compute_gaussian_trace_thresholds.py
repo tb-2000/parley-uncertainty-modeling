@@ -6,7 +6,7 @@ Berechnet pro Map die skalare Gaussian-Unsicherheit
 
     U_G(Sigma) = trace(Sigma) = var_x + var_y
 
-fuer die h=0.1-quantisierten Kovarianzzustaende.
+fuer die h=0.05-quantisierten Kovarianzzustaende.
 
 Analog zum Belief-State-Modell werden 10 Unsicherheitsschwellwerte erzeugt,
 die den Schritten 1..10 seit dem letzten Knowledge-Update entsprechen.
@@ -41,7 +41,7 @@ from typing import Dict, List, Sequence, Tuple
 
 import dijkstra
 
-H = 0.1
+H = 0.05
 TRACE_SCALE = 1000
 DIRECTION_NAMES = ["west", "east", "south", "north"]
 KNOWLEDGE_EFFECT = {
@@ -150,6 +150,14 @@ def analyse_map(map_id, maps_dir, refined_dir, output_dir, target_x, target_y, p
     with refined_path.open("r") as f:
         refined = json.load(f)
 
+    refined_h = float(refined.get("h", h))
+    if abs(refined_h - h) > 1e-12:
+        raise ValueError(
+            f"Map {map_id}: refined model uses h={refined_h}, "
+            f"but trace computation was requested with h={h}. "
+            "Regenerate gaussian_refined with the same h."
+        )
+
     # Map quantized Sigma -> exact gvar ID used by refined model.
     sigma_to_gvar = {}
     gvar_trace = {}
@@ -252,7 +260,7 @@ def parse_args():
     p.add_argument("--target-x", type=int, default=9)
     p.add_argument("--target-y", type=int, default=9)
     p.add_argument("--p", type=float, default=0.01)
-    p.add_argument("--h", type=float, default=0.1)
+    p.add_argument("--h", type=float, default=H)
     p.add_argument("--max-steps", type=int, default=10)
     p.add_argument("--trace-scale", type=int, default=TRACE_SCALE)
     return p.parse_args()

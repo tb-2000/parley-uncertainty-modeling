@@ -949,11 +949,11 @@ def parse_args():
         nargs="+",
         type=float,
         default=[
+            0.01,
+            0.025,
             0.05,
             0.075,
             0.10,
-            0.15,
-            0.20,
         ],
     )
     parser.add_argument(

@@ -31,6 +31,10 @@ empirisch zu bestimmen, wie viele verschiedene Sigma-Zustände/gvars auf den
 Maps 10..99 benötigt werden.
 """
 
+# NOTE: Dieses Skript berechnet unquantisierte Roh-Sigma-Zustaende.
+# Die Produktions-Quantisierung h=0.05 wird erst in den nachgelagerten
+# Quantisierungs-/Refinement-Skripten angewendet.
+
 from __future__ import annotations
 
 import argparse

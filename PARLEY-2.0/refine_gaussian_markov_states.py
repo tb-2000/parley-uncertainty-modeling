@@ -4,7 +4,7 @@ refine_gaussian_markov_states.py
 
 Erzeugt für Maps 10..99 aus dem bestehenden Dijkstra/MAPE-Controller:
 
-1. die h=0.1-quantisierten Gaussian-Klassen ``gvar`` und
+1. die h=0.05-quantisierten Gaussian-Klassen ``gvar`` und
 2. eine möglichst kleine technische Verfeinerung ``gstate``,
 
 so dass die Kombination
@@ -58,7 +58,7 @@ gaussian_refined/
 
 Standardparameter
 -----------------
-h = 0.1
+h = 0.05
 p = 0.01
 max_steps_since_update = 10
 target = (9, 9)
@@ -1101,7 +1101,7 @@ def write_summary(
 def parse_args():
     parser = argparse.ArgumentParser(
         description=(
-            "Refines h=0.1 Gaussian gvar classes into "
+            "Refines h=0.05 Gaussian gvar classes into "
             "Markov-compatible gstates."
         )
     )
@@ -1144,7 +1144,7 @@ def parse_args():
     parser.add_argument(
         "--h",
         type=float,
-        default=0.1,
+        default=0.05,
     )
     parser.add_argument(
         "--max-steps",
