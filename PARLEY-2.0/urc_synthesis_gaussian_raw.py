@@ -80,12 +80,22 @@ def add_controller(path,guards,vars_,thresholds,possible,baseline):
         f.write('\nmodule URC\n')
         low=min(thresholds);high=max(thresholds)
         f.write(f'  max_gaussian_uncertainty : [{low}..{high}] init {low};\n')
+
         for c in cs:
             suffix=''.join(f'_{v}' for v in c)
             guard='true'+''.join(f' & {g}={v}' for v,g in zip(c,guards))
-            for d in range(1,11):
-                f.write(f"  [URC] {guard} & decision{suffix}={d} -> "
-                        f"(max_gaussian_uncertainty'={thresholds[d-1]});\n")
+            decision=f'decision{suffix}'
+
+            # Nested PRISM ternary: one URC command per (xhat,yhat)
+            # instead of ten commands for decision=1,...,10.
+            expr=str(thresholds[-1])
+            for d in range(len(thresholds)-1,0,-1):
+                expr=f'({decision}={d} ? {thresholds[d-1]} : {expr})'
+
+            f.write(
+                f"  [URC] {guard} -> "
+                f"(max_gaussian_uncertainty'={expr});\n"
+            )
         f.write('endmodule\n')
 
 def add_turn(path,before,after):
