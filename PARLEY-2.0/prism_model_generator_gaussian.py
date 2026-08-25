@@ -135,9 +135,22 @@ def preambel():
 
         f.write(";\n\n")
 
-        # PRISM 4.7-friendly uncertainty encoding.
-        # The URC stores only a threshold LEVEL in [1..10].
-        uncertainty_groups = {}
+        # PRISM 4.7-friendly uncertainty encoding, analogous to the
+        # belief model but compressed to the 10 URC threshold levels.
+        #
+        # Each gstate is assigned offline to the highest threshold level
+        # reached by its trace uncertainty:
+        #   level 0: below threshold_1
+        #   level 1: >= threshold_1 but < threshold_2
+        #   ...
+        #   level 10: >= threshold_10
+        #
+        # Thus we need at most 11 boolean state-group formulas and only
+        # 10 short terms in update_required.
+        uncertainty_levels = {
+            level: []
+            for level in range(0, 11)
+        }
 
         for (
             state_id,
@@ -147,74 +160,75 @@ def preambel():
                 "uncertainties"
             ]
         ):
-            uncertainty_groups.setdefault(
-                uncertainty,
-                [],
-            ).append(
+            reached_level = 0
+
+            for (
+                level,
+                threshold,
+            ) in enumerate(
+                thresholds,
+                start=1,
+            ):
+                if uncertainty >= threshold:
+                    reached_level = level
+                else:
+                    break
+
+            uncertainty_levels[
+                reached_level
+            ].append(
                 state_id
             )
 
-        sorted_groups = sorted(
-            uncertainty_groups.items()
-        )
+        # One compact boolean formula per non-empty uncertainty level.
+        for level in range(0, 11):
+            state_ids = uncertainty_levels[
+                level
+            ]
 
-        for (
-            group_index,
-            (
-                uncertainty,
-                state_ids,
-            ),
-        ) in enumerate(
-            sorted_groups
-        ):
+            if not state_ids:
+                continue
+
             f.write(
-                f"formula gaussian_u_{group_index} = "
+                f"formula gaussian_level_{level} = "
             )
+
             f.write(
                 " | ".join(
                     f"gstate={state_id}"
                     for state_id in state_ids
                 )
             )
+
             f.write(";\n")
 
-        # PRISM 4.7-friendly direct level logic:
-        # update_required iff the current representative uncertainty is
-        # greater than or equal to the threshold selected by
-        # gaussian_threshold_level in [1..10].
+        # If a state has reached uncertainty level L, an update is required
+        # whenever the URC selected threshold level is <= L.
         #
-        # No large numeric state variable and no ternary threshold formula
-        # are introduced. Only equality tests on the 10-level state remain.
+        # This is equivalent to:
+        #   trace(Sigma_gstate) >= threshold[selected_level]
+        #
+        # but avoids a large numeric state variable and avoids expanding every
+        # gstate against every threshold.
         update_terms = []
 
-        for (
-            group_index,
-            (
-                uncertainty,
-                _state_ids,
-            ),
-        ) in enumerate(
-            sorted_groups
-        ):
-            matching_levels = [
-                level
-                for level, threshold in enumerate(
-                    thresholds,
-                    start=1,
-                )
-                if uncertainty >= threshold
-            ]
-
-            if not matching_levels:
+        for reached_level in range(1, 11):
+            if not uncertainty_levels[
+                reached_level
+            ]:
                 continue
 
-            level_guard = " | ".join(
+            selected_levels = " | ".join(
                 f"gaussian_threshold_level={level}"
-                for level in matching_levels
+                for level in range(
+                    1,
+                    reached_level + 1,
+                )
             )
 
             update_terms.append(
-                f"(gaussian_u_{group_index} & ({level_guard}))"
+                f"(gaussian_level_{reached_level} & "
+                f"({selected_levels}))"
             )
 
         f.write(
