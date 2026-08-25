@@ -235,7 +235,7 @@ def preambel():
         else:
             f.write("false")
 
-        f.write(";\\n\\n")
+        f.write(";\n\n")
 
 
 def robot():
