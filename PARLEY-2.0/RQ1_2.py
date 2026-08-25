@@ -21,7 +21,7 @@ def models(i):
     infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
     outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
     # TODO umc_synthesis.manipulate_prism_model is currently broken
-    urc_synthesis_gaussian.manipulate_prism_model(infile, outfile, decision_variables=['x', 'y'], baseline=False) # vorher baseline=True, aber das ist nicht sinnvoll, da wir die Baseline ja erst berechnen wollen.
+    urc_synthesis_gaussian.manipulate_prism_model(infile, outfile, baseline=False) # vorher baseline=True, aber das ist nicht sinnvoll, da wir die Baseline ja erst berechnen wollen.
 
 
 def baseline(i):
