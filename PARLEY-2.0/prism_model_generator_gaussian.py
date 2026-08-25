@@ -105,25 +105,6 @@ def preambel():
             "const int gaussian_threshold_level = 1;\n"
         )
 
-        # Explicit mapping:
-        #   level 1 -> gaussian_threshold_1
-        #   ...
-        #   level 10 -> gaussian_threshold_10
-        #
-        # This is a formula, not a state variable, so the large numeric
-        # threshold range does NOT enlarge the PRISM state space.
-        selected_threshold_expr = "".join(
-            f"gaussian_threshold_level={level} ? "
-            f"gaussian_threshold_{level} : "
-            for level in range(1, 10)
-        ) + "gaussian_threshold_10"
-
-        f.write(
-            "formula selected_gaussian_threshold = "
-            + selected_threshold_expr
-            + ";\n"
-        )
-
         f.write(
             f"const int N={mapSize - 1};\n"
         )
@@ -197,15 +178,13 @@ def preambel():
             )
             f.write(";\n")
 
-        # update_required is generated from the same mapping as
-        # selected_gaussian_threshold. For a representative uncertainty U:
-        # update iff U >= gaussian_threshold_<selected level>.
-        # Direct and compact semantics:
-        # update_required iff trace(Sigma_gstate) >= selected threshold.
+        # PRISM 4.7-friendly direct level logic:
+        # update_required iff the current representative uncertainty is
+        # greater than or equal to the threshold selected by
+        # gaussian_threshold_level in [1..10].
         #
-        # Each gaussian_u_i groups all representatives with the same fixed
-        # offline trace value, so no large numeric uncertainty variable is
-        # introduced into the PRISM state space.
+        # No large numeric state variable and no ternary threshold formula
+        # are introduced. Only equality tests on the 10-level state remain.
         update_terms = []
 
         for (
@@ -217,9 +196,25 @@ def preambel():
         ) in enumerate(
             sorted_groups
         ):
+            matching_levels = [
+                level
+                for level, threshold in enumerate(
+                    thresholds,
+                    start=1,
+                )
+                if uncertainty >= threshold
+            ]
+
+            if not matching_levels:
+                continue
+
+            level_guard = " | ".join(
+                f"gaussian_threshold_level={level}"
+                for level in matching_levels
+            )
+
             update_terms.append(
-                f"(gaussian_u_{group_index} & "
-                f"selected_gaussian_threshold<={uncertainty})"
+                f"(gaussian_u_{group_index} & ({level_guard}))"
             )
 
         f.write(
