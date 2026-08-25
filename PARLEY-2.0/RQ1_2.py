@@ -1,12 +1,12 @@
 import os
 
 import create_maps
-import prism_model_generator_gaussian_raw
+import prism_model_generator_gaussian_full
 import prism_caller
 import run_evochecker
 import evaluation
 import plot_fronts
-import urc_synthesis_gaussian_raw
+import urc_synthesis_gaussian_full
 import time
 
 max_replications = 10 # 10
@@ -17,11 +17,11 @@ def maps():
 
 
 def models(i):
-    prism_model_generator_gaussian_raw.generate_model(i)
+    prism_model_generator_gaussian_full.generate_model(i)
     infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
     outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
     # TODO umc_synthesis.manipulate_prism_model is currently broken
-    urc_synthesis_gaussian_raw.manipulate_prism_model(infile, outfile, baseline=False) # vorher baseline=True, aber das ist nicht sinnvoll, da wir die Baseline ja erst berechnen wollen.
+    urc_synthesis_gaussian_full.manipulate_prism_model(infile, outfile, baseline=False) # vorher baseline=True, aber das ist nicht sinnvoll, da wir die Baseline ja erst berechnen wollen.
 
 
 def baseline(i):

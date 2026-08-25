@@ -1,5 +1,5 @@
-import urc_synthesis_gaussian_raw
-import prism_model_generator_gaussian_raw
+import urc_synthesis_gaussian_full
+import prism_model_generator_gaussian_full
 import plot_fronts
 
 def main():
@@ -15,9 +15,9 @@ def main():
     for i in maps:
         infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
         outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
-        prism_model_generator_gaussian_raw.generate_model(i)
+        prism_model_generator_gaussian_full.generate_model(i)
         print(f"generated: {infile}")
-        urc_synthesis_gaussian_raw.manipulate_prism_model(infile, outfile, baseline=False)
+        urc_synthesis_gaussian_full.manipulate_prism_model(infile, outfile, baseline=False)
     print(f"generated: {outfile}")
 
     # max_replications = 10
