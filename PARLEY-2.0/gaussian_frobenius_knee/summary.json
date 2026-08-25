@@ -1,0 +1,934 @@
+{
+  "settings": {
+    "first_map": 10,
+    "last_map": 99,
+    "target": [
+      9,
+      9
+    ],
+    "p": 0.01,
+    "max_steps": 10,
+    "metric": "frobenius",
+    "k_values": [
+      25,
+      50,
+      75,
+      100,
+      125,
+      150,
+      175,
+      200
+    ]
+  },
+  "global_geometric_knee": {
+    "k": 75,
+    "maps": 90,
+    "mean_frobenius_error": 0.01192310930153146,
+    "mean_max_frobenius_error": 0.05644061731427162,
+    "mean_silhouette": 0.3320093958668979,
+    "mean_objective": 7.828049536277063,
+    "geometric_distance": 0.27362388374797064
+  },
+  "per_map_knees": [
+    {
+      "map_id": 10,
+      "unique_raw_sigma": 256,
+      "geometric_knee_k": 50,
+      "mean_frobenius_error_at_knee": 0.01379215491739278,
+      "max_frobenius_error_at_knee": 0.06172973351635336,
+      "silhouette_at_knee": 0.3732696067794418,
+      "geometric_knee_distance": 0.32839542273909794
+    },
+    {
+      "map_id": 11,
+      "unique_raw_sigma": 259,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010705421453095571,
+      "max_frobenius_error_at_knee": 0.054305800795126855,
+      "silhouette_at_knee": 0.3794584152649278,
+      "geometric_knee_distance": 0.30072120618593623
+    },
+    {
+      "map_id": 12,
+      "unique_raw_sigma": 303,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.011899417339462027,
+      "max_frobenius_error_at_knee": 0.05430580079512685,
+      "silhouette_at_knee": 0.3356392382110522,
+      "geometric_knee_distance": 0.2719001772013431
+    },
+    {
+      "map_id": 13,
+      "unique_raw_sigma": 303,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.010018574624594892,
+      "max_frobenius_error_at_knee": 0.05076386510107361,
+      "silhouette_at_knee": 0.33700833723152834,
+      "geometric_knee_distance": 0.2441161531217817
+    },
+    {
+      "map_id": 14,
+      "unique_raw_sigma": 344,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.01200731723559005,
+      "max_frobenius_error_at_knee": 0.054305800795126834,
+      "silhouette_at_knee": 0.33026391933330773,
+      "geometric_knee_distance": 0.2347253889129711
+    },
+    {
+      "map_id": 15,
+      "unique_raw_sigma": 258,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.013479437767907757,
+      "max_frobenius_error_at_knee": 0.05430580079512685,
+      "silhouette_at_knee": 0.31013016730224324,
+      "geometric_knee_distance": 0.25345381352599433
+    },
+    {
+      "map_id": 16,
+      "unique_raw_sigma": 308,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.011884848397091112,
+      "max_frobenius_error_at_knee": 0.054305800795126834,
+      "silhouette_at_knee": 0.2896794352875364,
+      "geometric_knee_distance": 0.2775627805752168
+    },
+    {
+      "map_id": 17,
+      "unique_raw_sigma": 250,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.007811125883881549,
+      "max_frobenius_error_at_knee": 0.05430580079512685,
+      "silhouette_at_knee": 0.3429284706444306,
+      "geometric_knee_distance": 0.3242688036655257
+    },
+    {
+      "map_id": 18,
+      "unique_raw_sigma": 268,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010115776182140433,
+      "max_frobenius_error_at_knee": 0.054305800795126855,
+      "silhouette_at_knee": 0.361556342625358,
+      "geometric_knee_distance": 0.29564512724682945
+    },
+    {
+      "map_id": 19,
+      "unique_raw_sigma": 301,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.012908282843256078,
+      "max_frobenius_error_at_knee": 0.06076915335924963,
+      "silhouette_at_knee": 0.3440032273420125,
+      "geometric_knee_distance": 0.2862928756764866
+    },
+    {
+      "map_id": 20,
+      "unique_raw_sigma": 263,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.012097891540918374,
+      "max_frobenius_error_at_knee": 0.0554105585606209,
+      "silhouette_at_knee": 0.4139707840617491,
+      "geometric_knee_distance": 0.29296345906947696
+    },
+    {
+      "map_id": 21,
+      "unique_raw_sigma": 272,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.008070589640135292,
+      "max_frobenius_error_at_knee": 0.050763865101073634,
+      "silhouette_at_knee": 0.35335195264676417,
+      "geometric_knee_distance": 0.26556737555024623
+    },
+    {
+      "map_id": 22,
+      "unique_raw_sigma": 327,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.010353724188558693,
+      "max_frobenius_error_at_knee": 0.06076915335924961,
+      "silhouette_at_knee": 0.4307521998688333,
+      "geometric_knee_distance": 0.2694417697396026
+    },
+    {
+      "map_id": 23,
+      "unique_raw_sigma": 299,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.012728200472654706,
+      "max_frobenius_error_at_knee": 0.06076915335924963,
+      "silhouette_at_knee": 0.3634442455009923,
+      "geometric_knee_distance": 0.2735668017488078
+    },
+    {
+      "map_id": 24,
+      "unique_raw_sigma": 332,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.011684536355048594,
+      "max_frobenius_error_at_knee": 0.051217575108550385,
+      "silhouette_at_knee": 0.342230950935134,
+      "geometric_knee_distance": 0.27511939672938357
+    },
+    {
+      "map_id": 25,
+      "unique_raw_sigma": 263,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010365153863093902,
+      "max_frobenius_error_at_knee": 0.05430580079512685,
+      "silhouette_at_knee": 0.3414216324935049,
+      "geometric_knee_distance": 0.2800499119288077
+    },
+    {
+      "map_id": 26,
+      "unique_raw_sigma": 261,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.011096227182939232,
+      "max_frobenius_error_at_knee": 0.04610845909374981,
+      "silhouette_at_knee": 0.30230980978993865,
+      "geometric_knee_distance": 0.24420507411765816
+    },
+    {
+      "map_id": 27,
+      "unique_raw_sigma": 343,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.010835062683075096,
+      "max_frobenius_error_at_knee": 0.06076915335924963,
+      "silhouette_at_knee": 0.3357550914661509,
+      "geometric_knee_distance": 0.2325958413589056
+    },
+    {
+      "map_id": 28,
+      "unique_raw_sigma": 210,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.008486880191320207,
+      "max_frobenius_error_at_knee": 0.054305800795126834,
+      "silhouette_at_knee": 0.3269078000654402,
+      "geometric_knee_distance": 0.2958806220154519
+    },
+    {
+      "map_id": 29,
+      "unique_raw_sigma": 258,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.012078808453199448,
+      "max_frobenius_error_at_knee": 0.06172973351635334,
+      "silhouette_at_knee": 0.3686416730018118,
+      "geometric_knee_distance": 0.2788837359724151
+    },
+    {
+      "map_id": 30,
+      "unique_raw_sigma": 269,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.01126268106195409,
+      "max_frobenius_error_at_knee": 0.054305800795126834,
+      "silhouette_at_knee": 0.2449974252088374,
+      "geometric_knee_distance": 0.25929114497667977
+    },
+    {
+      "map_id": 31,
+      "unique_raw_sigma": 262,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.00975216643559331,
+      "max_frobenius_error_at_knee": 0.054305800795126855,
+      "silhouette_at_knee": 0.3425294813733589,
+      "geometric_knee_distance": 0.3046873233856058
+    },
+    {
+      "map_id": 32,
+      "unique_raw_sigma": 342,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.01465841430315491,
+      "max_frobenius_error_at_knee": 0.06440403714053958,
+      "silhouette_at_knee": 0.31052398740523274,
+      "geometric_knee_distance": 0.2680699106147722
+    },
+    {
+      "map_id": 33,
+      "unique_raw_sigma": 312,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010502446205043857,
+      "max_frobenius_error_at_knee": 0.0512183560845133,
+      "silhouette_at_knee": 0.3070733466832832,
+      "geometric_knee_distance": 0.2823570766053572
+    },
+    {
+      "map_id": 34,
+      "unique_raw_sigma": 293,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.012478352593306074,
+      "max_frobenius_error_at_knee": 0.058964480833803665,
+      "silhouette_at_knee": 0.27597188011819,
+      "geometric_knee_distance": 0.2593772850563815
+    },
+    {
+      "map_id": 35,
+      "unique_raw_sigma": 321,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.010950645931099892,
+      "max_frobenius_error_at_knee": 0.050956059502280986,
+      "silhouette_at_knee": 0.35453728038934973,
+      "geometric_knee_distance": 0.25954478892929767
+    },
+    {
+      "map_id": 36,
+      "unique_raw_sigma": 305,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.01222854826118075,
+      "max_frobenius_error_at_knee": 0.06172973351635335,
+      "silhouette_at_knee": 0.37423164736298653,
+      "geometric_knee_distance": 0.2922592256876648
+    },
+    {
+      "map_id": 37,
+      "unique_raw_sigma": 233,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.008347123999354373,
+      "max_frobenius_error_at_knee": 0.04074162490623074,
+      "silhouette_at_knee": 0.3175210807018282,
+      "geometric_knee_distance": 0.3184528272768812
+    },
+    {
+      "map_id": 38,
+      "unique_raw_sigma": 282,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010616884150862066,
+      "max_frobenius_error_at_knee": 0.06060627030266754,
+      "silhouette_at_knee": 0.31371280570383103,
+      "geometric_knee_distance": 0.28664028630598154
+    },
+    {
+      "map_id": 39,
+      "unique_raw_sigma": 253,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.012040132104933309,
+      "max_frobenius_error_at_knee": 0.04959606839256514,
+      "silhouette_at_knee": 0.3710719407313213,
+      "geometric_knee_distance": 0.2537462335180006
+    },
+    {
+      "map_id": 40,
+      "unique_raw_sigma": 249,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.009222704072902174,
+      "max_frobenius_error_at_knee": 0.05076386510107362,
+      "silhouette_at_knee": 0.3483180269336342,
+      "geometric_knee_distance": 0.3046826221677247
+    },
+    {
+      "map_id": 41,
+      "unique_raw_sigma": 300,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.009533993497770461,
+      "max_frobenius_error_at_knee": 0.050763865101073634,
+      "silhouette_at_knee": 0.350578031246256,
+      "geometric_knee_distance": 0.2621060099323573
+    },
+    {
+      "map_id": 42,
+      "unique_raw_sigma": 247,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010614166949032848,
+      "max_frobenius_error_at_knee": 0.046352777694546016,
+      "silhouette_at_knee": 0.3212342966170951,
+      "geometric_knee_distance": 0.25709177780220593
+    },
+    {
+      "map_id": 43,
+      "unique_raw_sigma": 291,
+      "geometric_knee_k": 50,
+      "mean_frobenius_error_at_knee": 0.01649930733203168,
+      "max_frobenius_error_at_knee": 0.06333348245596482,
+      "silhouette_at_knee": 0.33358736888365875,
+      "geometric_knee_distance": 0.22340794017387872
+    },
+    {
+      "map_id": 44,
+      "unique_raw_sigma": 301,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010834834958832962,
+      "max_frobenius_error_at_knee": 0.054305800795126834,
+      "silhouette_at_knee": 0.3254647297429721,
+      "geometric_knee_distance": 0.2883848513185187
+    },
+    {
+      "map_id": 45,
+      "unique_raw_sigma": 278,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010075453392860288,
+      "max_frobenius_error_at_knee": 0.05430580079512685,
+      "silhouette_at_knee": 0.3179685379844121,
+      "geometric_knee_distance": 0.2884322373523743
+    },
+    {
+      "map_id": 46,
+      "unique_raw_sigma": 335,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.014166389816315158,
+      "max_frobenius_error_at_knee": 0.05973081281884585,
+      "silhouette_at_knee": 0.2976293391586192,
+      "geometric_knee_distance": 0.2429657382992592
+    },
+    {
+      "map_id": 47,
+      "unique_raw_sigma": 319,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.011559770083079807,
+      "max_frobenius_error_at_knee": 0.0512183560845133,
+      "silhouette_at_knee": 0.36186489406401173,
+      "geometric_knee_distance": 0.28754232191828777
+    },
+    {
+      "map_id": 48,
+      "unique_raw_sigma": 353,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.014172629397922578,
+      "max_frobenius_error_at_knee": 0.06172973351635331,
+      "silhouette_at_knee": 0.3588605750997778,
+      "geometric_knee_distance": 0.2940774629840367
+    },
+    {
+      "map_id": 49,
+      "unique_raw_sigma": 261,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.008274715374951426,
+      "max_frobenius_error_at_knee": 0.035310196827545465,
+      "silhouette_at_knee": 0.3269381535026371,
+      "geometric_knee_distance": 0.32214186322525834
+    },
+    {
+      "map_id": 50,
+      "unique_raw_sigma": 256,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.009854624676162145,
+      "max_frobenius_error_at_knee": 0.045390747955943625,
+      "silhouette_at_knee": 0.32965688125570264,
+      "geometric_knee_distance": 0.2937830839749635
+    },
+    {
+      "map_id": 51,
+      "unique_raw_sigma": 321,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.010093308929236369,
+      "max_frobenius_error_at_knee": 0.043637140144606165,
+      "silhouette_at_knee": 0.33535420762574986,
+      "geometric_knee_distance": 0.2418382371174184
+    },
+    {
+      "map_id": 52,
+      "unique_raw_sigma": 257,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010364287602635684,
+      "max_frobenius_error_at_knee": 0.06076915335924963,
+      "silhouette_at_knee": 0.39253739928476844,
+      "geometric_knee_distance": 0.2965940310676557
+    },
+    {
+      "map_id": 53,
+      "unique_raw_sigma": 273,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.011972220798419413,
+      "max_frobenius_error_at_knee": 0.06060627030266754,
+      "silhouette_at_knee": 0.3545525465194432,
+      "geometric_knee_distance": 0.2698504126133168
+    },
+    {
+      "map_id": 54,
+      "unique_raw_sigma": 299,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.00985271967763203,
+      "max_frobenius_error_at_knee": 0.05430580079512685,
+      "silhouette_at_knee": 0.33221615285222356,
+      "geometric_knee_distance": 0.31892088890412734
+    },
+    {
+      "map_id": 55,
+      "unique_raw_sigma": 319,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.01223247318067485,
+      "max_frobenius_error_at_knee": 0.06172973351635336,
+      "silhouette_at_knee": 0.3517067380118968,
+      "geometric_knee_distance": 0.2844937243051619
+    },
+    {
+      "map_id": 56,
+      "unique_raw_sigma": 251,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010574601338499067,
+      "max_frobenius_error_at_knee": 0.04869065618781494,
+      "silhouette_at_knee": 0.40641542480498216,
+      "geometric_knee_distance": 0.3047485195546764
+    },
+    {
+      "map_id": 57,
+      "unique_raw_sigma": 277,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.00901418616945574,
+      "max_frobenius_error_at_knee": 0.05645821463702161,
+      "silhouette_at_knee": 0.29253026551479144,
+      "geometric_knee_distance": 0.3143854053997998
+    },
+    {
+      "map_id": 58,
+      "unique_raw_sigma": 305,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.013398231783445284,
+      "max_frobenius_error_at_knee": 0.06076915335924963,
+      "silhouette_at_knee": 0.3611680833770477,
+      "geometric_knee_distance": 0.27910869352783524
+    },
+    {
+      "map_id": 59,
+      "unique_raw_sigma": 318,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.013051219378469758,
+      "max_frobenius_error_at_knee": 0.054305800795126855,
+      "silhouette_at_knee": 0.37472868832348266,
+      "geometric_knee_distance": 0.28931216805562304
+    },
+    {
+      "map_id": 60,
+      "unique_raw_sigma": 250,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.007030262989342464,
+      "max_frobenius_error_at_knee": 0.03989774429714041,
+      "silhouette_at_knee": 0.2817417100222408,
+      "geometric_knee_distance": 0.3288572875041388
+    },
+    {
+      "map_id": 61,
+      "unique_raw_sigma": 306,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.010339077619681674,
+      "max_frobenius_error_at_knee": 0.05076386510107361,
+      "silhouette_at_knee": 0.31648869125181617,
+      "geometric_knee_distance": 0.2443760597887686
+    },
+    {
+      "map_id": 62,
+      "unique_raw_sigma": 300,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010361678713328853,
+      "max_frobenius_error_at_knee": 0.054305800795126875,
+      "silhouette_at_knee": 0.28921122125314846,
+      "geometric_knee_distance": 0.3059590811914751
+    },
+    {
+      "map_id": 63,
+      "unique_raw_sigma": 296,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.008341271093337488,
+      "max_frobenius_error_at_knee": 0.06076915335924963,
+      "silhouette_at_knee": 0.4080881327334687,
+      "geometric_knee_distance": 0.29267104965598073
+    },
+    {
+      "map_id": 64,
+      "unique_raw_sigma": 265,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.012327521257485433,
+      "max_frobenius_error_at_knee": 0.06172973351635338,
+      "silhouette_at_knee": 0.36587143221025986,
+      "geometric_knee_distance": 0.2716287122855468
+    },
+    {
+      "map_id": 65,
+      "unique_raw_sigma": 265,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010568905410353735,
+      "max_frobenius_error_at_knee": 0.058964480833803665,
+      "silhouette_at_knee": 0.3407779276530201,
+      "geometric_knee_distance": 0.2858110433218527
+    },
+    {
+      "map_id": 66,
+      "unique_raw_sigma": 348,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.015392271901452387,
+      "max_frobenius_error_at_knee": 0.060769153359249616,
+      "silhouette_at_knee": 0.3853275576784074,
+      "geometric_knee_distance": 0.2810492624440923
+    },
+    {
+      "map_id": 67,
+      "unique_raw_sigma": 282,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.009809757652246466,
+      "max_frobenius_error_at_knee": 0.05337124694065148,
+      "silhouette_at_knee": 0.3042409385973362,
+      "geometric_knee_distance": 0.28467666749838666
+    },
+    {
+      "map_id": 68,
+      "unique_raw_sigma": 280,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010910031787477133,
+      "max_frobenius_error_at_knee": 0.06172973351635336,
+      "silhouette_at_knee": 0.3233000656352384,
+      "geometric_knee_distance": 0.2452148160505926
+    },
+    {
+      "map_id": 69,
+      "unique_raw_sigma": 252,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.009390026504195714,
+      "max_frobenius_error_at_knee": 0.06172973351635338,
+      "silhouette_at_knee": 0.35204323360451917,
+      "geometric_knee_distance": 0.32787537553811463
+    },
+    {
+      "map_id": 70,
+      "unique_raw_sigma": 286,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.00946021198887955,
+      "max_frobenius_error_at_knee": 0.045390747955943625,
+      "silhouette_at_knee": 0.2751203023173207,
+      "geometric_knee_distance": 0.3088993941148253
+    },
+    {
+      "map_id": 71,
+      "unique_raw_sigma": 320,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.010049075626073507,
+      "max_frobenius_error_at_knee": 0.05896448083380367,
+      "silhouette_at_knee": 0.37799431632136776,
+      "geometric_knee_distance": 0.27605013228792924
+    },
+    {
+      "map_id": 72,
+      "unique_raw_sigma": 283,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.013584836815105783,
+      "max_frobenius_error_at_knee": 0.06076915335924963,
+      "silhouette_at_knee": 0.332748060451903,
+      "geometric_knee_distance": 0.2521443329347893
+    },
+    {
+      "map_id": 73,
+      "unique_raw_sigma": 253,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.011237216440093574,
+      "max_frobenius_error_at_knee": 0.06440403714053956,
+      "silhouette_at_knee": 0.3175465781058664,
+      "geometric_knee_distance": 0.2897664990249849
+    },
+    {
+      "map_id": 74,
+      "unique_raw_sigma": 310,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.012517054709995581,
+      "max_frobenius_error_at_knee": 0.07278323982896062,
+      "silhouette_at_knee": 0.3234058595359491,
+      "geometric_knee_distance": 0.2784996671367111
+    },
+    {
+      "map_id": 75,
+      "unique_raw_sigma": 250,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.009505579715725911,
+      "max_frobenius_error_at_knee": 0.06076915335924961,
+      "silhouette_at_knee": 0.3239496046096226,
+      "geometric_knee_distance": 0.31595635480818945
+    },
+    {
+      "map_id": 76,
+      "unique_raw_sigma": 294,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.011597046244062003,
+      "max_frobenius_error_at_knee": 0.050763865101073634,
+      "silhouette_at_knee": 0.3662525009531497,
+      "geometric_knee_distance": 0.2665318740865324
+    },
+    {
+      "map_id": 77,
+      "unique_raw_sigma": 284,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.011282953194292828,
+      "max_frobenius_error_at_knee": 0.05076386510107362,
+      "silhouette_at_knee": 0.30762181818749657,
+      "geometric_knee_distance": 0.26501658373862436
+    },
+    {
+      "map_id": 78,
+      "unique_raw_sigma": 268,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.009308095819551497,
+      "max_frobenius_error_at_knee": 0.054305800795126855,
+      "silhouette_at_knee": 0.3978381561151839,
+      "geometric_knee_distance": 0.3202022404462788
+    },
+    {
+      "map_id": 79,
+      "unique_raw_sigma": 269,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.013576832640357672,
+      "max_frobenius_error_at_knee": 0.06501899722388835,
+      "silhouette_at_knee": 0.349340359455678,
+      "geometric_knee_distance": 0.26027532611112947
+    },
+    {
+      "map_id": 80,
+      "unique_raw_sigma": 281,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010822079200942076,
+      "max_frobenius_error_at_knee": 0.06076915335924961,
+      "silhouette_at_knee": 0.42400197087329716,
+      "geometric_knee_distance": 0.3131230538847186
+    },
+    {
+      "map_id": 81,
+      "unique_raw_sigma": 225,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.009403060829886385,
+      "max_frobenius_error_at_knee": 0.06076915335924961,
+      "silhouette_at_knee": 0.3603423654924622,
+      "geometric_knee_distance": 0.3089984598664986
+    },
+    {
+      "map_id": 82,
+      "unique_raw_sigma": 370,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.015015525943804805,
+      "max_frobenius_error_at_knee": 0.05977733684265301,
+      "silhouette_at_knee": 0.38865382544973287,
+      "geometric_knee_distance": 0.27832173194604376
+    },
+    {
+      "map_id": 83,
+      "unique_raw_sigma": 258,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.011360308918706312,
+      "max_frobenius_error_at_knee": 0.054305800795126855,
+      "silhouette_at_knee": 0.3238151110665685,
+      "geometric_knee_distance": 0.2375733612180869
+    },
+    {
+      "map_id": 84,
+      "unique_raw_sigma": 279,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.01038727276718,
+      "max_frobenius_error_at_knee": 0.05430580079512685,
+      "silhouette_at_knee": 0.32960980827778324,
+      "geometric_knee_distance": 0.28626486081671815
+    },
+    {
+      "map_id": 85,
+      "unique_raw_sigma": 277,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.008683840060893615,
+      "max_frobenius_error_at_knee": 0.05076386510107361,
+      "silhouette_at_knee": 0.3218506488708298,
+      "geometric_knee_distance": 0.2603163887290049
+    },
+    {
+      "map_id": 86,
+      "unique_raw_sigma": 215,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.009415803023606381,
+      "max_frobenius_error_at_knee": 0.051026463722268676,
+      "silhouette_at_knee": 0.3377447553162937,
+      "geometric_knee_distance": 0.28388276294171594
+    },
+    {
+      "map_id": 87,
+      "unique_raw_sigma": 265,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.011422476054979444,
+      "max_frobenius_error_at_knee": 0.06076915335924963,
+      "silhouette_at_knee": 0.37551634750665214,
+      "geometric_knee_distance": 0.29304871698662666
+    },
+    {
+      "map_id": 88,
+      "unique_raw_sigma": 300,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.00905869994023586,
+      "max_frobenius_error_at_knee": 0.05656014497859778,
+      "silhouette_at_knee": 0.2454998723456663,
+      "geometric_knee_distance": 0.24497502705479726
+    },
+    {
+      "map_id": 89,
+      "unique_raw_sigma": 265,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.011395854975876411,
+      "max_frobenius_error_at_knee": 0.054305800795126834,
+      "silhouette_at_knee": 0.2949915691425931,
+      "geometric_knee_distance": 0.24359021042820986
+    },
+    {
+      "map_id": 90,
+      "unique_raw_sigma": 349,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.01294977610974987,
+      "max_frobenius_error_at_knee": 0.06708867266536132,
+      "silhouette_at_knee": 0.3743221513163542,
+      "geometric_knee_distance": 0.28451890955633
+    },
+    {
+      "map_id": 91,
+      "unique_raw_sigma": 223,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.008219440271616047,
+      "max_frobenius_error_at_knee": 0.04649042912256241,
+      "silhouette_at_knee": 0.306580709187988,
+      "geometric_knee_distance": 0.2877010524310543
+    },
+    {
+      "map_id": 92,
+      "unique_raw_sigma": 314,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.013282312846240344,
+      "max_frobenius_error_at_knee": 0.06172973351635335,
+      "silhouette_at_knee": 0.2883171284585452,
+      "geometric_knee_distance": 0.25207807560660406
+    },
+    {
+      "map_id": 93,
+      "unique_raw_sigma": 318,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.010119507815990893,
+      "max_frobenius_error_at_knee": 0.05896448083380367,
+      "silhouette_at_knee": 0.3484302503270237,
+      "geometric_knee_distance": 0.23917236724172328
+    },
+    {
+      "map_id": 94,
+      "unique_raw_sigma": 246,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.011510610958761115,
+      "max_frobenius_error_at_knee": 0.06076915335924963,
+      "silhouette_at_knee": 0.3439948638852521,
+      "geometric_knee_distance": 0.2749627498692284
+    },
+    {
+      "map_id": 95,
+      "unique_raw_sigma": 282,
+      "geometric_knee_k": 100,
+      "mean_frobenius_error_at_knee": 0.009475197175411258,
+      "max_frobenius_error_at_knee": 0.060769153359249636,
+      "silhouette_at_knee": 0.35529909979063495,
+      "geometric_knee_distance": 0.2617817533424595
+    },
+    {
+      "map_id": 96,
+      "unique_raw_sigma": 230,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.010623020845515967,
+      "max_frobenius_error_at_knee": 0.05401120254169499,
+      "silhouette_at_knee": 0.3145142897855206,
+      "geometric_knee_distance": 0.2666485471654932
+    },
+    {
+      "map_id": 97,
+      "unique_raw_sigma": 245,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.007254199412848075,
+      "max_frobenius_error_at_knee": 0.04193268414971787,
+      "silhouette_at_knee": 0.2521474333672877,
+      "geometric_knee_distance": 0.2955480445667571
+    },
+    {
+      "map_id": 98,
+      "unique_raw_sigma": 271,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.012748870573731287,
+      "max_frobenius_error_at_knee": 0.06172973351635337,
+      "silhouette_at_knee": 0.3906067898892552,
+      "geometric_knee_distance": 0.26983063208168645
+    },
+    {
+      "map_id": 99,
+      "unique_raw_sigma": 309,
+      "geometric_knee_k": 75,
+      "mean_frobenius_error_at_knee": 0.012797619542409218,
+      "max_frobenius_error_at_knee": 0.06172973351635338,
+      "silhouette_at_knee": 0.33277020571043536,
+      "geometric_knee_distance": 0.28740621709580827
+    }
+  ],
+  "aggregated_curve": [
+    {
+      "k": 25,
+      "maps": 90,
+      "mean_frobenius_error": 0.031504329649489196,
+      "mean_max_frobenius_error": 0.08786755808378598,
+      "mean_silhouette": 0.23007411562699956,
+      "mean_objective": 20.619055659884747,
+      "frobenius_improvement_from_previous_k": "",
+      "is_geometric_knee": 0,
+      "geometric_distance": 0.0
+    },
+    {
+      "k": 50,
+      "maps": 90,
+      "mean_frobenius_error": 0.01813719949109582,
+      "mean_max_frobenius_error": 0.06523366749068533,
+      "mean_silhouette": 0.3079569927870295,
+      "mean_objective": 11.876554156306666,
+      "frobenius_improvement_from_previous_k": 0.013367130158393376,
+      "is_geometric_knee": 0,
+      "geometric_distance": 0.22369046174084276
+    },
+    {
+      "k": 75,
+      "maps": 90,
+      "mean_frobenius_error": 0.01192310930153146,
+      "mean_max_frobenius_error": 0.05644061731427162,
+      "mean_silhouette": 0.3320093958668979,
+      "mean_objective": 7.828049536277063,
+      "frobenius_improvement_from_previous_k": 0.006214090189564359,
+      "is_geometric_knee": 1,
+      "geometric_distance": 0.27362388374797064
+    },
+    {
+      "k": 100,
+      "maps": 90,
+      "mean_frobenius_error": 0.008429683032568717,
+      "mean_max_frobenius_error": 0.04605347523795877,
+      "mean_silhouette": 0.30986188412425275,
+      "mean_objective": 5.537394762433939,
+      "frobenius_improvement_from_previous_k": 0.0034934262689627436,
+      "is_geometric_knee": 0,
+      "geometric_distance": 0.25746869014353946
+    },
+    {
+      "k": 125,
+      "maps": 90,
+      "mean_frobenius_error": 0.006287668272282569,
+      "mean_max_frobenius_error": 0.037015191410405296,
+      "mean_silhouette": 0.2665061565755537,
+      "mean_objective": 4.137812050030167,
+      "frobenius_improvement_from_previous_k": 0.0021420147602861485,
+      "is_geometric_knee": 0,
+      "geometric_distance": 0.20848587859862597
+    },
+    {
+      "k": 150,
+      "maps": 90,
+      "mean_frobenius_error": 0.004688548770516491,
+      "mean_max_frobenius_error": 0.03317716892444888,
+      "mean_silhouette": 0.23102643646668564,
+      "mean_objective": 3.0903021238159996,
+      "frobenius_improvement_from_previous_k": 0.0015991195017660779,
+      "is_geometric_knee": 0,
+      "geometric_distance": 0.14631540510620625
+    },
+    {
+      "k": 175,
+      "maps": 90,
+      "mean_frobenius_error": 0.0034189558492176628,
+      "mean_max_frobenius_error": 0.029520793638485216,
+      "mean_silhouette": 0.19135886322630238,
+      "mean_objective": 2.25778673689805,
+      "frobenius_improvement_from_previous_k": 0.001269592921298828,
+      "is_geometric_knee": 0,
+      "geometric_distance": 0.07614028416527856
+    },
+    {
+      "k": 200,
+      "maps": 90,
+      "mean_frobenius_error": 0.0023949302501393393,
+      "mean_max_frobenius_error": 0.02588570144816493,
+      "mean_silhouette": 0.14147319922088414,
+      "mean_objective": 1.5954706784765373,
+      "frobenius_improvement_from_previous_k": 0.0010240255990783234,
+      "is_geometric_knee": 0,
+      "geometric_distance": 0.0
+    }
+  ]
+}
