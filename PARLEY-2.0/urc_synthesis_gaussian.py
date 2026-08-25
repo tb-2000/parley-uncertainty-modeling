@@ -4,202 +4,449 @@ import shutil
 
 
 def manipulate_prism_model(
-        input_path,
-        output_path,
-        possible_decisions=[1, 10],
-        decision_variables=['x', 'y'],
-        before_actions=['east', 'west', 'north', 'south'],
-        after_actions=['update', 'skip_update'],
-        module_name='Knowledge',
-        baseline=False):
+    input_path,
+    output_path,
+    possible_decisions=[1, 10],
+    decision_variables=[],
+    before_actions=[
+        "east",
+        "west",
+        "north",
+        "south",
+    ],
+    after_actions=[
+        "update",
+        "skip_update",
+    ],
+    module_name="Knowledge",
+    baseline=False,
+):
     """
-    Gaussian trace URC, analogous to the Belief-State URC.
+    Gaussian representative-state URC.
 
-    The URC logic is independent of the concrete grid width h;
-    for the current pipeline the thresholds come from h=0.05 models.
-
-    The search space remains position-based:
-        decision_x_y in [1..10]
-
-    Each decision selects one of:
-        gaussian_threshold_1 .. gaussian_threshold_10
-
-    The Knowledge module then compares the current trace(Sigma) uncertainty
-    with max_gaussian_uncertainty via formula update_required.
+    This intentionally mirrors urc_synthesis_belief_full.py:
+      * position-dependent decision_x_y in [1..10]
+      * each decision selects one map-specific Gaussian trace threshold
+      * one compact ternary [URC] command per position
     """
-    if os.path.abspath(input_path) == os.path.abspath(output_path):
-        raise ValueError("Input and output files cannot be the same.")
-
-    shutil.copyfile(input_path, output_path)
-
-    variables, guard_variables = get_variables(
-        input_path, decision_variables
-    )
-    thresholds = get_gaussian_thresholds(input_path)
-
-    remove_counter_from_module(output_path)
-    add_controller(
-        output_path,
-        guard_variables,
-        variables,
-        thresholds,
-        possible_decisions,
-        baseline
-    )
-    add_turn(output_path, before_actions, after_actions)
-
-
-def _parse_int_constants(path):
-    pattern = re.compile(r'const\s+int\s+(\w+)\s*=\s*(-?\d+)\s*;')
-    constants = {}
-    with open(path, 'r') as f:
-        for line in f:
-            for m in pattern.finditer(line):
-                constants[m.group(1)] = int(m.group(2))
-    return constants
-
-
-def _parse_int_variables(path, constants):
-    pattern = re.compile(
-        r'(\w+)\s*:\s*\[(-?\w+)\s*\.\.\s*(-?\w+)\]\s*init\s*(-?\w+)\s*;'
-    )
-    result = {}
-    with open(path, 'r') as f:
-        for line in f:
-            for m in pattern.finditer(line):
-                name = m.group(1)
-                result[name] = [
-                    name,
-                    _resolve(m.group(2), constants),
-                    _resolve(m.group(3), constants),
-                ]
-    return result
-
-
-def _resolve(value, constants):
-    if value.lstrip("-").isdigit():
-        return int(value)
-    if value not in constants:
-        raise ValueError(f"Unknown integer bound: {value}")
-    return constants[value]
-
-
-def get_variables(path, decision_variables):
-    constants = _parse_int_constants(path)
-    declared = _parse_int_variables(path, constants)
-    variables = []
-    guards = []
-
-    for name in decision_variables:
-        if name not in declared:
-            raise ValueError(f"Decision variable '{name}' not declared.")
-        variables.append(declared[name])
-        estimate = name + "hat"
-        guards.append(estimate if estimate in declared else name)
-
-    return variables, guards
-
-
-def get_gaussian_thresholds(path):
-    pattern = re.compile(
-        r'const\s+int\s+gaussian_threshold_(\d+)\s*=\s*(\d+)\s*;'
-    )
-    thresholds = {}
-    with open(path, 'r') as f:
-        for line in f:
-            m = pattern.search(line)
-            if m:
-                thresholds[int(m.group(1))] = int(m.group(2))
-
-    missing = [i for i in range(1, 11) if i not in thresholds]
-    if missing:
+    if (
+        os.path.abspath(input_path)
+        == os.path.abspath(output_path)
+    ):
         raise ValueError(
-            f"Missing gaussian thresholds {missing} in {path}. "
-            "Generate the Gaussian trace model first."
+            "Input and output files cannot be the same."
         )
 
-    return [thresholds[i] for i in range(1, 11)]
+    shutil.copyfile(
+        input_path,
+        output_path,
+    )
+
+    variables, estimates = get_variables(
+        input_path,
+        decision_variables,
+    )
+
+    remove_counter_from_module(
+        output_path
+    )
+
+    add_controller(
+        output_path,
+        estimates,
+        variables,
+        possible_decisions,
+        baseline=baseline,
+    )
+
+    add_turn(
+        output_path,
+        before_actions,
+        after_actions,
+    )
 
 
-def remove_counter_from_module(output_path):
-    # Point-estimate models have const int c=...; trace models do not need it.
-    pattern = re.compile(r"^\s*const\s+int\s+c\d*\s*=\s*\d+\s*;")
-    with open(output_path, 'r') as f:
-        lines = f.readlines()
-    with open(output_path, 'w') as f:
-        f.writelines(line for line in lines if not pattern.match(line))
+def get_variables(
+    prism_model_path,
+    decision_variables,
+):
+    int_constants_pattern = re.compile(
+        r"const\s+int\s+(\w+)\s*=\s*(-?\s*\d+)\s*;"
+    )
+
+    int_constants = {}
+
+    with open(
+        prism_model_path,
+        "r",
+    ) as prism_model_file:
+        for line in prism_model_file:
+            for match in (
+                int_constants_pattern.finditer(
+                    line
+                )
+            ):
+                int_constants[
+                    match.group(1)
+                ] = int(
+                    match.group(2).replace(
+                        " ",
+                        "",
+                    )
+                )
+
+    variable_pattern = re.compile(
+        r"(\w+)\s*:\s*\[(-?\s*\w+)\s*\.\.\s*(-?\s*\w+)\]"
+        r"\s*init\s*(-?\s*\w+)\s*;"
+    )
+
+    variables = []
+    estimates = []
+
+    with open(
+        prism_model_path,
+        "r",
+    ) as prism_model_file:
+        for line in prism_model_file:
+            for match in (
+                variable_pattern.finditer(
+                    line
+                )
+            ):
+                name = match.group(1)
+
+                if name.endswith(
+                    "hat"
+                ):
+                    estimates.append(
+                        name
+                    )
+                elif (
+                    name
+                    not in decision_variables
+                ):
+                    continue
+
+                lower = _get_limit(
+                    match.group(2).replace(
+                        " ",
+                        "",
+                    ),
+                    int_constants,
+                )
+                upper = _get_limit(
+                    match.group(3).replace(
+                        " ",
+                        "",
+                    ),
+                    int_constants,
+                )
+
+                variables.append(
+                    [
+                        name,
+                        lower,
+                        upper,
+                    ]
+                )
+
+    return (
+        variables,
+        estimates,
+    )
 
 
-def generate_combinations_list(variables):
-    result = []
+def _get_limit(
+    string,
+    constants,
+):
+    if not string.lstrip(
+        "-"
+    ).isdigit():
+        return constants[
+            string
+        ]
 
-    def rec(current, remaining):
-        if not remaining:
-            result.append(tuple(current))
-            return
-        var = remaining[0]
-        for value in range(var[1], var[2] + 1):
-            rec(current + [value], remaining[1:])
+    return int(
+        string
+    )
 
-    rec([], variables)
-    return result
+
+def remove_counter_from_module(
+    output_path,
+):
+    """
+    Remove legacy numeric max_gaussian_uncertainty declarations if present.
+    New models use only gaussian_threshold_level in [1..10].
+    """
+    pattern = re.compile(
+        r"^\s*(?:"
+        r"(?:const\s+int\s+)?max_gaussian_uncertainty"
+        r"(?:\s*:\s*\[\d+\.\.\d+\]\s*init\s*\d+|\s*=\s*\d+)"
+        r"|const\s+int\s+gaussian_threshold_level\s*=\s*\d+"
+        r")\s*;"
+    )
+
+    with open(
+        output_path,
+        "r",
+    ) as file:
+        lines = file.readlines()
+
+    lines = [
+        line
+        for line in lines
+        if not pattern.match(
+            line
+        )
+    ]
+
+    with open(
+        output_path,
+        "w",
+    ) as file:
+        file.writelines(
+            lines
+        )
+
+
+def get_gaussian_thresholds(
+    file_path,
+):
+    pattern = re.compile(
+        r"^\s*const\s+int\s+"
+        r"gaussian_threshold_(\d+)"
+        r"\s*=\s*(\d+)\s*;"
+    )
+
+    thresholds = {}
+
+    with open(
+        file_path,
+        "r",
+    ) as file:
+        for line in file:
+            match = pattern.match(
+                line
+            )
+
+            if match:
+                thresholds[
+                    int(
+                        match.group(1)
+                    )
+                ] = int(
+                    match.group(2)
+                )
+
+    if len(thresholds) != 10:
+        raise ValueError(
+            "Expected gaussian_threshold_1.."
+            "gaussian_threshold_10 in PRISM model."
+        )
+
+    return [
+        thresholds[index]
+        for index in range(
+            1,
+            11,
+        )
+    ]
 
 
 def add_controller(
+    file_path,
+    estimates,
+    variables,
+    possible_decisions,
+    baseline,
+):
+    combinations = (
+        generate_combinations_list(
+            variables
+        )
+    )
+
+    _add_controller_prefix(
         file_path,
-        guard_variables,
-        variables,
-        thresholds,
         possible_decisions,
-        baseline):
-    combinations = generate_combinations_list(variables)
+        combinations,
+        variables,
+        baseline,
+    )
 
-    with open(file_path, 'a') as f:
-        # 100 position-based evolvables on a 10x10 grid.
-        for combination in combinations:
-            suffix = "".join(f"_{v}" for v in combination)
-            if baseline:
-                f.write(f"\nconst int decision{suffix}=1;")
-            else:
-                f.write(
-                    f"\nevolve int decision{suffix} "
-                    f"[{possible_decisions[0]}..{possible_decisions[1]}];"
-                )
-
-        f.write("\nmodule URC\n")
-
-        low = min(thresholds)
-        high = max(thresholds)
-        f.write(
-            f"  max_gaussian_uncertainty : [{low}..{high}] "
-            f"init {low};\n"
+    with open(
+        file_path,
+        "a",
+    ) as file:
+        file.write(
+            "  gaussian_threshold_level : [1..10] init 1;\n"
+        )
+        file.write(
+            "  // decision_x_y directly selects threshold level 1..10\n"
         )
 
         for combination in combinations:
-            suffix = "".join(f"_{v}" for v in combination)
-            guard = "true"
-            for value, guard_variable in zip(combination, guard_variables):
-                guard += f" & {guard_variable}={value}"
+            decision_name = "decision"
 
-            for decision in range(1, 11):
-                threshold = thresholds[decision - 1]
-                f.write(
-                    f"  [URC] {guard} & decision{suffix}={decision} "
-                    f"-> (max_gaussian_uncertainty'={threshold});\n"
+            for value in combination:
+                decision_name += f"_{value}"
+
+            position_guard = ""
+
+            for (
+                value,
+                estimate,
+            ) in zip(
+                combination,
+                estimates,
+            ):
+                position_guard += (
+                    f" & {estimate}={value}"
                 )
 
-        f.write("endmodule\n")
+            # Keep the compact ternary form used in the other URC models.
+            # The result is still only a LEVEL 1..10, so no large numeric
+            # threshold range becomes part of the state space.
+            level_expression = "".join(
+                f"{decision_name}={level} ? {level} : "
+                for level in range(1, 10)
+            ) + "10"
+
+            file.write(
+                f"  [URC] true{position_guard} -> "
+                f"(gaussian_threshold_level'={level_expression});\n"
+            )
+
+        file.write(
+            "endmodule\n"
+        )
 
 
-def add_turn(file_path, before_actions, after_actions):
-    with open(file_path, 'a') as f:
-        f.write("module Turn\n")
-        f.write("  t : [0..2] init 0;\n")
+def _add_controller_prefix(
+    file_path,
+    possible_decisions,
+    combinations,
+    variables,
+    baseline,
+):
+    with open(
+        file_path,
+        "a",
+    ) as file:
+        for combination in combinations:
+            if baseline:
+                new_line = (
+                    "const int decision"
+                )
+            else:
+                new_line = (
+                    "evolve int decision"
+                )
+
+            for index in range(
+                len(variables)
+            ):
+                new_line += (
+                    "_"
+                    + str(
+                        combination[index]
+                    )
+                )
+
+            if baseline:
+                new_line += "=1;"
+            else:
+                new_line += (
+                    f" [{possible_decisions[0]}"
+                    f"..{possible_decisions[1]}];"
+                )
+
+            file.write(
+                "\n"
+                + new_line
+            )
+
+        file.write(
+            "\nmodule URC\n"
+        )
+
+
+def add_turn(
+    file_path,
+    before_actions,
+    after_actions,
+):
+    with open(
+        file_path,
+        "a",
+    ) as file:
+        file.write(
+            "module Turn\n"
+        )
+        file.write(
+            "  t : [0..2] init 0;\n"
+        )
+
         for action in before_actions:
-            f.write(f"  [{action}] (t=0) -> (t'=1);\n")
-        f.write("\n  [URC] (t=1) -> (t'=2);\n\n")
+            file.write(
+                f"  [{action}] (t=0) -> (t'=1);\n"
+            )
+
+        file.write(
+            "\n"
+            "  [URC] (t=1) -> (t'=2);\n"
+            "\n"
+        )
+
         for action in after_actions:
-            f.write(f"  [{action}] (t=2) -> (t'=0);\n")
-        if not after_actions:
-            f.write("  [] (t=2) -> (t'=0);\n")
-        f.write("endmodule\n")
+            file.write(
+                f"  [{action}] (t=2) -> (t'=0);\n"
+            )
+
+        if len(
+            after_actions
+        ) == 0:
+            file.write(
+                "  [] (t=2) -> (t'=0);\n"
+            )
+
+        file.write(
+            "endmodule\n"
+        )
+
+
+def generate_combinations_list(
+    variables,
+):
+    result = []
+
+    def recurse(
+        current,
+        remaining,
+    ):
+        if not remaining:
+            result.append(
+                tuple(current)
+            )
+            return
+
+        current_variable = (
+            remaining[0]
+        )
+
+        for value in range(
+            current_variable[1],
+            current_variable[2] + 1,
+        ):
+            recurse(
+                current + [value],
+                remaining[1:],
+            )
+
+    recurse(
+        [],
+        variables,
+    )
+
+    return result
