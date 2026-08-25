@@ -85,7 +85,7 @@ def main():
         # with open(filename, "w") as f:
         #     for map_id in sorted(times):
         #         f.write(f"Map {map_id}: {times[map_id]:.3f}\n")
-        times_dir = "times_gaussian_raw"
+        times_dir = "times_gaussian"
         os.makedirs(times_dir, exist_ok=True)
         times_file = os.path.join(times_dir, f"map_{i}.txt")
         with open(times_file, "w") as f:
