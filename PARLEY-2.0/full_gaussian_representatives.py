@@ -425,7 +425,7 @@ def _distance_matrix(sigmas, metric):
 def _cluster(
     candidates,
     k,
-    metric="bures_wasserstein",
+    metric="frobenius",
     max_iter=100,
 ):
     """
@@ -770,7 +770,7 @@ def build_gaussian_model(
     p=0.01,
     k=100,
     max_steps=10,
-    metric="bures_wasserstein",
+    metric="frobenius",
     cache_dir="gaussian_models",
 ):
     """
@@ -945,7 +945,7 @@ def precompute_maps(
     p=0.01,
     k=100,
     max_steps=10,
-    metric="bures_wasserstein",
+    metric="frobenius",
     cache_dir="gaussian_models",
 ):
     for map_id in range(
