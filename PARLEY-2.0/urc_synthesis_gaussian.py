@@ -305,17 +305,11 @@ def add_controller(
                     f" & {estimate}={value}"
                 )
 
-            # Keep the compact ternary form used in the other URC models.
-            # The result is still only a LEVEL 1..10, so no large numeric
-            # threshold range becomes part of the state space.
-            level_expression = "".join(
-                f"{decision_name}={level} ? {level} : "
-                for level in range(1, 10)
-            ) + "10"
-
+            # Direct assignment is sufficient because decision_x_y already
+            # ranges over exactly the Gaussian threshold levels 1..10.
             file.write(
                 f"  [URC] true{position_guard} -> "
-                f"(gaussian_threshold_level'={level_expression});\n"
+                f"(gaussian_threshold_level'={decision_name});\n"
             )
 
         file.write(
