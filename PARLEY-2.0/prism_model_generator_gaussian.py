@@ -40,6 +40,7 @@ GAUSSIAN_K = 100
 GAUSSIAN_MAX_STEPS = 10
 GAUSSIAN_METRIC = "bures_wasserstein"
 GAUSSIAN_MODEL_DIR = Path("gaussian_models")
+GAUSSIAN_UNCERTAINTY_SCALE = 1000
 
 
 def build_map(filename):
@@ -83,8 +84,21 @@ def preambel():
     ) as f:
         f.write("dtmc\n")
 
-        thresholds = gaussian_model[
+        raw_thresholds = gaussian_model[
             "thresholds"
+        ]
+
+        thresholds = [
+            max(
+                0,
+                int(
+                    round(
+                        threshold
+                        / GAUSSIAN_UNCERTAINTY_SCALE
+                    )
+                )
+            )
+            for threshold in raw_thresholds
         ]
 
         for (
@@ -99,10 +113,8 @@ def preambel():
                 f"{threshold};\n"
             )
 
-        # Base model default. urc_synthesis removes this constant and
-        # replaces it with a mutable variable in [1..10].
         f.write(
-            "const int gaussian_threshold_level = 1;\n"
+            f"const int max_gaussian_uncertainty = {thresholds[0]};\n"
         )
 
         f.write(
@@ -135,105 +147,92 @@ def preambel():
 
         f.write(";\n\n")
 
-        # PRISM 4.7-friendly uncertainty encoding, analogous to the
-        # belief model but compressed to the 10 URC threshold levels.
+        # PRISM 4.7-friendly uncertainty encoding.
         #
-        # Each gstate is assigned offline to the highest threshold level
-        # reached by its trace uncertainty:
-        #   level 0: below threshold_1
-        #   level 1: >= threshold_1 but < threshold_2
-        #   ...
-        #   level 10: >= threshold_10
+        # IMPORTANT:
+        # Only the PRISM uncertainty values are scaled down. The Gaussian
+        # representatives/covariances and transition structure are untouched.
         #
-        # Thus we need at most 11 boolean state-group formulas and only
-        # 10 short terms in update_required.
-        uncertainty_levels = {
-            level: []
-            for level in range(0, 11)
-        }
+        # Example with scale=1000:
+        #   raw trace  78400 ->  78
+        #   raw trace 724400 -> 724
+        #
+        # Thresholds and representative uncertainties use the SAME scaling,
+        # so update_required preserves the intended ordering up to rounding.
+        # group Gaussian states by their scaled offline trace uncertainty.
+        uncertainty_groups = {}
 
         for (
             state_id,
-            uncertainty,
+            raw_uncertainty,
         ) in enumerate(
             gaussian_model[
                 "uncertainties"
             ]
         ):
-            reached_level = 0
+            uncertainty = max(
+                0,
+                int(
+                    round(
+                        raw_uncertainty
+                        / GAUSSIAN_UNCERTAINTY_SCALE
+                    )
+                )
+            )
 
-            for (
-                level,
-                threshold,
-            ) in enumerate(
-                thresholds,
-                start=1,
-            ):
-                if uncertainty >= threshold:
-                    reached_level = level
-                else:
-                    break
-
-            uncertainty_levels[
-                reached_level
-            ].append(
+            uncertainty_groups.setdefault(
+                uncertainty,
+                [],
+            ).append(
                 state_id
             )
 
-        # One compact boolean formula per non-empty uncertainty level.
-        for level in range(0, 11):
-            state_ids = uncertainty_levels[
-                level
-            ]
-
-            if not state_ids:
-                continue
-
-            f.write(
-                f"formula gaussian_level_{level} = "
+        # One boolean formula per distinct Gaussian uncertainty value.
+        for (
+            group_index,
+            (
+                uncertainty,
+                state_ids,
+            ),
+        ) in enumerate(
+            sorted(
+                uncertainty_groups.items()
             )
-
+        ):
+            f.write(
+                f"formula gaussian_u_{group_index} = "
+            )
             f.write(
                 " | ".join(
                     f"gstate={state_id}"
                     for state_id in state_ids
                 )
             )
-
             f.write(";\n")
 
-        # If a state has reached uncertainty level L, an update is required
-        # whenever the URC selected threshold level is <= L.
-        #
-        # This is equivalent to:
-        #   trace(Sigma_gstate) >= threshold[selected_level]
-        #
-        # but avoids a large numeric state variable and avoids expanding every
-        # gstate against every threshold.
-        update_terms = []
-
-        for reached_level in range(1, 11):
-            if not uncertainty_levels[
-                reached_level
-            ]:
-                continue
-
-            selected_levels = " | ".join(
-                f"gaussian_threshold_level={level}"
-                for level in range(
-                    1,
-                    reached_level + 1,
-                )
-            )
-
-            update_terms.append(
-                f"(gaussian_level_{reached_level} & "
-                f"({selected_levels}))"
-            )
-
+        # Same structure as the working belief model:
+        # update iff current Gaussian uncertainty >= URC-selected threshold.
         f.write(
             "formula update_required = "
         )
+
+        update_terms = []
+
+        for (
+            group_index,
+            (
+                uncertainty,
+                _,
+            ),
+        ) in enumerate(
+            sorted(
+                uncertainty_groups.items()
+            )
+        ):
+            update_terms.append(
+                f"(gaussian_u_{group_index} & "
+                f"max_gaussian_uncertainty<={uncertainty})"
+            )
 
         if update_terms:
             f.write(

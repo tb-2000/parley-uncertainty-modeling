@@ -175,16 +175,8 @@ def _get_limit(
 def remove_counter_from_module(
     output_path,
 ):
-    """
-    Remove legacy numeric max_gaussian_uncertainty declarations if present.
-    New models use only gaussian_threshold_level in [1..10].
-    """
     pattern = re.compile(
-        r"^\s*(?:"
-        r"(?:const\s+int\s+)?max_gaussian_uncertainty"
-        r"(?:\s*:\s*\[\d+\.\.\d+\]\s*init\s*\d+|\s*=\s*\d+)"
-        r"|const\s+int\s+gaussian_threshold_level\s*=\s*\d+"
-        r")\s*;"
+        r"^\s*const\s+int\s+max_gaussian_uncertainty\s*=\s*\d+\s*;"
     )
 
     with open(
@@ -193,7 +185,7 @@ def remove_counter_from_module(
     ) as file:
         lines = file.readlines()
 
-    lines = [
+    new_lines = [
         line
         for line in lines
         if not pattern.match(
@@ -206,7 +198,7 @@ def remove_counter_from_module(
         "w",
     ) as file:
         file.writelines(
-            lines
+            new_lines
         )
 
 
@@ -275,22 +267,45 @@ def add_controller(
         baseline,
     )
 
+    # Threshold constants are already scaled by the Gaussian generator.
+    # The URC must use them exactly as written so its numeric state range is
+    # on the same reduced scale as update_required.
+    thresholds = get_gaussian_thresholds(
+        file_path
+    )
+
     with open(
         file_path,
         "a",
     ) as file:
         file.write(
-            "  gaussian_threshold_level : [1..10] init 1;\n"
+            f"  max_gaussian_uncertainty : "
+            f"[{min(thresholds)}..{max(thresholds)}] "
+            f"init {thresholds[0]};\n"
         )
+
         file.write(
-            "  // decision_x_y directly selects threshold level 1..10\n"
+            "  // decision value -> map-specific max_gaussian_uncertainty\n"
         )
+
+        for (
+            index,
+            threshold,
+        ) in enumerate(
+            thresholds,
+            start=1,
+        ):
+            file.write(
+                f"  // {index} -> {threshold}\n"
+            )
 
         for combination in combinations:
             decision_name = "decision"
 
             for value in combination:
-                decision_name += f"_{value}"
+                decision_name += (
+                    f"_{value}"
+                )
 
             position_guard = ""
 
@@ -305,11 +320,33 @@ def add_controller(
                     f" & {estimate}={value}"
                 )
 
-            # Direct assignment is sufficient because decision_x_y already
-            # ranges over exactly the Gaussian threshold levels 1..10.
+            ternary_parts = []
+
+            for (
+                index,
+                threshold,
+            ) in enumerate(
+                thresholds[:-1],
+                start=1,
+            ):
+                ternary_parts.append(
+                    f"{decision_name}={index} ? "
+                    f"{threshold} : "
+                )
+
+            ternary_expression = (
+                "".join(
+                    ternary_parts
+                )
+                + str(
+                    thresholds[-1]
+                )
+            )
+
             file.write(
                 f"  [URC] true{position_guard} -> "
-                f"(gaussian_threshold_level'={decision_name});\n"
+                f"(max_gaussian_uncertainty'="
+                f"{ternary_expression});\n"
             )
 
         file.write(
