@@ -638,8 +638,33 @@ def _nearest(
     representatives,
     metric,
 ):
+    """
+    Project a covariance to the nearest Gaussian representative.
+
+    State 0 is reserved EXCLUSIVELY for exact certainty Sigma=0.
+    Any strictly positive covariance is projected only to representatives
+    1..K-1, even if Sigma=0 would be geometrically nearest.
+
+    This preserves the intended semantics:
+        gstate=0  <=>  exact post-update certainty.
+    """
+    zero_sigma = (
+        0.0,
+        0.0,
+        0.0,
+    )
+
+    if _sigma_key(sigma) == zero_sigma:
+        return 0
+
+    if len(representatives) <= 1:
+        raise ValueError(
+            "Need at least one non-zero Gaussian representative "
+            "for Sigma > 0."
+        )
+
     return min(
-        range(len(representatives)),
+        range(1, len(representatives)),
         key=lambda index: (
             _distance(
                 sigma,
