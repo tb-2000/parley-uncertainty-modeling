@@ -62,9 +62,14 @@ def __get_limit(string, constants):
 
 
 def remove_counter_from_module(output_path):
+    """
+    Remove the base-model constant c so the synthesized model can replace
+    it with the URC-controlled state variable c:[1..10].
+    """
     pattern = re.compile(
-        r"^\s*const\s+int\s+max_belief_uncertainty\s*=\s*\d+\s*;"
+        r"^\s*const\s+int\s+c\d*\s*=\s*\d+\s*;"
     )
+
     with open(output_path, 'r') as file:
         lines = file.readlines()
 
@@ -117,24 +122,25 @@ def add_controller(
     thresholds = get_belief_thresholds(file_path)
 
     with open(file_path, 'a') as file:
-        file.write(
-            f'  max_belief_uncertainty : '
-            f'[{min(thresholds)}..{max(thresholds)}] '
-            f'init {thresholds[0]};\n'
-        )
+        # Same URC state representation as in the original point-estimate
+        # model: EvoChecker chooses a discrete uncertainty stage 1..10.
+        file.write('  c : [1..10] init 1;\n')
 
-        # Helpful map-specific documentation.
+        # Map-specific documentation. The numerical Gini thresholds differ
+        # between maps, but the URC always synthesizes only stages 1..10.
         file.write(
-            '  // decision value -> map-specific '
-            'max_belief_uncertainty\n'
+            '  // Map-specific belief-uncertainty thresholds:\n'
         )
         for index, threshold in enumerate(
             thresholds,
             start=1,
         ):
             file.write(
-                f'  // {index} -> {threshold}\n'
+                f'  // c={index} -> '
+                f'max_belief_uncertainty={threshold}\n'
             )
+
+        file.write('\n')
 
         for combination in combinations:
             decision_name = 'decision'
@@ -150,37 +156,11 @@ def add_controller(
                     f' & {estimate}={value}'
                 )
 
-            # One compact URC command per position.
-            #
-            # Example:
-            # decision=1 ? threshold_1 :
-            # decision=2 ? threshold_2 :
-            # ...
-            # threshold_10
-            #
-            # This keeps the decision parameter on the RHS, as in the
-            # point-estimate/interval PARLEY encoding, while still mapping
-            # decision 1..10 to map-specific belief thresholds.
-            ternary_parts = []
-
-            for index, threshold in enumerate(
-                thresholds[:-1],
-                start=1,
-            ):
-                ternary_parts.append(
-                    f'{decision_name}={index} ? '
-                    f'{threshold} : '
-                )
-
-            ternary_expression = (
-                ''.join(ternary_parts)
-                + str(thresholds[-1])
-            )
-
+            # Point-estimate/PARLEY-style controller:
+            # decision_x_y is an EvoChecker parameter; c is the PRISM state.
             file.write(
                 f'  [URC] true{position_guard} -> '
-                f"(max_belief_uncertainty'="
-                f"{ternary_expression});\n"
+                f"(c'={decision_name});\n"
             )
 
         file.write('endmodule\n')

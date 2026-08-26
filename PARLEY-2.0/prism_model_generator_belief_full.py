@@ -51,12 +51,25 @@ def preambel():
         f.write('dtmc\n')
 
         thresholds = belief_model["thresholds"]
-        f.write(
-            f'const int max_belief_uncertainty = {thresholds[0]};\n'
-        )
-        for index, threshold in enumerate(thresholds, start=1):
+
+        # Same discrete URC control variable as in the original
+        # point-estimate model. urc_synthesis_belief_full_stages_grouped.py
+        # removes this constant and replaces it by c:[1..10].
+        f.write(f'const int c = {period};\n')
+
+        # Numerical Gini thresholds are map-specific.
+        f.write('// Map-specific belief-uncertainty thresholds:\n')
+        for index, threshold in enumerate(
+            thresholds,
+            start=1,
+        ):
             f.write(
-                f'const int belief_threshold_{index} = {threshold};\n'
+                f'// c={index} -> '
+                f'max_belief_uncertainty={threshold}\n'
+            )
+            f.write(
+                f'const int belief_threshold_{index} = '
+                f'{threshold};\n'
             )
 
         f.write('const int N=' + str(mapSize - 1) + ';\n')
@@ -68,29 +81,58 @@ def preambel():
 
         f.write('formula hasCrashed = (1=0) ')
         for x, y in obstacles:
-            f.write('| (x={0} & y={1}) '.format(str(x), str(y)))
+            f.write(
+                '| (x={0} & y={1}) '.format(
+                    str(x),
+                    str(y),
+                )
+            )
         f.write(';\n\n')
 
-        # PRISM 4.7-friendly uncertainty encoding:
-        # group belief states by their offline-computed Gini uncertainty.
-        # No long nested ternary expression is generated.
-        uncertainty_groups = {}
+        # Group every belief representative directly by the highest
+        # map-specific threshold it has reached.
+        #
+        # class 0: uncertainty < threshold_1
+        # class 1: threshold_1 <= uncertainty < threshold_2
+        # ...
+        # class 10: uncertainty >= threshold_10
+        #
+        # Only classes 1..10 are relevant for update_required.
+        belief_classes = {
+            stage: []
+            for stage in range(0, 11)
+        }
+
         for state_id, uncertainty in enumerate(
             belief_model["uncertainties"]
         ):
-            uncertainty_groups.setdefault(
-                uncertainty, []
-            ).append(state_id)
+            reached_stage = 0
 
-        # One boolean formula per distinct uncertainty value.
-        for group_index, (
-            uncertainty,
-            state_ids
-        ) in enumerate(
-            sorted(uncertainty_groups.items())
-        ):
+            for index, threshold in enumerate(
+                thresholds,
+                start=1,
+            ):
+                if uncertainty >= threshold:
+                    reached_stage = index
+
+            belief_classes[reached_stage].append(
+                state_id
+            )
+
+        # Write at most ten formulas for the update-relevant classes.
+        # Empty classes are omitted.
+        written_stages = []
+
+        for stage in range(1, 11):
+            state_ids = belief_classes[stage]
+
+            if not state_ids:
+                continue
+
+            written_stages.append(stage)
+
             f.write(
-                f'formula belief_u_{group_index} = '
+                f'formula belief_u_{stage} = '
             )
             f.write(
                 ' | '.join(
@@ -100,22 +142,39 @@ def preambel():
             )
             f.write(';\n')
 
-        # update_required is written as a disjunction of short guards.
-        # Each guard is true when the current belief has an uncertainty
-        # greater than or equal to the URC-selected threshold.
+        # Optional documentation for completely certain / low-uncertainty
+        # states that do not reach even threshold 1.
+        if belief_classes[0]:
+            f.write(
+                '// Belief states below threshold 1 '
+                '(never trigger update by uncertainty): '
+            )
+            f.write(
+                ','.join(
+                    str(state_id)
+                    for state_id in belief_classes[0]
+                )
+            )
+            f.write('\n')
+
+        # Compact stage-based update formula.
+        #
+        # A belief in class j has reached thresholds 1..j, hence an update
+        # is required iff the URC-selected stage c is <= j.
         f.write('formula update_required = ')
+
         update_terms = []
 
-        for group_index, (
-            uncertainty,
-            _
-        ) in enumerate(
-            sorted(uncertainty_groups.items())
-        ):
-            update_terms.append(
-                f'(belief_u_{group_index} & '
-                f'max_belief_uncertainty<={uncertainty})'
-            )
+        for stage in written_stages:
+            if stage < 10:
+                update_terms.append(
+                    f'(belief_u_{stage} & c<={stage})'
+                )
+            else:
+                # Since c is restricted to 1..10, c<=10 is always true.
+                update_terms.append(
+                    f'belief_u_{stage}'
+                )
 
         if update_terms:
             f.write(' | '.join(update_terms))
@@ -127,6 +186,8 @@ def preambel():
 
 def robot():
     with open(prism_file, 'a') as f:
+        # Keep the original Robot structure, including crashed and
+        # the explicit [check] phase after every physical movement.
         f.write('module Robot \n')
         f.write('  x : [0..N] init xstart;\n')
         f.write('  y : [0..N] init ystart;\n')
@@ -175,6 +236,8 @@ def adaptation_mape_controller(d):
 
 def knowledge():
     with open(prism_file, 'a') as f:
+        # Keep the original ready handshake. The belief-specific
+        # belief_state augments xhat/yhat but does not replace ready.
         f.write('module Knowledge\n')
         f.write('  xhat : [0..N] init xstart;\n')
         f.write('  yhat : [0..N] init ystart;\n')
