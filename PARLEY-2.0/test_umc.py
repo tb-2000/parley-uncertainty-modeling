@@ -1,5 +1,7 @@
 import urc_synthesis_gaussian
 import prism_model_generator_gaussian
+import urc_synthesis
+import prism_model_generator
 import plot_fronts
 
 def main():
@@ -11,7 +13,7 @@ def main():
     #     urc_synthesis.manipulate_prism_model(infile, outfile, baseline=False)
     #     print(f"generated: {outfile}")
 
-    maps = [14]
+    maps = [21]
     for i in maps:
         infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
         outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'

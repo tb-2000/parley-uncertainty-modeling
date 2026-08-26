@@ -38,9 +38,8 @@ gaussian_model = None
 # Fixed finite Gaussian abstraction budget, analogous to belief model.
 GAUSSIAN_K = 100
 GAUSSIAN_MAX_STEPS = 10
-GAUSSIAN_METRIC = "bures_wasserstein"
+GAUSSIAN_METRIC = "frobenius"
 GAUSSIAN_MODEL_DIR = Path("gaussian_models")
-GAUSSIAN_UNCERTAINTY_SCALE = 1000
 
 
 def build_map(filename):
@@ -84,37 +83,49 @@ def preambel():
     ) as f:
         f.write("dtmc\n")
 
-        raw_thresholds = gaussian_model[
-            "thresholds"
+        raw_thresholds = [
+            int(value)
+            for value in gaussian_model[
+                "thresholds"
+            ]
         ]
 
-        thresholds = [
-            max(
-                0,
-                int(
-                    round(
-                        threshold
-                        / GAUSSIAN_UNCERTAINTY_SCALE
-                    )
-                )
+        if len(raw_thresholds) != 10:
+            raise ValueError(
+                "Expected exactly 10 Gaussian uncertainty thresholds."
             )
-            for threshold in raw_thresholds
-        ]
+
+        if any(
+            raw_thresholds[index]
+            > raw_thresholds[index + 1]
+            for index in range(9)
+        ):
+            raise ValueError(
+                "Gaussian thresholds must be monotonically nondecreasing."
+            )
+
+        # PRISM stores only the discrete uncertainty LEVEL 1..10.
+        # The actual Gaussian trace thresholds remain offline information.
+        # The mapping is written as comments for traceability.
+        f.write(
+            "// Gaussian uncertainty level -> raw trace(Sigma) threshold\n"
+        )
 
         for (
-            index,
+            level,
             threshold,
         ) in enumerate(
-            thresholds,
+            raw_thresholds,
             start=1,
         ):
             f.write(
-                f"const int gaussian_threshold_{index} = "
-                f"{threshold};\n"
+                f"// level {level} -> trace(Sigma) >= {threshold}\n"
             )
 
+        # Baseline/default value. urc_synthesis removes this constant and
+        # replaces it by the mutable [1..10] variable in the UMC.
         f.write(
-            f"const int max_gaussian_uncertainty = {thresholds[0]};\n"
+            "const int max_gaussian_uncertainty = 1;\n"
         )
 
         f.write(
@@ -147,20 +158,13 @@ def preambel():
 
         f.write(";\n\n")
 
-        # PRISM 4.7-friendly uncertainty encoding.
-        #
-        # IMPORTANT:
-        # Only the PRISM uncertainty values are scaled down. The Gaussian
-        # representatives/covariances and transition structure are untouched.
-        #
-        # Example with scale=1000:
-        #   raw trace  78400 ->  78
-        #   raw trace 724400 -> 724
-        #
-        # Thresholds and representative uncertainties use the SAME scaling,
-        # so update_required preserves the intended ordering up to rounding.
-        # group Gaussian states by their scaled offline trace uncertainty.
-        uncertainty_groups = {}
+        # Assign every Gaussian representative to the highest uncertainty
+        # threshold level reached by its raw trace(Sigma).
+        # level 0 means: below threshold 1.
+        states_by_level = {
+            level: []
+            for level in range(0, 11)
+        }
 
         for (
             state_id,
@@ -170,37 +174,38 @@ def preambel():
                 "uncertainties"
             ]
         ):
-            uncertainty = max(
-                0,
-                int(
-                    round(
-                        raw_uncertainty
-                        / GAUSSIAN_UNCERTAINTY_SCALE
-                    )
-                )
-            )
+            reached_level = 0
 
-            uncertainty_groups.setdefault(
-                uncertainty,
-                [],
-            ).append(
+            for (
+                level,
+                threshold,
+            ) in enumerate(
+                raw_thresholds,
+                start=1,
+            ):
+                if raw_uncertainty >= threshold:
+                    reached_level = level
+                else:
+                    break
+
+            states_by_level[
+                reached_level
+            ].append(
                 state_id
             )
 
-        # One boolean formula per distinct Gaussian uncertainty value.
-        for (
-            group_index,
-            (
-                uncertainty,
-                state_ids,
-            ),
-        ) in enumerate(
-            sorted(
-                uncertainty_groups.items()
-            )
-        ):
+        # At most 11 compact formulas are required, independently of the
+        # absolute magnitude of trace(Sigma).
+        for level in range(0, 11):
+            state_ids = states_by_level[
+                level
+            ]
+
+            if not state_ids:
+                continue
+
             f.write(
-                f"formula gaussian_u_{group_index} = "
+                f"formula gaussian_u_level_{level} = "
             )
             f.write(
                 " | ".join(
@@ -210,29 +215,37 @@ def preambel():
             )
             f.write(";\n")
 
-        # Same structure as the working belief model:
-        # update iff current Gaussian uncertainty >= URC-selected threshold.
+        # Semantics:
+        # selected URC level c means the raw threshold threshold[c].
+        # A Gaussian state whose uncertainty has reached level L requires
+        # an update iff c <= L.
+        # This is exactly equivalent to:
+        #   trace(Sigma_gstate) >= raw_threshold[c]
+        # but PRISM stores only integers 1..10.
+        update_terms = []
+
+        for reached_level in range(1, 11):
+            if not states_by_level[
+                reached_level
+            ]:
+                continue
+
+            selected_levels = " | ".join(
+                f"max_gaussian_uncertainty={level}"
+                for level in range(
+                    1,
+                    reached_level + 1,
+                )
+            )
+
+            update_terms.append(
+                f"(gaussian_u_level_{reached_level} & "
+                f"({selected_levels}))"
+            )
+
         f.write(
             "formula update_required = "
         )
-
-        update_terms = []
-
-        for (
-            group_index,
-            (
-                uncertainty,
-                _,
-            ),
-        ) in enumerate(
-            sorted(
-                uncertainty_groups.items()
-            )
-        ):
-            update_terms.append(
-                f"(gaussian_u_{group_index} & "
-                f"max_gaussian_uncertainty<={uncertainty})"
-            )
 
         if update_terms:
             f.write(
@@ -245,7 +258,6 @@ def preambel():
 
         f.write(";\n\n")
 
-
 def robot():
     with open(
         prism_file,
@@ -255,6 +267,8 @@ def robot():
             "module Robot\n"
         )
 
+        # Keep the Robot state structure aligned with the original
+        # point-estimate PARLEY model.
         f.write(
             "  x : [0..N] init xstart;\n"
         )
@@ -358,6 +372,9 @@ def knowledge():
             f"  gstate : [0..{gaussian_model['state_count'] - 1}] "
             "init 0;\n\n"
         )
+
+        # Same handshake variable as in the point-estimate Knowledge module.
+        # There is deliberately NO separate variable named `read`.
         f.write(
             "  ready : [0..1] init 1;\n"
         )
@@ -604,6 +621,33 @@ def generate_model(i):
     )
     knowledge()
     rewards()
+
+    # Structural sanity check against the original point-estimate model.
+    with open(
+        prism_file,
+        "r",
+        encoding="utf-8",
+    ) as generated_file:
+        generated_model = generated_file.read()
+
+    required_fragments = [
+        "crashed : [0..1] init 0;",
+        "ready : [0..1] init 1;",
+        "[check] (move_ready=0) & hasCrashed",
+        "[check] (move_ready=0) & !hasCrashed",
+    ]
+
+    for fragment in required_fragments:
+        if fragment not in generated_model:
+            raise ValueError(
+                f"{prism_file}: missing required point-estimate-compatible "
+                f"structure: {fragment}"
+            )
+
+    if "  read :" in generated_model:
+        raise ValueError(
+            f"{prism_file}: unexpected Knowledge variable `read` found."
+        )
 
     print(
         f"finished map {i}: "

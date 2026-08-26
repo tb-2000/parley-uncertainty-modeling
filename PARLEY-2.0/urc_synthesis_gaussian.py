@@ -202,50 +202,6 @@ def remove_counter_from_module(
         )
 
 
-def get_gaussian_thresholds(
-    file_path,
-):
-    pattern = re.compile(
-        r"^\s*const\s+int\s+"
-        r"gaussian_threshold_(\d+)"
-        r"\s*=\s*(\d+)\s*;"
-    )
-
-    thresholds = {}
-
-    with open(
-        file_path,
-        "r",
-    ) as file:
-        for line in file:
-            match = pattern.match(
-                line
-            )
-
-            if match:
-                thresholds[
-                    int(
-                        match.group(1)
-                    )
-                ] = int(
-                    match.group(2)
-                )
-
-    if len(thresholds) != 10:
-        raise ValueError(
-            "Expected gaussian_threshold_1.."
-            "gaussian_threshold_10 in PRISM model."
-        )
-
-    return [
-        thresholds[index]
-        for index in range(
-            1,
-            11,
-        )
-    ]
-
-
 def add_controller(
     file_path,
     estimates,
@@ -267,37 +223,20 @@ def add_controller(
         baseline,
     )
 
-    # Threshold constants are already scaled by the Gaussian generator.
-    # The URC must use them exactly as written so its numeric state range is
-    # on the same reduced scale as update_required.
-    thresholds = get_gaussian_thresholds(
-        file_path
-    )
-
     with open(
         file_path,
         "a",
     ) as file:
+        # Exactly like the point-estimate period variable: the mutable URC
+        # state contains only the selected level 1..10, never the raw
+        # trace(Sigma) value.
         file.write(
-            f"  max_gaussian_uncertainty : "
-            f"[{min(thresholds)}..{max(thresholds)}] "
-            f"init {thresholds[0]};\n"
+            "  max_gaussian_uncertainty : [1..10] init 1;\n"
         )
-
         file.write(
-            "  // decision value -> map-specific max_gaussian_uncertainty\n"
+            "  // Levels 1..10 refer to the raw trace(Sigma) thresholds "
+            "documented at the top of this model.\n"
         )
-
-        for (
-            index,
-            threshold,
-        ) in enumerate(
-            thresholds,
-            start=1,
-        ):
-            file.write(
-                f"  // {index} -> {threshold}\n"
-            )
 
         for combination in combinations:
             decision_name = "decision"
@@ -320,39 +259,16 @@ def add_controller(
                     f" & {estimate}={value}"
                 )
 
-            ternary_parts = []
-
-            for (
-                index,
-                threshold,
-            ) in enumerate(
-                thresholds[:-1],
-                start=1,
-            ):
-                ternary_parts.append(
-                    f"{decision_name}={index} ? "
-                    f"{threshold} : "
-                )
-
-            ternary_expression = (
-                "".join(
-                    ternary_parts
-                )
-                + str(
-                    thresholds[-1]
-                )
-            )
-
+            # No ternary mapping is necessary: decision_x_y already has
+            # exactly the desired domain [1..10].
             file.write(
                 f"  [URC] true{position_guard} -> "
-                f"(max_gaussian_uncertainty'="
-                f"{ternary_expression});\n"
+                f"(max_gaussian_uncertainty'={decision_name});\n"
             )
 
         file.write(
             "endmodule\n"
         )
-
 
 def _add_controller_prefix(
     file_path,
