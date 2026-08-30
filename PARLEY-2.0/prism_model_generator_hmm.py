@@ -149,16 +149,26 @@ def write_hmm_group_formulas(f, hmm):
     """
     PRISM-4.7-friendly exact HMM uncertainty formulas.
 
-    Every exact reachable hstate is assigned to exactly one uncertainty
-    level 0..10.  We use OR-groups rather than one huge ternary formula.
+    This mirrors the Belief/Gaussian generators:
+      * no explicit step/age variable in PRISM,
+      * max_steps=10 is used only for offline state/threshold generation,
+      * exact HMM states are grouped by reached uncertainty level.
 
-    The offline reachable-belief horizon is exactly 10 prediction steps.
-    A separate PRISM variable `step` enforces a mandatory localization
-    after the 10th movement, so no horizon/frontier formula is required.
+    Because exact HMM beliefs are NOT projected onto representatives, the
+    finite 10-step reachable-belief automaton can have terminal contexts.
+    `hmm_frontier` marks exactly those contexts and forces localization there.
+    This avoids a separate step variable and prevents deadlocks.
     """
     state_entries = hmm.get("states", hmm.get("representatives", []))
     thresholds = [float(v) for v in hmm["thresholds"]]
     state_count = int(hmm["belief_state_count"])
+
+    max_steps = int(hmm.get("max_steps", 10))
+    if max_steps != 10:
+        raise ValueError(
+            "Expected exact HMM beliefs generated with max_steps=10, "
+            f"got max_steps={max_steps}."
+        )
 
     groups = {level: [] for level in range(11)}
     seen = set()
@@ -190,24 +200,61 @@ def write_hmm_group_formulas(f, hmm):
             f"missing={missing[:10]}, extra={extra[:10]}"
         )
 
-    # Base groups: every hstate occurs exactly once.
+    # Like Gaussian/Belief: group states by the highest threshold reached.
     for level in range(11):
         states = sorted(groups[level])
-        expr = (
-            "false"
-            if not states
-            else " | ".join(f"(hstate={hstate})" for hstate in states)
-        )
-        f.write(f'formula hmm_l{level} = {expr};\n')
+        if not states:
+            continue
+
+        expr = " | ".join(f"hstate={hstate}" for hstate in states)
+        f.write(f'formula hmm_u_{level} = {expr};\n')
 
     f.write('\n')
 
-    # Cumulative threshold predicates.
+    # Cumulative predicates: state uncertainty has reached threshold c.
     for level in range(1, 11):
-        expr = " | ".join(f"hmm_l{k}" for k in range(level, 11))
+        active = [
+            f"hmm_u_{k}"
+            for k in range(level, 11)
+            if groups[k]
+        ]
+        expr = " | ".join(active) if active else "false"
         f.write(f'formula hmm_ge_{level} = {expr};\n')
 
     f.write('\n')
+
+    # Use frontier contexts already computed by the exact-state generator.
+    frontier = hmm.get("frontier_contexts", [])
+
+    # Accept both dict and [x,y,hstate]/tuple representations.
+    normalized = []
+    for item in frontier:
+        if isinstance(item, dict):
+            x = int(item["xhat"])
+            y = int(item["yhat"])
+            h = int(item.get("hstate", item.get("belief_state")))
+        else:
+            x, y, h = map(int, item)
+        normalized.append((x, y, h))
+
+    # Target contexts do not need a localization fallback because no further
+    # MAPE movement is required there.
+    normalized = sorted(set(
+        (x, y, h)
+        for x, y, h in normalized
+        if (x, y) != (targetX, targetY)
+    ))
+
+    if not normalized:
+        f.write('formula hmm_frontier = false;\n\n')
+        return
+
+    # Keep the OR expression flat (no nested ternaries).
+    expr = " | ".join(
+        f"(xhat={x} & yhat={y} & hstate={h})"
+        for x, y, h in normalized
+    )
+    f.write(f'formula hmm_frontier = {expr};\n\n')
 
 
 def hmm_update_guard():
@@ -309,20 +356,15 @@ def adaptation_mape_controller(d):
 
 def knowledge_hmm(hmm):
     """
-    Exact finite HMM Knowledge module with a hard 10-step update horizon.
+    Exact finite HMM Knowledge module, aligned with Belief/Gaussian PRISM
+    structure: xhat, yhat, hstate, ready -- no explicit step variable.
 
-    Semantics
-    ---------
-    step=0 immediately after a perfect localization.
-    Every movement increments step by one.
-    An update is performed if either
-        1) the HMM uncertainty reaches the URC-selected threshold c, or
-        2) step=10.
-    At step=10, skip_update is impossible.
+    Update condition:
+        selected HMM uncertainty threshold reached
+        OR current exact-belief context is at the offline frontier.
 
-    Hence at most 10 movements can occur between two localizations.
-    This also means that exact reachable HMM beliefs only need to be
-    precomputed through prediction step 10.
+    The frontier is the finite-automaton analogue of the 10-step offline
+    horizon and does not add a PRISM state variable.
     """
     transitions = hmm.get("belief_transitions", {})
     state_count = int(hmm["belief_state_count"])
@@ -330,8 +372,8 @@ def knowledge_hmm(hmm):
     max_steps = int(hmm.get("max_steps", 10))
     if max_steps != 10:
         raise ValueError(
-            "This PRISM generator requires exact HMM beliefs generated "
-            f"with max_steps=10, but the input contains max_steps={max_steps}."
+            "This PRISM generator expects exact HMM beliefs with "
+            f"max_steps=10, got {max_steps}."
         )
 
     update_guard = hmm_update_guard()
@@ -341,9 +383,8 @@ def knowledge_hmm(hmm):
         f.write('module Knowledge\n')
         f.write('  xhat : [0..N] init xstart;\n')
         f.write('  yhat : [0..N] init ystart;\n')
-        f.write(f'  hstate : [0..{state_count - 1}] init 0;\n')
-        f.write('  step : [0..10] init 0;\n')
-        f.write('  ready : [0..1] init 1;\n\n')
+        f.write(f'  hstate : [0..{state_count - 1}] init 0;\n\n')
+        f.write('  ready : [0..1] init 1;\n')
 
         def sort_key(item):
             key, value = item
@@ -365,38 +406,30 @@ def knowledge_hmm(hmm):
                 value.get("next_hstate", value["next_belief_state"])
             )
 
-            if action not in directions:
-                raise ValueError(
-                    f"Unknown HMM transition action '{action}' in {key}."
-                )
-
             effect = directions_effects[directions.index(action)]
 
             f.write(
-                f'  [{action}] ready=1 & step<10'
+                f'  [{action}] ready=1'
                 f' & xhat={xhat}'
                 f' & yhat={yhat}'
                 f' & hstate={hstate}'
                 f' -> {effect}'
                 f' & (hstate\'={next_hstate})'
-                f' & (step\'=step+1)'
                 f' & (ready\'=0);\n'
             )
 
         f.write('\n')
 
-        # Mandatory update at the 10th movement, otherwise uncertainty-driven.
         f.write(
             '  [update] ready=0 & '
-            f'(step=10 | {update_guard}) -> '
+            f'({update_guard} | hmm_frontier) -> '
             '(xhat\'=x) & (yhat\'=y) & '
-            '(hstate\'=0) & (step\'=0) & (ready\'=1);\n'
+            '(hstate\'=0) & (ready\'=1);\n'
         )
 
-        # At step=10 this command is disabled, so update is compulsory.
         f.write(
-            '  [skip_update] ready=0 & step<10 & '
-            f'{skip_guard} -> '
+            '  [skip_update] ready=0 & '
+            f'{skip_guard} & !hmm_frontier -> '
             '(ready\'=1);\n'
         )
 
