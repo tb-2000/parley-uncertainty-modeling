@@ -59,7 +59,7 @@ def main():
                   54, 55, 56, 57, 63, 66, 71, 75, 81, 82, 83, 85, 87, 89, 90, 97]
                     
     # maps()
-    maps = [30, 31] # selected_maps
+    maps = [32, 40] # selected_maps
     for i in maps: # lasse auf map 30, 31 laufen
         models(i)
         #baseline(i)
