@@ -2,7 +2,7 @@ import urc_synthesis_hmm
 import prism_model_generator_hmm
 
 def main():
-    maps = [10]
+    maps = [14]
     for i in maps:
         infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
         outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
