@@ -1,23 +1,21 @@
 """
-Exact reachable Gaussian moment-state model for PARLEY.
+Compact exact reachable Gaussian moment model for PARLEY.
 
-This module replaces the former K=100 Gaussian medoid abstraction.
+PRISM stores only:
+    gstate : one ID per reachable (xhat, yhat, Gaussian-moment-state) context
+    ready  : Knowledge handshake variable
 
-Gaussian knowledge state:
+There are no separate xhat/yhat variables in the Knowledge module.
+
+Each Gaussian moment state is
     g = (bias_x, bias_y, var_x, var_y, cov_xy)
 
-For a fixed map:
-- derive the SAME ten map-specific Gaussian MSE thresholds as before;
-- enumerate all Gaussian moment states reachable under the union of URC choices;
-- assign one integer ID to every exact reachable Gaussian state;
-- construct exact deterministic knowledge transitions
-      (xhat, yhat, gstate_id) -> (next_xhat, next_yhat, next_gstate_id)
-  for the MAPE-selected action;
-- stop skip expansion when tau_10 is reached, since then every c=1..10
-  requires localization.
+The first (N+1)^2 gstates are the zero-uncertainty contexts in row-major
+position order, so perfect localization can be encoded by one PRISM update:
+    gstate' = x*(N+1)+y
 
-"Exact" here means exact within the Gaussian moment model. The Gaussian
-representation itself remains an approximation of the full positional belief.
+"Exact" means exact within the Gaussian moment model. No K-medoids or
+nearest-representative projection are used.
 """
 
 from collections import defaultdict, deque
@@ -36,7 +34,7 @@ from full_gaussian_representatives_bias import (
 
 
 def _derive_thresholds(map_data, target, p, max_steps):
-    """Derive the same 10 median-MSE thresholds as the previous model."""
+    """Derive exactly the same ten median-MSE thresholds as before."""
     map_size = len(map_data)
     n = map_size - 1
     controller = _controller(map_data, target)
@@ -82,6 +80,11 @@ def _derive_thresholds(map_data, target, p, max_steps):
         scale=MSE_SCALE,
     )
 
+    if len(thresholds) != 10:
+        raise ValueError(
+            f"Expected exactly 10 Gaussian thresholds, got {len(thresholds)}."
+        )
+
     return thresholds, controller
 
 
@@ -93,10 +96,13 @@ def build_exact_gaussian_model(
     max_steps=10,
 ):
     """
-    Build the exact reachable Gaussian finite-state knowledge automaton.
+    Build a compact exact Gaussian Knowledge automaton.
 
-    Certainty/zero uncertainty is reusable as gstate 0 at every position after
-    perfect localization.
+    One PRISM gstate corresponds to exactly one reachable context:
+        (xhat, yhat, Gaussian moment state).
+
+    Perfect localization maps physical position (x,y) to the zero-uncertainty
+    context at that position.
     """
     size = len(map_data)
     n = size - 1
@@ -107,59 +113,81 @@ def build_exact_gaussian_model(
         p,
         max_steps,
     )
-
-    if len(thresholds) != 10:
-        raise ValueError(
-            f"Expected exactly 10 Gaussian thresholds, got {len(thresholds)}."
-        )
-
     tau10 = int(thresholds[-1])
 
+    # Distinct Gaussian moment tuples are kept only for offline diagnostics.
     gaussian_states = []
-    id_by_key = {}
+    gaussian_id_by_key = {}
 
-    def get_id(state):
+    def get_gaussian_id(state):
         key = _state_key(state)
-        if key not in id_by_key:
-            id_by_key[key] = len(gaussian_states)
+        if key not in gaussian_id_by_key:
+            gaussian_id_by_key[key] = len(gaussian_states)
             gaussian_states.append(key)
-        return id_by_key[key]
+        return gaussian_id_by_key[key]
 
-    zero_id = get_id(ZERO_STATE)
-    if zero_id != 0:
-        raise AssertionError("ZERO_STATE must have gstate ID 0.")
+    zero_gaussian_id = get_gaussian_id(ZERO_STATE)
+    if zero_gaussian_id != 0:
+        raise AssertionError("ZERO_STATE must have offline Gaussian ID 0.")
 
-    # Seed zero-state at every grid position because perfect localization can
-    # reset xhat,yhat to the concrete robot position.
+    contexts = []
+    context_id_by_key = {}
     queue = deque()
-    seen_contexts = set()
 
+    def get_context_id(xhat, yhat, state):
+        state = _state_key(state)
+        key = (xhat, yhat, state)
+
+        if key not in context_id_by_key:
+            context_id = len(contexts)
+            context_id_by_key[key] = context_id
+
+            gaussian_id = get_gaussian_id(state)
+            contexts.append({
+                "gstate": context_id,
+                "xhat": xhat,
+                "yhat": yhat,
+                "gaussian_id": gaussian_id,
+                "uncertainty": int(round(_mse(state) * MSE_SCALE)),
+            })
+            queue.append((xhat, yhat, state))
+
+        return context_id_by_key[key]
+
+    # IMPORTANT numbering invariant for the single Perfect-Localization update:
+    # zero_context(x,y) = x*size+y
+    zero_contexts = {}
     for xhat in range(size):
         for yhat in range(size):
-            context = (
+            context_id = get_context_id(
                 xhat,
                 yhat,
-                _state_key(ZERO_STATE),
+                ZERO_STATE,
             )
-            if context not in seen_contexts:
-                seen_contexts.add(context)
-                queue.append(
-                    (xhat, yhat, ZERO_STATE)
+            expected_id = xhat * size + yhat
+
+            if context_id != expected_id:
+                raise AssertionError(
+                    "Zero-context numbering invariant violated: "
+                    f"({xhat},{yhat}) -> {context_id}, expected {expected_id}"
                 )
+
+            zero_contexts[f"{xhat},{yhat}"] = context_id
 
     transitions = {}
 
     while queue:
         xhat, yhat, state = queue.popleft()
-
         state = _state_key(state)
-        state_id = get_id(state)
 
+        context_id = context_id_by_key[
+            (xhat, yhat, state)
+        ]
         scaled_mse = int(
             round(_mse(state) * MSE_SCALE)
         )
 
-        # Once tau_10 is reached, every URC choice c=1..10 updates.
+        # Once tau_10 is reached, every URC choice 1..10 localizes.
         if scaled_mse >= tau10:
             continue
 
@@ -168,7 +196,6 @@ def build_exact_gaussian_model(
             xhat,
             yhat,
         )
-
         if action is None:
             continue
 
@@ -189,68 +216,65 @@ def build_exact_gaussian_model(
             n,
         )
 
-        next_id = get_id(next_state)
-
-        transitions[
-            f"{xhat},{yhat},{state_id}"
-        ] = {
-            "action": action,
-            "next_xhat": next_xhat,
-            "next_yhat": next_yhat,
-            "next_state": next_id,
-        }
-
-        next_context = (
+        next_context = get_context_id(
             next_xhat,
             next_yhat,
             next_state,
         )
 
-        if next_context not in seen_contexts:
-            seen_contexts.add(next_context)
-            queue.append(
-                (
-                    next_xhat,
-                    next_yhat,
-                    next_state,
-                )
-            )
+        transitions[str(context_id)] = {
+            "action": action,
+            "next_context": next_context,
+        }
+
+    position_contexts = {
+        f"{x},{y}": []
+        for x in range(size)
+        for y in range(size)
+    }
+
+    for context in contexts:
+        position_contexts[
+            f"{context['xhat']},{context['yhat']}"
+        ].append(context["gstate"])
 
     uncertainties = [
-        int(round(_mse(state) * MSE_SCALE))
-        for state in gaussian_states
+        int(context["uncertainty"])
+        for context in contexts
     ]
 
-    representatives = []
-    for state_id, state in enumerate(gaussian_states):
+    gaussian_diagnostics = []
+    for gaussian_id, state in enumerate(gaussian_states):
         bx, by, var_x, var_y, cov_xy = state
-        representatives.append(
-            {
-                "state_id": state_id,
-                "bias_x": bx,
-                "bias_y": by,
-                "var_x": var_x,
-                "var_y": var_y,
-                "cov_xy": cov_xy,
-                "trace": var_x + var_y,
-                "bias_squared": bx * bx + by * by,
-                "mse": _mse(state),
-            }
-        )
+        gaussian_diagnostics.append({
+            "gaussian_id": gaussian_id,
+            "bias_x": bx,
+            "bias_y": by,
+            "var_x": var_x,
+            "var_y": var_y,
+            "cov_xy": cov_xy,
+            "trace": var_x + var_y,
+            "bias_squared": bx * bx + by * by,
+            "mse": _mse(state),
+        })
 
     return {
         "map_id": map_id,
-        "state_count": len(gaussian_states),
-        "context_count": len(seen_contexts),
+        # PRISM gstate count = reachable (xhat,yhat,Gaussian) contexts.
+        "state_count": len(contexts),
+        "context_count": len(contexts),
+        # Distinct moment tuples are diagnostic only.
+        "gaussian_count": len(gaussian_states),
         "max_steps": max_steps,
         "p": p,
-        "representation": "exact_reachable_gaussian_moments",
+        "representation": "compact_exact_reachable_gaussian_contexts",
         "uncertainty_metric": "mse",
         "mse_scale": MSE_SCALE,
         "thresholds": thresholds,
         "uncertainties": uncertainties,
-        # Name kept for compatibility with existing diagnostics/loaders.
-        "representatives": representatives,
+        "contexts": contexts,
+        "position_contexts": position_contexts,
+        "zero_contexts": zero_contexts,
+        "gaussian_states": gaussian_diagnostics,
         "transitions": transitions,
-        "zero_state": 0,
     }

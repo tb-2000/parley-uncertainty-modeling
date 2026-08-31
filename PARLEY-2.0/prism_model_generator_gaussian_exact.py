@@ -19,12 +19,6 @@ directions = [
     "north",
 ]
 
-directions_effects = [
-    "(xhat'=max(xhat-1, 0))",
-    "(xhat'=min(xhat+1, N))",
-    "(yhat'=max(yhat-1, 0))",
-    "(yhat'=min(yhat+1, N))",
-]
 
 obstacles = []
 updates = [5]
@@ -156,7 +150,7 @@ def preambel():
 
         f.write(";\n\n")
 
-        # Assign every exact reachable Gaussian state to the highest uncertainty
+        # Assign every reachable compact Gaussian context to the highest uncertainty
         # threshold level reached by its raw Gaussian MSE.
         # level 0 means: below threshold 1.
         states_by_level = {
@@ -331,8 +325,26 @@ def adaptation_mape_controller(d):
         prism_file,
         "a",
     ) as f:
+        # xhat/yhat are encoded inside gstate. These formulas expose the
+        # estimate position without adding PRISM state variables.
+        for x in range(mapSize):
+            for y in range(mapSize):
+                ids = gaussian_model[
+                    "position_contexts"
+                ][f"{x},{y}"]
+
+                if ids:
+                    f.write(
+                        f"formula estimate_{x}_{y} = "
+                        + " | ".join(
+                            f"gstate={state_id}"
+                            for state_id in ids
+                        )
+                        + ";\n"
+                    )
+
         f.write(
-            "module Adaptation_MAPE_controller\n"
+            "\nmodule Adaptation_MAPE_controller\n"
         )
 
         for x in range(mapSize):
@@ -344,7 +356,7 @@ def adaptation_mape_controller(d):
                 if direction < 4:
                     f.write(
                         f"  [{directions[direction]}] "
-                        f"(xhat={x}) & (yhat={y}) -> true;\n"
+                        f"estimate_{x}_{y} -> true;\n"
                     )
 
         f.write(
@@ -357,65 +369,50 @@ def knowledge():
         prism_file,
         "a",
     ) as f:
+        initial_gstate = gaussian_model[
+            "zero_contexts"
+        ][f"{startX},{startY}"]
+
         f.write(
             "module Knowledge\n"
         )
         f.write(
-            "  xhat : [0..N] init xstart;\n"
-        )
-        f.write(
-            "  yhat : [0..N] init ystart;\n"
-        )
-        f.write(
             f"  gstate : [0..{gaussian_model['state_count'] - 1}] "
-            "init 0;\n\n"
+            f"init {initial_gstate};\n"
         )
-
-        # Same handshake variable as in the point-estimate Knowledge module.
-        # There is deliberately NO separate variable named `read`.
         f.write(
-            "  ready : [0..1] init 1;\n"
+            "  ready : [0..1] init 1;\n\n"
         )
 
-        # Map-specific exact reachable deterministic Gaussian automaton.
-        # Only the MAPE-selected action at each xhat,yhat is written.
+        # One exact transition per reachable compact Gaussian context.
         for (
-            key,
+            context_id,
             transition,
         ) in gaussian_model[
             "transitions"
         ].items():
-            x, y, state_id = [
-                int(value)
-                for value in key.split(",")
-            ]
-
             action = transition[
                 "action"
             ]
-            next_state = transition[
-                "next_state"
+            next_context = transition[
+                "next_context"
             ]
-
-            next_xhat = transition["next_xhat"]
-            next_yhat = transition["next_yhat"]
 
             f.write(
                 f"  [{action}] ready=1 & "
-                f"xhat={x} & yhat={y} & "
-                f"gstate={state_id} -> "
-                f"(xhat'={next_xhat}) & "
-                f"(yhat'={next_yhat}) & "
-                f"(gstate'={next_state}) & "
+                f"gstate={context_id} -> "
+                f"(gstate'={next_context}) & "
                 f"(ready'=0);\n"
             )
 
-        # Perfect Ground-Truth update:
-        # exact position, zero bias and exact covariance Sigma=0 = gstate 0.
+        # Perfect localization. The first (N+1)^2 gstates are the zero
+        # Gaussian contexts in row-major order:
+        #   zero_context(x,y) = x*(N+1)+y
+        # Hence a single update command is sufficient.
         f.write(
             "  [update] update_required & ready=0 -> "
-            "(xhat'=x) & (yhat'=y) & "
-            "(gstate'=0) & (ready'=1);\n"
+            "(gstate'=x*(N+1)+y) & "
+            "(ready'=1);\n"
         )
 
         f.write(
@@ -530,10 +527,21 @@ def generate_model(i):
         max_steps=GAUSSIAN_MAX_STEPS,
     )
 
+    # Required for the single Perfect-Localization update.
+    for x in range(mapSize):
+        for y in range(mapSize):
+            expected = x * mapSize + y
+            actual = gaussian_model["zero_contexts"][f"{x},{y}"]
+            if actual != expected:
+                raise AssertionError(
+                    f"Invalid zero Gaussian context for ({x},{y}): "
+                    f"{actual}, expected {expected}"
+                )
+
     print(
-        f"map {i}: exact reachable Gaussian states="
+        f"map {i}: compact reachable Gaussian contexts="
         f"{gaussian_model['state_count']}, "
-        f"knowledge contexts={gaussian_model['context_count']}"
+        f"distinct Gaussian moment states={gaussian_model['gaussian_count']}"
     )
 
     open(
@@ -576,7 +584,17 @@ def generate_model(i):
             f"{prism_file}: unexpected Knowledge variable `read` found."
         )
 
+    for obsolete in (
+        "  xhat :",
+        "  yhat :",
+    ):
+        if obsolete in generated_model:
+            raise ValueError(
+                f"{prism_file}: obsolete compact-Gaussian variable found: "
+                f"{obsolete.strip()}"
+            )
+
     print(
         f"finished map {i}: "
-        f"{gaussian_model['state_count']} exact reachable Gaussian states"
+        f"{gaussian_model['state_count']} compact reachable Gaussian contexts"
     )
