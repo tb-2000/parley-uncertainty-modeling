@@ -20,36 +20,79 @@ def manipulate_prism_model(input_path, output_path, possible_decisions=[1, 10], 
 
 
 def get_variables(prism_model_path, decision_variables):
-    # get all int constants
-    int_constants_pattern = re.compile(r'const\s+int\s+(\w+)\s*=\s*(-?\s*\d+)\s*;')
+    """
+    Return controller dimensions.
+
+    Compact exact-belief models no longer contain xhat/yhat variables.
+    Their estimate position is encoded by formula estimate_X_Y = (...kstate...).
+    We therefore reconstruct the same virtual 10x10 position dimensions from N.
+    """
+    int_constants_pattern = re.compile(
+        r'const\s+int\s+(\w+)\s*=\s*(-?\s*\d+)\s*;'
+    )
     int_constants = {}
 
     with open(prism_model_path, 'r') as prism_model_file:
-        # Process the file line by line
-        for line in prism_model_file:
-            # Match constants in each line
-            matches = int_constants_pattern.finditer(line)
-            for match in matches:
-                int_constants[match.group(1)] = int(match.group(2).replace(" ", ""))
+        text = prism_model_file.read()
 
+    for match in int_constants_pattern.finditer(text):
+        int_constants[match.group(1)] = int(
+            match.group(2).replace(" ", "")
+        )
+
+    # Compact context representation.
+    if re.search(r'\bkstate\s*:', text):
+        if "N" not in int_constants:
+            raise ValueError("Compact belief model is missing const int N.")
+
+        n = int_constants["N"]
+        variables = [
+            ["xhat", 0, n],
+            ["yhat", 0, n],
+        ]
+        estimates = ["xhat", "yhat"]
+
+        for x in range(n + 1):
+            for y in range(n + 1):
+                if not re.search(
+                    rf'^\s*formula\s+estimate_{x}_{y}\s*=',
+                    text,
+                    re.MULTILINE,
+                ):
+                    raise ValueError(
+                        f"Missing estimate_{x}_{y} formula in compact model."
+                    )
+
+        return variables, estimates
+
+    # Backward-compatible path for old xhat/yhat models.
     int_variable_declaration_pattern = re.compile(
-        r'(\w+)\s*:\s*\[(-?\s*\w+)\s*\.\.\s*(-?\s*\w+)\]\s*init\s*(-?\s*\w+)\s*;')
+        r'(\w+)\s*:\s*\[(-?\s*\w+)\s*\.\.\s*(-?\s*\w+)\]'
+        r'\s*init\s*(-?\s*\w+)\s*;'
+    )
+
     _vars = []
     _bel = []
 
-    with open(prism_model_path, 'r') as prism_model_file:
-        # Process the file line by line again
-        for line in prism_model_file:
-            # Match variables in each line
-            matches = int_variable_declaration_pattern.finditer(line)
-            for match in matches:
-                if match.group(1)[-3:] == 'hat':
-                    _bel.append(match.group(1))
-                elif match.group(1) not in decision_variables:
-                    continue
-                lower_limit = __get_limit(match.group(2).replace(" ", ""), int_constants)
-                upper_limit = __get_limit(match.group(3).replace(" ", ""), int_constants)
-                _vars.append([match.group(1), lower_limit, upper_limit])
+    for match in int_variable_declaration_pattern.finditer(text):
+        if match.group(1)[-3:] == 'hat':
+            _bel.append(match.group(1))
+        elif match.group(1) not in decision_variables:
+            continue
+
+        lower_limit = __get_limit(
+            match.group(2).replace(" ", ""),
+            int_constants,
+        )
+        upper_limit = __get_limit(
+            match.group(3).replace(" ", ""),
+            int_constants,
+        )
+        _vars.append([
+            match.group(1),
+            lower_limit,
+            upper_limit,
+        ])
 
     return _vars, _bel
 
@@ -147,19 +190,20 @@ def add_controller(
             for value in combination:
                 decision_name += f'_{value}'
 
-            position_guard = ''
-            for value, estimate in zip(
-                combination,
-                estimates,
-            ):
-                position_guard += (
-                    f' & {estimate}={value}'
-                )
+            # Compact models encode xhat/yhat inside kstate and expose
+            # formula estimate_X_Y. Old models keep explicit xhat/yhat.
+            if estimates == ['xhat', 'yhat']:
+                x, y = combination
+                position_guard = f'estimate_{x}_{y}'
+            else:
+                parts = [
+                    f'{estimate}={value}'
+                    for value, estimate in zip(combination, estimates)
+                ]
+                position_guard = ' & '.join(parts) if parts else 'true'
 
-            # Point-estimate/PARLEY-style controller:
-            # decision_x_y is an EvoChecker parameter; c is the PRISM state.
             file.write(
-                f'  [URC] true{position_guard} -> '
+                f'  [URC] {position_guard} -> '
                 f"(c'={decision_name});\n"
             )
 

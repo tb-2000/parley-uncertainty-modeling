@@ -1,21 +1,18 @@
 """
-Exact reachable positional-belief model for PARLEY.
+Compact exact reachable positional-belief model for PARLEY.
 
-This replaces the former K=100 clustering/medoid abstraction.
+This replaces the former representation
+    (xhat, yhat, belief_state)
+by one compact PRISM state variable
+    kstate
 
-For a fixed map:
-- derive the SAME ten map-specific Gini thresholds as before;
-- enumerate exact relative beliefs reachable after a perfect localization;
-- assign one integer ID to every distinct exact reachable belief;
-- build deterministic context-dependent transitions
-      (xhat, yhat, belief_id) -> (next_xhat, next_yhat, next_belief_id)
-  for the MAPE-selected action;
-- stop skip-expansion once tau_10 is reached, because then every c=1..10
-  requires localization.
+Each kstate is exactly one reachable knowledge context
+    (xhat, yhat, exact relative belief).
 
-The resulting PRISM model stores only belief_state, not the full probability
-vector. There is no clustering, medoid selection, nearest-neighbour projection,
+There is no clustering, medoid selection, nearest-neighbour projection,
 or K parameter.
+
+The ten map-specific Gini thresholds are derived exactly as before.
 """
 
 from collections import deque
@@ -88,21 +85,18 @@ def build_exact_belief_model(
     max_steps=10,
 ):
     """
-    Build the exact finite belief automaton for one map.
+    Build one compact exact finite knowledge automaton.
 
-    Important:
-    The ten thresholds are intentionally derived exactly as in the previous
-    implementation. Only the belief-state representation changes.
+    One PRISM kstate corresponds to one reachable tuple
+        (xhat, yhat, relative_belief).
 
-    We seed certainty at every grid position because a perfect localization
-    sets (xhat,yhat)=(x,y). In the PRISM robot model, physical motion can enter
-    cells marked as crashed before/while the crash flag is set, so a reset
-    context must not be restricted to Dijkstra 'free cells' only.
+    Perfect localization maps physical position (x,y) to the certainty
+    kstate belonging to exactly that position.
     """
     size = len(map_data)
     n = size - 1
 
-    # SAME threshold derivation as the previous K=100 model.
+    # SAME threshold derivation as the previous exact/K=100 model.
     _, gini_by_age, controller = belief_impl._generate_records(
         map_data,
         target,
@@ -115,7 +109,6 @@ def build_exact_belief_model(
     )
     tau10 = int(thresholds[-1])
 
-    # Relative certainty is position-independent and is always belief_state=0.
     certain = belief_impl._relative_vector(
         {(0, 0): 1.0},
         0,
@@ -123,48 +116,82 @@ def build_exact_belief_model(
         n,
     )
 
+    # Keep distinct relative beliefs offline for diagnostics only.
     vectors = []
-    id_by_key = {}
+    belief_id_by_key = {}
 
-    def get_id(vector):
+    def get_belief_id(vector):
         key = _vector_key(vector)
-        if key not in id_by_key:
-            id_by_key[key] = len(vectors)
+        if key not in belief_id_by_key:
+            belief_id_by_key[key] = len(vectors)
             vectors.append(vector)
-        return id_by_key[key]
+        return belief_id_by_key[key]
 
-    certainty_id = get_id(certain)
-    if certainty_id != 0:
-        raise AssertionError("Certainty must have belief_state ID 0.")
+    certainty_belief_id = get_belief_id(certain)
+    if certainty_belief_id != 0:
+        raise AssertionError("Certainty must have offline belief ID 0.")
 
+    contexts = []
+    context_id_by_key = {}
     queue = deque()
-    seen_contexts = set()
-    transitions = {}
 
-    # Any actual grid position can become the new estimate after [update].
+    def get_context_id(xhat, yhat, vector):
+        vkey = _vector_key(vector)
+        key = (xhat, yhat, vkey)
+
+        if key not in context_id_by_key:
+            context_id = len(contexts)
+            context_id_by_key[key] = context_id
+
+            belief_id = get_belief_id(vector)
+            contexts.append({
+                "kstate": context_id,
+                "xhat": xhat,
+                "yhat": yhat,
+                "belief_id": belief_id,
+                "vector": vector,
+                "uncertainty": _scaled_gini(vector),
+            })
+            queue.append((xhat, yhat, vector))
+
+        return context_id_by_key[key]
+
+    # Every physical position can be the result of perfect localization.
+    # IMPORTANT invariant:
+    #   certainty_kstate(x,y) = x * size + y
+    # because these certainty contexts are inserted first in row-major order.
+    # This lets the PRISM model use one compact update assignment:
+    #   kstate' = x*(N+1)+y
+    certainty_contexts = {}
     for xhat in range(size):
         for yhat in range(size):
-            key = (xhat, yhat, _vector_key(certain))
-            if key not in seen_contexts:
-                seen_contexts.add(key)
-                queue.append((xhat, yhat, certain))
+            context_id = get_context_id(
+                xhat, yhat, certain
+            )
+            expected_id = xhat * size + yhat
+            if context_id != expected_id:
+                raise AssertionError(
+                    "Certainty-context numbering invariant violated: "
+                    f"({xhat},{yhat}) -> {context_id}, expected {expected_id}"
+                )
+            certainty_contexts[f"{xhat},{yhat}"] = context_id
+
+    transitions = {}
 
     while queue:
         xhat, yhat, vector = queue.popleft()
-
-        state_id = get_id(vector)
+        context_id = context_id_by_key[
+            (xhat, yhat, _vector_key(vector))
+        ]
         uncertainty = _scaled_gini(vector)
 
-        # If tau_10 is reached, every possible URC stage c=1..10 updates.
-        # Therefore no skip/movement successor is reachable from this context.
+        # At tau_10 every c=1..10 must update, so no skip successor exists.
         if uncertainty >= tau10:
             continue
 
         action = belief_impl._direction(
             controller, xhat, yhat
         )
-
-        # Target or another position without a MAPE move.
         if action is None:
             continue
 
@@ -176,42 +203,63 @@ def build_exact_belief_model(
             n,
             p,
         )
-        next_state = get_id(successor)
 
-        transitions[f"{xhat},{yhat},{state_id}"] = {
-            "action": action,
-            "next_xhat": nxhat,
-            "next_yhat": nyhat,
-            "next_state": next_state,
-        }
-
-        next_context = (
+        next_context = get_context_id(
             nxhat,
             nyhat,
-            _vector_key(successor),
+            successor,
         )
 
-        if next_context not in seen_contexts:
-            seen_contexts.add(next_context)
-            queue.append(
-                (nxhat, nyhat, successor)
-            )
+        transitions[str(context_id)] = {
+            "action": action,
+            "next_context": next_context,
+            "next_xhat": nxhat,
+            "next_yhat": nyhat,
+        }
 
-    # Must be calculated after exploration because get_id() grows vectors.
+    # Position -> all compact context IDs whose estimate is that position.
+    position_contexts = {
+        f"{x},{y}": []
+        for x in range(size)
+        for y in range(size)
+    }
+
+    for context in contexts:
+        position_contexts[
+            f"{context['xhat']},{context['yhat']}"
+        ].append(context["kstate"])
+
     uncertainties = [
-        _scaled_gini(vector)
-        for vector in vectors
+        int(context["uncertainty"])
+        for context in contexts
+    ]
+
+    # Remove large vectors from the compact contexts table; vectors remain once
+    # in the offline diagnostics table.
+    compact_contexts = [
+        {
+            "kstate": context["kstate"],
+            "xhat": context["xhat"],
+            "yhat": context["yhat"],
+            "belief_id": context["belief_id"],
+            "uncertainty": context["uncertainty"],
+        }
+        for context in contexts
     ]
 
     return {
         "map_id": map_id,
-        "state_count": len(vectors),
-        "context_count": len(seen_contexts),
+        # PRISM state count: one ID per reachable knowledge context.
+        "state_count": len(compact_contexts),
+        "context_count": len(compact_contexts),
+        # Number of distinct relative beliefs is diagnostic only.
+        "belief_count": len(vectors),
         "thresholds": thresholds,
         "uncertainties": uncertainties,
         "transitions": transitions,
-        # Kept for diagnostics / optional offline analysis only.
+        "contexts": compact_contexts,
+        "position_contexts": position_contexts,
+        "certainty_contexts": certainty_contexts,
         "vectors": vectors,
-        "certainty_state": 0,
-        "representation": "exact_reachable",
+        "representation": "compact_exact_reachable_contexts",
     }

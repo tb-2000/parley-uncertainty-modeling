@@ -9,7 +9,6 @@ targetX = 4
 targetY = 4
 p = 0.01
 directions = ['west', 'east', 'south', 'north']
-directions_effects = ['(xhat\'=max(xhat-1, 0))', '(xhat\'=min(xhat+1, N))', '(yhat\'=max(yhat-1, 0))', '(yhat\'=min(yhat+1, N))']
 obstacles = []
 
 updates = [5]  # cost of updates
@@ -89,7 +88,7 @@ def preambel():
             )
         f.write(';\n\n')
 
-        # Group every exact reachable belief state by the highest
+        # Group every exact reachable knowledge context by the highest
         # map-specific threshold it has reached.
         #
         # class 0: uncertainty < threshold_1
@@ -136,7 +135,7 @@ def preambel():
             )
             f.write(
                 ' | '.join(
-                    f'belief_state={state_id}'
+                    f'kstate={state_id}'
                     for state_id in state_ids
                 )
             )
@@ -146,7 +145,7 @@ def preambel():
         # states that do not reach even threshold 1.
         if belief_classes[0]:
             f.write(
-                '// Belief states below threshold 1 '
+                '// Knowledge states below threshold 1 '
                 '(never trigger update by uncertainty): '
             )
             f.write(
@@ -224,52 +223,62 @@ def robot():
 
 def adaptation_mape_controller(d):
     with open(prism_file, 'a') as f:
-        f.write('module Adaptation_MAPE_controller\n')
+        # xhat/yhat are encoded inside kstate. Expose one compact formula for
+        # every estimate position so the MAPE controller and URC can keep their
+        # original position-dependent semantics.
+        for x in range(mapSize):
+            for y in range(mapSize):
+                ids = belief_model["position_contexts"][f"{x},{y}"]
+                if ids:
+                    f.write(
+                        f'formula estimate_{x}_{y} = '
+                        + ' | '.join(f'kstate={sid}' for sid in ids)
+                        + ';\n'
+                    )
+        f.write('\nmodule Adaptation_MAPE_controller\n')
         for x in range(mapSize):
             for y in range(mapSize):
                 direction = int(d[y][x])
                 if direction < 4:
-                    f.write('  [{0}] '.format(directions[direction]))
-                    f.write('(xhat={0}) & (yhat={1}) -> true;\n'.format(str(x), str(y)))
+                    f.write(
+                        f'  [{directions[direction]}] '
+                        f'estimate_{x}_{y} -> true;\n'
+                    )
         f.write('endmodule\n\n')
 
 
 def knowledge():
     with open(prism_file, 'a') as f:
-        # Keep the original ready handshake. The belief-specific
-        # belief_state is an exact reachable belief ID and augments xhat/yhat.
+        initial_context = belief_model["certainty_contexts"][
+            f"{startX},{startY}"
+        ]
+
         f.write('module Knowledge\n')
-        f.write('  xhat : [0..N] init xstart;\n')
-        f.write('  yhat : [0..N] init ystart;\n')
         f.write(
-            f'  belief_state : [0..{belief_model["state_count"] - 1}] '
-            'init 0;\n\n'
+            f'  kstate : [0..{belief_model["state_count"] - 1}] '
+            f'init {initial_context};\n'
         )
-        f.write('  ready : [0..1] init 1;\n')
+        f.write('  ready : [0..1] init 1;\n\n')
 
-        # Map-specific exact reachable deterministic finite belief automaton.
-        # Only the MAPE-selected action at each xhat,yhat is written.
-        for key, transition in belief_model["transitions"].items():
-            x, y, state_id = [int(value) for value in key.split(',')]
+        # One exact transition per reachable compact knowledge context.
+        for context_id, transition in belief_model["transitions"].items():
             action = transition["action"]
-            next_state = transition["next_state"]
-
-            next_xhat = transition["next_xhat"]
-            next_yhat = transition["next_yhat"]
+            next_context = transition["next_context"]
 
             f.write(
-                f'  [{action}] ready=1 & xhat={x} & yhat={y} '
-                f'& belief_state={state_id} -> '
-                f"(xhat'={next_xhat}) & (yhat'={next_yhat}) & "
-                f"(belief_state'={next_state}) & (ready'=0);\n"
+                f'  [{action}] ready=1 & kstate={context_id} -> '
+                f"(kstate'={next_context}) & (ready'=0);\n"
             )
 
-        # Perfect Ground-Truth observation resets the full belief to certainty.
+        # Perfect localization.
+        # The first (N+1)^2 kstates are certainty contexts in row-major order:
+        #   certainty_kstate(x,y) = x*(N+1)+y
+        # Therefore one update command is sufficient.
         f.write(
             '  [update] update_required & ready=0 -> '
-            "(xhat'=x) & (yhat'=y) & "
-            "(belief_state'=0) & (ready'=1);\n"
+            "(kstate'=x*(N+1)+y) & (ready'=1);\n"
         )
+
         f.write(
             '  [skip_update] !update_required & ready=0 -> '
             "(ready'=1);\n"
@@ -322,10 +331,22 @@ def generate_model(i):
         max_steps=10,
     )
 
+    # The compact single-update encoding relies on certainty contexts
+    # occupying IDs 0..(N+1)^2-1 in row-major order.
+    for x in range(mapSize):
+        for y in range(mapSize):
+            expected = x * mapSize + y
+            actual = belief_model["certainty_contexts"][f"{x},{y}"]
+            if actual != expected:
+                raise AssertionError(
+                    f"Invalid certainty kstate for ({x},{y}): "
+                    f"{actual}, expected {expected}"
+                )
+
     print(
-        f"map {i}: exact reachable belief states="
+        f"map {i}: compact knowledge states="
         f"{belief_model['state_count']}, "
-        f"knowledge contexts={belief_model['context_count']}"
+        f"distinct relative beliefs={belief_model['belief_count']}"
     )
 
     open(prism_file, "w").close()
