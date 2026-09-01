@@ -1,5 +1,5 @@
-import urc_synthesis_gaussian_exact
-import prism_model_generator_gaussian_exact
+import urc_synthesis_gaussian_behavioral_structured
+import prism_model_generator_gaussian_behavioral_structured
 import urc_synthesis
 import prism_model_generator
 import plot_fronts
@@ -13,13 +13,13 @@ def main():
     #     urc_synthesis.manipulate_prism_model(infile, outfile, baseline=False)
     #     print(f"generated: {outfile}")
 
-    maps = [32, 40]
+    maps = [32, 40, 43]
     for i in maps:
         infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
         outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
-        prism_model_generator_gaussian_exact.generate_model(i)
+        prism_model_generator_gaussian_behavioral_structured.generate_model(i)
         print(f"generated: {infile}")
-        urc_synthesis_gaussian_exact.manipulate_prism_model(infile, outfile, baseline=False)
+        urc_synthesis_gaussian_behavioral_structured.manipulate_prism_model(infile, outfile, baseline=False)
     print(f"generated: {outfile}")
 
     # max_replications = 10
