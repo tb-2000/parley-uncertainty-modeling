@@ -1,12 +1,12 @@
 import os
 
 import create_maps
-import prism_model_generator_hmm
+import prism_model_generator_hmm_behavioral_structured
 import prism_caller
 import run_evochecker
 import evaluation
 import plot_fronts
-import urc_synthesis_hmm
+import urc_synthesis_hmm_behavioral_structured
 import time
 
 max_replications = 10 # 10
@@ -17,11 +17,11 @@ def maps():
 
 
 def models(i):
-    prism_model_generator_hmm.generate_model(i)
+    prism_model_generator_hmm_behavioral_structured.generate_model(i)
     infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
     outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
     # TODO umc_synthesis.manipulate_prism_model is currently broken
-    urc_synthesis_hmm.manipulate_prism_model(infile, outfile, baseline=False) # vorher baseline=True, aber das ist nicht sinnvoll, da wir die Baseline ja erst berechnen wollen.
+    urc_synthesis_hmm_behavioral_structured.manipulate_prism_model(infile, outfile, baseline=False) # vorher baseline=True, aber das ist nicht sinnvoll, da wir die Baseline ja erst berechnen wollen.
 
 
 def baseline(i):
@@ -59,7 +59,7 @@ def main():
                   54, 55, 56, 57, 63, 66, 71, 75, 81, 82, 83, 85, 87, 89, 90, 97]
                     
     # maps()
-    maps = [14] # selected_maps
+    maps = [14, 21, 23] # selected_maps
     for i in maps: # lasse auf map 14 laufen
         models(i)
         #baseline(i)
