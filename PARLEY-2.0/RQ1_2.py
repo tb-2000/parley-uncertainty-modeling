@@ -1,8 +1,8 @@
 import os
 
 import create_maps
-import prism_model_generator_belief_behavioral_structured
-import urc_synthesis_belief_behavioral_structured
+import prism_model_generator_belief_exact_local
+import urc_synthesis_belief_exact_local
 import prism_caller
 import run_evochecker
 import evaluation
@@ -17,11 +17,11 @@ def maps():
 
 
 def models(i):
-    prism_model_generator_belief_behavioral_structured.generate_model(i)
+    prism_model_generator_belief_exact_local.generate_model(i)
     infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
     outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
     # TODO umc_synthesis.manipulate_prism_model is currently broken
-    urc_synthesis_belief_behavioral_structured.manipulate_prism_model(infile, outfile, baseline=False) # vorher baseline=True, aber das ist nicht sinnvoll, da wir die Baseline ja erst berechnen wollen.
+    urc_synthesis_belief_exact_local.manipulate_prism_model(infile, outfile, baseline=False) # vorher baseline=True, aber das ist nicht sinnvoll, da wir die Baseline ja erst berechnen wollen.
 
 
 def baseline(i):

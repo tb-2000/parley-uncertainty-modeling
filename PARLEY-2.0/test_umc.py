@@ -1,7 +1,7 @@
 import urc_synthesis
 import prism_model_generator
-import prism_model_generator_belief_behavioral_structured
-import urc_synthesis_belief_behavioral_structured
+import prism_model_generator_belief_exact_local
+import urc_synthesis_belief_exact_local
 import prism_model_generator_belief_full
 import urc_synthesis_belief_full
 import prism_model_generator_belief_exact
@@ -21,9 +21,9 @@ def main():
     for i in maps:
         infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
         outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
-        prism_model_generator_belief_behavioral_structured.generate_model(i)
+        prism_model_generator_belief_exact_local.generate_model(i)
         print(f"generated: {infile}")
-        urc_synthesis_belief_behavioral_structured.manipulate_prism_model(infile, outfile, baseline=False)
+        urc_synthesis_belief_exact_local.manipulate_prism_model(infile, outfile, baseline=False)
     print(f"generated: {outfile}")
 
     # max_replications = 10
