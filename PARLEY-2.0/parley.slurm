@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=parley_RQ1
+#SBATCH --job-name=parleyPE
 #SBATCH --partition=longrun
 #SBATCH --output=%x_%j.out
 #SBATCH --error=%x_%j.err
