@@ -30,7 +30,8 @@ def run_task(args):
 
 def run(map_, replications):
     # Number of parallel processes
-    num_processes = cpu_count()
+    # num_processes = cpu_count()
+    num_processes = min(replications, cpu_count())
 
     # available maps
     rep_values = range(replications)  # 10 replications
