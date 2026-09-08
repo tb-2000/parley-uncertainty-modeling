@@ -18,7 +18,7 @@ def run_task(args):
         f.write("       ALGORITHM = NSGAII\n")
         f.write("       POPULATION_SIZE = 100\n") # 100
         f.write("       MAX_EVALUATIONS = 4000\n") # 4000
-        f.write("       PROCESSORS = 4\n") # 1
+        f.write("       PROCESSORS = 6\n") # 6 PrismExecutor workers per replication
         f.write("       PLOT_PARETO_FRONT = false\n")
         f.write("       VERBOSE = true\n")
         #f.write("       INIT_PORT = 55{0}\n".format(str(i)))
@@ -29,9 +29,10 @@ def run_task(args):
 
 
 def run(map_, replications):
-    # Number of parallel processes
-    # num_processes = cpu_count()
-    num_processes = min(replications, cpu_count())
+    # Run at most 5 replications in parallel.
+    # Each replication uses 6 EvoChecker/Prism workers, so at most
+    # 5 * 6 = 30 PrismExecutor workers are active at the same time.
+    num_processes = min(5, replications, cpu_count())
 
     # available maps
     rep_values = range(replications)  # 10 replications
