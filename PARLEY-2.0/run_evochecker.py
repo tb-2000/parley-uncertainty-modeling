@@ -1,4 +1,5 @@
 import os
+import time
 from multiprocessing import Pool, cpu_count
 
 
@@ -29,18 +30,22 @@ def run_task(args):
 
 
 def run(map_, replications):
-    # Run at most 5 replications in parallel.
-    # Each replication uses 6 EvoChecker/Prism workers, so at most
-    # 5 * 6 = 30 PrismExecutor workers are active at the same time.
-    num_processes = min(5, replications, cpu_count())
+    """Run all replications sequentially and return their runtimes in seconds."""
+    runtimes = []
 
-    # available maps
-    rep_values = range(replications)  # 10 replications
+    for rep in range(replications):
+        print(f"Starting EvoChecker replication {rep + 1}/{replications} for map {map_}")
+        start = time.time()
 
-    # Create a list of tuples with all combinations of i and rep
-    tasks = [(map_, rep) for rep in rep_values]
+        # Run exactly one replication. run_task blocks until EvoChecker,
+        # including its 6 PrismExecutor workers, has finished.
+        run_task((map_, rep))
 
-    with Pool(num_processes) as pool:
-        pool.map(run_task, tasks)
-    # def run(map_, rep):
-    #     run_task((map_, 0))
+        runtime = time.time() - start
+        runtimes.append(runtime)
+        print(
+            f"Finished replication {rep + 1}/{replications} for map {map_} "
+            f"in {runtime:.3f} seconds"
+        )
+
+    return runtimes
