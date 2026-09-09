@@ -37,14 +37,13 @@ def baseline(i):
 
 
 def evo_checker(i):
-    # invoke EvoChecker
-    run_evochecker.run(i, max_replications)
+    # Invoke EvoChecker and return the runtime of every replication.
+    return run_evochecker.run(i, max_replications)
 
 
 def fronts(i):
     for period in range(max_replications):
         plot_fronts.plot_pareto_front(i, period)
-
 
 ## teste auf zufällig gewählten 50 maps
 ## [14, 16, 20, 21, 22, 23, 29, 30, 31, 32, 33, 36, 37,
@@ -60,38 +59,34 @@ def main():
                   54, 55, 56, 57, 63, 66, 71, 75, 81, 82, 83, 85, 87, 89, 90, 97]
                     
     # maps()
-    maps = [21] # selected_maps
-    for i in maps: # lasse auf map 14, 21 laufen
+    maps = [54] # selected_maps
+    for i in maps: # lasse auf map 54, 55 laufen
         models(i)
         #baseline(i)
         print('Starting EvoChecker for map {0}'.format(str(i)))
-        start = time.time()
-        evo_checker(i)
-        end = time.time()
-        runtime = end - start
-        print(f"Total runtime of EvoChecker for map {i} is {runtime:.3f} seconds")
+        wall_start = time.time()
+        replication_times = evo_checker(i)
+        wall_runtime = time.time() - wall_start
 
-        # # time speichern
-        # filename = "times_belief.txt"
-        # times = {}
-        # try:
-        #     with open(filename, "r") as f:
-        #         for line in f:
-        #             map_str, time_str = line.strip().split(": ")
-        #             map_id = int(map_str.replace("Map ", ""))
-        #             times[map_id] = float(time_str)
-        # except FileNotFoundError:
-        #     pass
-        # times[i] = runtime
-        # with open(filename, "w") as f:
-        #     for map_id in sorted(times):
-        #         f.write(f"Map {map_id}: {times[map_id]:.3f}\n")
-        times_dir = "times_belief"
+        # Since replications run sequentially, their sum is the useful
+        # EvoChecker runtime. wall_runtime is retained as a sanity check.
+        total_runtime = sum(replication_times)
+
+        print(f"Total summed EvoChecker runtime for map {i}: {total_runtime:.3f} seconds")
+        print(f"Measured wall-clock runtime for map {i}: {wall_runtime:.3f} seconds")
+
+        # Store one file per map. A rerun of the same map replaces the old
+        # measurements with the newest complete run.
+        times_dir = "times_gaussian"
         os.makedirs(times_dir, exist_ok=True)
         times_file = os.path.join(times_dir, f"map_{i}.txt")
+
         with open(times_file, "w") as f:
-            f.write(f"{runtime:.3f}\n")
-        
+            for rep, rep_runtime in enumerate(replication_times):
+                f.write(f"Replication {rep}: {rep_runtime:.3f}\n")
+            f.write(f"Total: {total_runtime:.3f}\n")
+            f.write(f"WallClock: {wall_runtime:.3f}\n")
+       
         fronts(i)
         print(f'Finished map {i}')
     # evaluation
