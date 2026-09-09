@@ -2,6 +2,7 @@ import os
 import time
 import subprocess
 from pathlib import Path
+from multiprocessing import Pool, cpu_count
 
 
 def run_task(args):
@@ -31,8 +32,8 @@ def run_task(args):
     env = os.environ.copy()
     env["LD_LIBRARY_PATH"] = "libs/runtime"
 
-    # This blocks until the current EvoChecker replication has completely
-    # finished. Then run() starts the next replication.
+    # This blocks until this EvoChecker replication has completely finished.
+    # Multiple run_task calls are executed concurrently by run().
     subprocess.run(
         ["java", "-jar", "./target/EvoChecker-1.1.0.jar", f"./{properties_name}"],
         cwd=evochecker_dir,
@@ -42,22 +43,22 @@ def run_task(args):
 
 
 def run(map_, replications):
-    """Run all replications sequentially and return their runtimes in seconds."""
-    runtimes = []
+    """Run all replications in parallel and return wall-clock runtime in seconds."""
+    tasks = [(map_, rep) for rep in range(replications)]
+    num_processes = min(replications, cpu_count())
 
-    for rep in range(replications):
-        print(f"Starting EvoChecker replication {rep + 1}/{replications} for map {map_}")
-        start = time.time()
+    print(
+        f"Starting {replications} EvoChecker replications in parallel "
+        f"for map {map_} using {num_processes} Python processes"
+    )
 
-        # Run exactly one replication. run_task blocks until EvoChecker,
-        # including its 6 PrismExecutor workers, has finished.
-        run_task((map_, rep))
+    start = time.time()
+    with Pool(processes=num_processes) as pool:
+        pool.map(run_task, tasks)
+    wall_runtime = time.time() - start
 
-        runtime = time.time() - start
-        runtimes.append(runtime)
-        print(
-            f"Finished replication {rep + 1}/{replications} for map {map_} "
-            f"in {runtime:.3f} seconds"
-        )
-
-    return runtimes
+    print(
+        f"Finished all {replications} EvoChecker replications for map {map_} "
+        f"in {wall_runtime:.3f} seconds"
+    )
+    return wall_runtime

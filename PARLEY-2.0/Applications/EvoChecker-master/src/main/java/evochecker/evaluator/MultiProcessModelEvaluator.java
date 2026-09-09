@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
@@ -54,6 +55,12 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 		
 	/** Set of connections array keeping the evaluators instances*/
 	private Connection connections[];
+
+	/** Number of completed parallel evaluation batches. */
+	private int evaluationBatchCounter = 0;
+
+	/** Restart PrismExecutor workers periodically to release native PRISM memory. */
+	private static final int RESTART_EVERY_BATCHES = 5;
 
 	
 	/**
@@ -124,7 +131,16 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 		this.reset();
 		this.assignSolutions();
 		this.startThreads();
+
+		// All current model checks are complete here.
 		solutionsList.clear();
+		evaluationBatchCounter++;
+
+		if (evaluationBatchCounter % RESTART_EVERY_BATCHES == 0) {
+			System.out.println("Restarting PrismExecutor workers after evaluation batch " + evaluationBatchCounter);
+			this.restartConnections();
+		}
+
 //		System.out.println("End of parallel evaluation....");
 		return this.evaluatedSolutions;
 	}
@@ -188,6 +204,26 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 	
 	
 	
+
+	/**
+	 * Restart all PrismExecutor processes without restarting EvoChecker/NSGA-II.
+	 * This is only called after all current evaluation threads have completed.
+	 */
+	private void restartConnections() {
+		for (int i = 0; i < numberOfProcesses; i++) {
+			try {
+				int port = connections[i].getPort();
+				connections[i].close();
+				connections[i] = new Connection(port, i, this);
+				System.out.println("Restarted PrismExecutor worker " + i + " on port " + port);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				throw new RuntimeException("Failed to restart PrismExecutor worker " + i, e);
+			}
+		}
+	}
+
 	public void setConnection(int id, Connection c) {
 		connections[id] = c;
 	}
@@ -279,6 +315,9 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 		/** Output channel**/
 		private PrintWriter out;
 
+		/** PrismExecutor process owned by this connection. */
+		private Process process;
+
 		private final String HOSTNAME = "127.0.0.1";
 		
 		private int portNum;
@@ -307,58 +346,44 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 			params[2] = Utility.getProperty(Constants.MODEL_CHECKING_ENGINE);
 			params[3] = String.valueOf(portNum);
 
-			//============================================================
-			// HIER EINFÜGEN
-			System.out.println(
-				"Starting PrismExecutor worker " + id +
-				" on port " + portNum
-			);
-			//============================================================
-			
-			
+			System.out.println("Starting PrismExecutor worker " + id + " on port " + portNum);
+
 			try {
 				ProcessBuilder pb = new ProcessBuilder(params);
-				//============================================================
-				//pb.inheritIO();
-				//============================================================
 				Map<String, String> env = pb.environment();
-				env.put("DYLD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR)); //OSX
-				env.put("LD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR));   //Linux
-	
-				
-				boolean alive = false;
-				do {
-					Process p;
-						p = pb.start();
-					alive = p.isAlive();
-					Thread.sleep(1000);
-				} while (!alive);
-	
+				env.put("DYLD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR));
+				env.put("LD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR));
+
+				// Start exactly one worker and keep the Process reference.
+				process = pb.start();
+
 				boolean successful = false;
 				while (!successful) {
+					if (!process.isAlive()) {
+						throw new IOException("PrismExecutor worker " + id + " terminated before opening port " + portNum);
+					}
+
 					try {
-						socket	= new Socket(HOSTNAME, portNum);
-						//============================================================
-						System.out.println(
-							"Connected worker " + id +
-							" to port " + portNum
-						);
-						//============================================================
-						in		= new BufferedReader(new InputStreamReader(socket.getInputStream()));
-						out		= new PrintWriter(socket.getOutputStream());
+						socket = new Socket(HOSTNAME, portNum);
+						System.out.println("Connected worker " + id + " to port " + portNum);
+						in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+						out = new PrintWriter(socket.getOutputStream());
 						successful = true;
-					} catch (IOException | NullPointerException e) {
+					}
+					catch (IOException | NullPointerException e) {
+						// Worker may still be starting. Do not spawn another worker here.
 						Thread.sleep(1000);
-						pb.start();
 					}
 				}
 			}
 			catch (IOException | InterruptedException e) {
-				e.printStackTrace();
+				if (e instanceof InterruptedException) {
+					Thread.currentThread().interrupt();
+				}
+				throw new RuntimeException("Failed to start PrismExecutor worker " + id + " on port " + portNum, e);
 			}
-		}		
-		
-		
+		}
+
 		public BufferedReader getInChannel() {
 			return in;
 		}
@@ -374,8 +399,29 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 
 		
 		public void close() throws IOException {
-			out.close();
-			in.close();
+			if (out != null) {
+				out.close();
+			}
+			if (in != null) {
+				in.close();
+			}
+			if (socket != null && !socket.isClosed()) {
+				socket.close();
+			}
+
+			if (process != null && process.isAlive()) {
+				process.destroy();
+				try {
+					if (!process.waitFor(5, TimeUnit.SECONDS)) {
+						process.destroyForcibly();
+						process.waitFor(5, TimeUnit.SECONDS);
+					}
+				}
+				catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					process.destroyForcibly();
+				}
+			}
 		}
 	}
 

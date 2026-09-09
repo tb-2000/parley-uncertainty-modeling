@@ -37,7 +37,7 @@ def baseline(i):
 
 
 def evo_checker(i):
-    # Invoke EvoChecker and return the runtime of every replication.
+    # Invoke all EvoChecker replications in parallel and return wall-clock runtime.
     return run_evochecker.run(i, max_replications)
 
 
@@ -59,33 +59,26 @@ def main():
                   54, 55, 56, 57, 63, 66, 71, 75, 81, 82, 83, 85, 87, 89, 90, 97]
                     
     # maps()
-    maps = [54] # selected_maps
-    for i in maps: # lasse auf map 54, 55 laufen
+    maps = [55, 56, 57, 63] # selected_maps
+    for i in maps: # lasse auf map 55, 56, 57, 63 laufen
         models(i)
         #baseline(i)
         print('Starting EvoChecker for map {0}'.format(str(i)))
         wall_start = time.time()
-        replication_times = evo_checker(i)
+        evochecker_runtime = evo_checker(i)
         wall_runtime = time.time() - wall_start
 
-        # Since replications run sequentially, their sum is the useful
-        # EvoChecker runtime. wall_runtime is retained as a sanity check.
-        total_runtime = sum(replication_times)
-
-        print(f"Total summed EvoChecker runtime for map {i}: {total_runtime:.3f} seconds")
-        print(f"Measured wall-clock runtime for map {i}: {wall_runtime:.3f} seconds")
+        print(f"EvoChecker wall-clock runtime for map {i}: {evochecker_runtime:.3f} seconds")
+        print(f"Measured outer wall-clock runtime for map {i}: {wall_runtime:.3f} seconds")
 
         # Store one file per map. A rerun of the same map replaces the old
-        # measurements with the newest complete run.
-        times_dir = "times_gaussian"
+        # measurement with the newest complete run.
+        times_dir = "times_point_estimates"
         os.makedirs(times_dir, exist_ok=True)
         times_file = os.path.join(times_dir, f"map_{i}.txt")
 
         with open(times_file, "w") as f:
-            for rep, rep_runtime in enumerate(replication_times):
-                f.write(f"Replication {rep}: {rep_runtime:.3f}\n")
-            f.write(f"Total: {total_runtime:.3f}\n")
-            f.write(f"WallClock: {wall_runtime:.3f}\n")
+            f.write(f"WallClock: {evochecker_runtime:.3f}\n")
        
         fronts(i)
         print(f'Finished map {i}')
