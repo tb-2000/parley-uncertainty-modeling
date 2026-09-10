@@ -59,8 +59,8 @@ def main():
                   54, 55, 56, 57, 63, 66, 71, 75, 81, 82, 83, 85, 87, 89, 90, 97]
                     
     # maps()
-    maps = [55, 56, 57, 63] # selected_maps
-    for i in maps: # lasse auf map 55, 56, 57, 63 laufen
+    maps = [56, 57, 63] # selected_maps
+    for i in maps: # lasse auf map 56, 57, 63 laufen
         models(i)
         #baseline(i)
         print('Starting EvoChecker for map {0}'.format(str(i)))
@@ -73,7 +73,7 @@ def main():
 
         # Store one file per map. A rerun of the same map replaces the old
         # measurement with the newest complete run.
-        times_dir = "times_point_estimates"
+        times_dir = "times_gaussian"
         os.makedirs(times_dir, exist_ok=True)
         times_file = os.path.join(times_dir, f"map_{i}.txt")
 
