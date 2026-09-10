@@ -60,7 +60,7 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 	private int evaluationBatchCounter = 0;
 
 	/** Restart PrismExecutor workers periodically to release native PRISM memory. */
-	private static final int RESTART_EVERY_BATCHES = 5;
+	private static final int RESTART_EVERY_BATCHES = 1;
 
 	
 	/**
