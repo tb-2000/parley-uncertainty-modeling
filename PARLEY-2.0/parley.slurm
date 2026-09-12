@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=parleyHMM
-#SBATCH --partition=longrun
+#SBATCH --partition=compute
 #SBATCH --output=%x_%j.out
 #SBATCH --error=%x_%j.err
 #SBATCH --nodes=1
