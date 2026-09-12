@@ -1,44 +1,64 @@
 import os
+import time
+import subprocess
+from pathlib import Path
 from multiprocessing import Pool, cpu_count
 
 
 def run_task(args):
-    os.chdir('Applications/EvoChecker-master')
-    os.environ['LD_LIBRARY_PATH'] = "libs/runtime"
     i, rep = args
-    path = "./{0}_{1}.properties".format(str(i), str(rep))
-    open(path, "w").close()
+
+    # Do not change the working directory of the Python process.
+    # Otherwise the second serial replication would try to chdir into
+    # Applications/EvoChecker-master a second time.
+    evochecker_dir = Path(__file__).resolve().parent / "Applications" / "EvoChecker-master"
+    properties_name = f"{i}_{rep}.properties"
+    properties_path = evochecker_dir / properties_name
 
     init_port = 10000 + i * 100 + rep * 10
 
-    with open(path, 'a') as f:
-        f.write("PROBLEM = ROBOT{0}_REP{1}\n".format(str(i), str(rep)))
-        f.write("       MODEL_TEMPLATE_FILE = models/model_{0}_umc.prism\n".format(str(i)))
+    with open(properties_path, "w") as f:
+        f.write(f"PROBLEM = ROBOT{i}_REP{rep}\n")
+        f.write(f"       MODEL_TEMPLATE_FILE = models/model_{i}_umc.prism\n")
         f.write("       PROPERTIES_FILE = robot.pctl\n")
         f.write("       ALGORITHM = NSGAII\n")
-        f.write("       POPULATION_SIZE = 100\n") # 100
-        f.write("       MAX_EVALUATIONS = 4000\n") # 4000
-        f.write("       PROCESSORS = 3\n") # 1
+        f.write("       POPULATION_SIZE = 100\n")
+        f.write("       MAX_EVALUATIONS = 4000\n")
+        f.write("       PROCESSORS = 6\n")
         f.write("       PLOT_PARETO_FRONT = false\n")
         f.write("       VERBOSE = true\n")
-        #f.write("       INIT_PORT = 55{0}\n".format(str(i)))
-        f.write("       INIT_PORT = {init_port}\n".format(init_port=init_port))
-    # Note: INIT_PORT doesn't have an effect https://github.com/gerasimou/EvoChecker/issues/11
+        f.write(f"       INIT_PORT = {init_port}\n")
 
-    os.system('java -jar ./target/EvoChecker-1.1.0.jar ' + path)
+    env = os.environ.copy()
+    env["LD_LIBRARY_PATH"] = "libs/runtime"
+
+    # This blocks until this EvoChecker replication has completely finished.
+    # Multiple run_task calls are executed concurrently by run().
+    subprocess.run(
+        ["java", "-jar", "./target/EvoChecker-1.1.0.jar", f"./{properties_name}"],
+        cwd=evochecker_dir,
+        env=env,
+        check=True,
+    )
 
 
 def run(map_, replications):
-    # Number of parallel processes
-    num_processes = cpu_count()
+    """Run all replications in parallel and return wall-clock runtime in seconds."""
+    tasks = [(map_, rep) for rep in range(replications)]
+    num_processes = min(replications, cpu_count())
 
-    # available maps
-    rep_values = range(replications)  # 10 replications
+    print(
+        f"Starting {replications} EvoChecker replications in parallel "
+        f"for map {map_} using {num_processes} Python processes"
+    )
 
-    # Create a list of tuples with all combinations of i and rep
-    tasks = [(map_, rep) for rep in rep_values]
-
-    with Pool(num_processes) as pool:
+    start = time.time()
+    with Pool(processes=num_processes) as pool:
         pool.map(run_task, tasks)
-    # def run(map_, rep):
-    #     run_task((map_, 0))
+    wall_runtime = time.time() - start
+
+    print(
+        f"Finished all {replications} EvoChecker replications for map {map_} "
+        f"in {wall_runtime:.3f} seconds"
+    )
+    return wall_runtime
