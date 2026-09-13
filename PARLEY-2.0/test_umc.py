@@ -13,7 +13,7 @@ def main():
     #     urc_synthesis.manipulate_prism_model(infile, outfile, baseline=False)
     #     print(f"generated: {outfile}")
 
-    maps = [66, 71] # selected_maps
+    maps = [75, 81, 82] # selected_maps
     for i in maps:
         infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
         outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
