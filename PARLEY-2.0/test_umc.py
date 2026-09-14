@@ -2,7 +2,7 @@ import urc_synthesis
 import prism_model_generator
 
 def main():
-    maps = [56, 57, 63] # selected_maps
+    maps = [66, 71, 75] # selected_maps
     for i in maps:
         infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
         outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
