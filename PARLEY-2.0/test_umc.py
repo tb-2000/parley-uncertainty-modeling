@@ -2,7 +2,7 @@ import urc_synthesis_hmm_exact_local
 import prism_model_generator_hmm_exact_local
 
 def main():
-    maps = [31, 32] # selected_maps
+    maps = [32, 40] # selected_maps
     for i in maps:
         infile = f'Applications/EvoChecker-master/models/model_{i}.prism'
         outfile = f'Applications/EvoChecker-master/models/model_{i}_umc.prism'
