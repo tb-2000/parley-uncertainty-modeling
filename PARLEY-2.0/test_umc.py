@@ -24,7 +24,7 @@ def main():
         prism_model_generator_belief_exact_local.generate_model(i)
         print(f"generated: {infile}")
         urc_synthesis_belief_exact_local.manipulate_prism_model(infile, outfile, baseline=False)
-    print(f"generated: {outfile}")
+        print(f"generated: {outfile}")
 
     # max_replications = 10
     # for period in range(max_replications):
