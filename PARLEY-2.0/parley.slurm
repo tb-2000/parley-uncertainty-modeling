@@ -6,7 +6,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=60
-#SBATCH --mem=200G
+#SBATCH --mem=360G
 #SBATCH --time=4-00:00:00
 
 set -euo pipefail
@@ -14,4 +14,5 @@ set -euo pipefail
 cd "$HOME/parley-uncertainty-modeling/PARLEY-2.0"
 
 source venv/bin/activate
-srun python RQ1_2.py
+#srun python RQ1_2.py
+srun python RQ3_belief_scaling.py
