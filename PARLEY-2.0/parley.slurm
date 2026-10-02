@@ -14,4 +14,5 @@ set -euo pipefail
 cd "$HOME/parley-uncertainty-modeling/PARLEY-2.0"
 
 source venv/bin/activate
-srun python RQ1_2.py
+#srun python RQ1_2.py
+srun python RQ3_gaussian_scaling.py
