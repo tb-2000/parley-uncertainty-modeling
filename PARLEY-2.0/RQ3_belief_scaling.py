@@ -3,8 +3,8 @@ import os
 import time
 
 import create_maps
-import prism_model_generator_belief_exact_local
-import urc_synthesis_belief_exact_local
+import prism_model_generator_belief_exact_local_scaling
+import urc_synthesis_belief_exact_local_scaling
 import run_evochecker
 import plot_fronts
 
@@ -36,12 +36,12 @@ def update_input(i, size):
 
 def models(i):
     """Generate the exact-local-belief model and its URC synthesis model."""
-    prism_model_generator_belief_exact_local.generate_model(i)
+    prism_model_generator_belief_exact_local_scaling.generate_model(i)
 
     infile = f"Applications/EvoChecker-master/models/model_{i}.prism"
     outfile = f"Applications/EvoChecker-master/models/model_{i}_umc.prism"
 
-    urc_synthesis_belief_exact_local.manipulate_prism_model(
+    urc_synthesis_belief_exact_local_scaling.manipulate_prism_model(
         infile,
         outfile,
         baseline=False,
