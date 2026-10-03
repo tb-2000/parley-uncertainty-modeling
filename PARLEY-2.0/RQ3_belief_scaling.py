@@ -12,8 +12,12 @@ import plot_fronts
 max_replications = 10
 
 # map_0 = 5x5, map_1 = 15x15, map_2 = 20x20
+# SCALING_MAPS = {
+#     0: 5,
+#     1: 15,
+#     2: 20,
+# }
 SCALING_MAPS = {
-    0: 5,
     1: 15,
     2: 20,
 }
@@ -79,7 +83,7 @@ def save_runtime(i, size, runtime):
 
 def main():
     # Generate the 5x5, 15x15 and 20x20 maps.
-    create_maps.create_3_maps()
+    #create_maps.create_3_maps()
 
     for i, size in SCALING_MAPS.items():
         print("=" * 70)
