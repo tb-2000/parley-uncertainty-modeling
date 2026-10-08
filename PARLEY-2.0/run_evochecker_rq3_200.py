@@ -27,7 +27,7 @@ def run_task(args):
         f.write("       ALGORITHM = NSGAII\n")
         f.write(f"       POPULATION_SIZE = {POPULATION_SIZE}\n")
         f.write(f"       MAX_EVALUATIONS = {MAX_EVALUATIONS}\n")
-        f.write("       PROCESSORS = 6\n")
+        f.write("       PROCESSORS = 1\n")
         f.write("       PLOT_PARETO_FRONT = false\n")
         f.write("       VERBOSE = true\n")
         f.write(f"       INIT_PORT = {init_port}\n")
