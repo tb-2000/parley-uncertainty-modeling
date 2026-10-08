@@ -15,4 +15,4 @@ cd "$HOME/parley-uncertainty-modeling/PARLEY-2.0"
 
 source venv/bin/activate
 
-srun python RQ3.py
+srun python RQ3_gaussian_scaling.py
