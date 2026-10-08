@@ -8,7 +8,7 @@ from pathlib import Path
 
 import create_maps
 import prism_model_generator_interval_scaling
-import run_evochecker
+import run_evochecker_rq3_200 as run_evochecker
 import plot_fronts
 
 
@@ -16,8 +16,9 @@ max_replications = 10
 
 SCALING_MAPS = {
     0: 5,
-    1: 15,
-    2: 20,
+    1: 10,
+    2: 15,
+    3: 20,
 }
 
 MODELS_DIR = Path("Applications/EvoChecker-master/models")
