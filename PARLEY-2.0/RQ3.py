@@ -1,4 +1,4 @@
-from os import times
+import time as times
 import os
 
 import create_maps
