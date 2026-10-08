@@ -1,114 +1,110 @@
-import numpy as np
+"""RQ3-Karten: map_0=5x5, map_1=10x10 (unverändert), map_2=15x15, map_3=20x20.
+
+PRISM-Generator liest CSV mit map_data[x][y] = csv[size-1-y][x].
+Damit liegt PRISM-Start (0,0) links unten und Ziel (N,N) rechts oben.
+Zellwerte >=10 sind Hindernisse, Werte 0..9 begehbar.
+"""
 from collections import deque
-import copy
+from pathlib import Path
 import csv
+import random
 
-size = 10
-start = (size - 1, 0)
-end = (0, size - 1)
-csv_file_path = "maps/map_"
-
-
-def generate_one_map():
-    map_data = []
-    for j in range(0, size):
-        l = []
-        for i in range(0, size):
-            r = int(np.random.normal(0, 1))
-            if r < 0:
-                r *= -1
-            r *= 10
-            if j == 0 | j == 9:
-                r = 0
-            if i == 0 | j == 9:
-                r = 0
-            l.append(r)
-        map_data.append(l)
-    return map_data
+MAP_DIR = Path(__file__).resolve().parent / "maps"
+RQ3_SIZES = {0: 5, 1: 10, 2: 15, 3: 20}
+OBSTACLE_PROBABILITY = 0.25
+MAX_ATTEMPTS = 10000
 
 
 def has_path(map_data, start_pos, target_pos):
+    """Prüft den Weg in CSV-Koordinaten (Zeile, Spalte) mit PRISM-Hindernisregel."""
     rows = len(map_data)
     cols = len(map_data[0])
-
-    # Initialize a visited set to keep track of visited cells
-    visited = set()
-
-    # Initialize a queue for BFS traversal
-    queue = deque()
-    queue.append(start_pos)
-
+    if any(not (0 <= r < rows and 0 <= c < cols) for r, c in (start_pos, target_pos)):
+        return False
+    if map_data[start_pos[0]][start_pos[1]] >= 10 or map_data[target_pos[0]][target_pos[1]] >= 10:
+        return False
+    queue = deque([start_pos])
+    visited = {start_pos}
     while queue:
-        current_pos = queue.popleft()
-
-        if current_pos == target_pos:
-            # A path to the target has been found
+        r, c = queue.popleft()
+        if (r, c) == target_pos:
             return True
-
-        x, y = current_pos
-
-        # Define the possible neighbor positions
-        neighbors = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
-
-        for neighbor_pos in neighbors:
-            nx, ny = neighbor_pos
-
-            # Check if the neighbor position is within the map boundaries
-            if 0 <= nx < rows and 0 <= ny < cols:
-                # Check if the neighbor cell is not an obstacle and has not been visited
-                if map_data[nx][ny] == 0 and neighbor_pos not in visited:
-                    visited.add(neighbor_pos)
-                    queue.append(neighbor_pos)
-
-    # No path to the target was found
+        for nr, nc in ((r-1,c), (r+1,c), (r,c-1), (r,c+1)):
+            if (0 <= nr < rows and 0 <= nc < cols and
+                (nr,nc) not in visited and map_data[nr][nc] < 10):
+                visited.add((nr,nc))
+                queue.append((nr,nc))
     return False
 
 
 def add_penalties(old_map_data):
-    map_data = copy.deepcopy(old_map_data)
-    for x in range(0, size):
-        for y in range(0, size):
-            neighbors = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
-            for neighbor_pos in neighbors:
-                nx, ny = neighbor_pos
-                # Check if the neighbor position is within the map boundaries
-                if 0 <= nx < size and 0 <= ny < size:
-                    if old_map_data[nx][ny] != 0:
-                        map_data[x][y] += 3
-    return map_data
+    """Erhöht Wegkosten neben Hindernissen, ohne neue Hindernisse zu erzeugen."""
+    size = len(old_map_data)
+    result = [row[:] for row in old_map_data]
+    for r in range(size):
+        for c in range(size):
+            if old_map_data[r][c] >= 10:
+                continue
+            adjacent = sum(
+                0 <= nr < size and 0 <= nc < size and old_map_data[nr][nc] >= 10
+                for nr, nc in ((r-1,c), (r+1,c), (r,c-1), (r,c+1))
+            )
+            result[r][c] = min(9, old_map_data[r][c] + 3 * adjacent)
+    return result
 
 
-def generate_map():
-    while True:
-        map_data = generate_one_map()
-        if has_path(map_data, start, end):
-            return map_data
+def generate_one_map(size=10, rng=None):
+    rng = rng or random.Random()
+    grid = [[10 if rng.random() < OBSTACLE_PROBABILITY else 1
+             for _ in range(size)] for _ in range(size)]
+    # Start links unten, Ziel rechts oben. Die Ränder bleiben nicht pauschal frei.
+    grid[size - 1][0] = 0
+    grid[0][size - 1] = 0
+    return grid
 
 
-# method to create 90 maps of size 10x10
-def create_90_maps():
-    print(size)
-    for i in range(10, 100):
-        map_data = generate_map()
-        map_data = add_penalties(map_data)
-        with open(csv_file_path + str(i) + '.csv', 'w', newline='') as csvfile:
-            csv_writer = csv.writer(csvfile)
-            for row in map_data:
-                csv_writer.writerow(row)
+def generate_map(size=10, rng=None):
+    rng = rng or random.Random()
+    start, target = (size - 1, 0), (0, size - 1)
+    for _ in range(MAX_ATTEMPTS):
+        raw = generate_one_map(size, rng)
+        if not has_path(raw, start, target):
+            continue
+        final = add_penalties(raw)
+        if has_path(final, start, target):
+            return final
+    raise RuntimeError(f"Keine begehbare {size}x{size}-Karte nach {MAX_ATTEMPTS} Versuchen")
 
 
-# method to create additional maps to investigate scalability
-# creates maps of size 5x5, 15x15, 20x20
-def create_3_maps():
-    sizes = [5, 15, 20]
-    for i in range(len(sizes)):
-        global size, start, end
-        size = sizes[i]
-        start = (size - 1, 0)
-        end = (0, size - 1)
-        map_data = generate_map()
-        map_data = add_penalties(map_data)
-        with open(csv_file_path + str(i) + '.csv', 'w', newline='') as csvfile:
-            csv_writer = csv.writer(csvfile)
-            for row in map_data:
-                csv_writer.writerow(row)
+def _write_map(index, grid):
+    MAP_DIR.mkdir(parents=True, exist_ok=True)
+    path = MAP_DIR / f"map_{index}.csv"
+    with path.open("w", newline="") as f:
+        csv.writer(f).writerows(grid)
+    print(f"Erzeugt: {path} ({len(grid)}x{len(grid)})")
+
+
+def create_3_maps(seed=20261008):
+    """Erzeugt nur map_0, map_2 und map_3. map_1 (10x10) bleibt unverändert."""
+    rng = random.Random(seed)
+    existing = MAP_DIR / "map_1.csv"
+    if not existing.is_file():
+        raise FileNotFoundError(f"10x10-Referenzkarte fehlt: {existing}")
+    with existing.open(newline="") as f:
+        reference = [[int(v) for v in row] for row in csv.reader(f)]
+    if len(reference) != 10 or any(len(row) != 10 for row in reference):
+        raise ValueError(f"{existing} ist nicht 10x10. Bitte Kartenzuordnung prüfen!")
+    print(f"Unverändert: {existing} (10x10)")
+    for index in (0, 2, 3):
+        _write_map(index, generate_map(RQ3_SIZES[index], rng))
+
+
+def create_90_maps(seed=None):
+    """Optional: alte 10x10-Trainingskarten map_10..map_99 neu erzeugen."""
+    rng = random.Random(seed)
+    for index in range(10, 100):
+        _write_map(index, generate_map(10, rng))
+
+
+if __name__ == "__main__":
+    create_3_maps()
