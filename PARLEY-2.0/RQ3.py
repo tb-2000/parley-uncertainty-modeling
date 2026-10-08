@@ -2,7 +2,7 @@ import time as times
 import os
 
 import create_maps
-import prism_model_generator
+import prism_model_generator_rq3 as prism_model_generator
 import urc_synthesis
 import run_evochecker_rq3_200 as run_evochecker
 
