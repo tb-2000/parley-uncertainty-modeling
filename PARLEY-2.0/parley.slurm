@@ -6,8 +6,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=10
-#SBATCH --mem=300G
-#SBATCH --time=4-00:00:00
+#SBATCH --mem=200G
+#SBATCH --time=1-00:00:00
 
 set -euo pipefail
 
@@ -15,4 +15,4 @@ cd "$HOME/parley-uncertainty-modeling/PARLEY-2.0"
 
 source venv/bin/activate
 
-srun python RQ3_gaussian_scaling.py
+srun python RQ3.py
