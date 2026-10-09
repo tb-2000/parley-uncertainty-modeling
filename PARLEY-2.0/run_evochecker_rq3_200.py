@@ -23,11 +23,11 @@ def run_task(args):
     with open(properties_path, "w") as f:
         f.write(f"PROBLEM = ROBOT{i}_REP{rep}\n")
         f.write(f"       MODEL_TEMPLATE_FILE = models/model_{i}_umc.prism\n")
-        f.write("       PROPERTIES_FILE = robot.pctl\n")
+        f.write(f"       PROPERTIES_FILE = robot_rq3_map_{i}.pctl\n")
         f.write("       ALGORITHM = NSGAII\n")
         f.write(f"       POPULATION_SIZE = {POPULATION_SIZE}\n")
         f.write(f"       MAX_EVALUATIONS = {MAX_EVALUATIONS}\n")
-        f.write("       PROCESSORS = 6\n")
+        f.write("       PROCESSORS = 1\n")
         f.write("       PLOT_PARETO_FRONT = false\n")
         f.write("       VERBOSE = true\n")
         f.write(f"       INIT_PORT = {init_port}\n")
@@ -48,7 +48,8 @@ def run_task(args):
 def run(map_, replications):
     """Run all replications in parallel and return wall-clock runtime in seconds."""
     tasks = [(map_, rep) for rep in range(replications)]
-    num_processes = min(replications, cpu_count())
+    allocated_cpus = int(os.environ.get("SLURM_CPUS_PER_TASK", cpu_count()))
+    num_processes = min(replications, allocated_cpus)
 
     print(
         f"Starting {replications} EvoChecker replications in parallel "
