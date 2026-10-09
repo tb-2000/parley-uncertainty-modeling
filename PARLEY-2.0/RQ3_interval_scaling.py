@@ -46,7 +46,7 @@ def update_input(i, size):
 
 
 def generate_base_models():
-    """Generate map_0..2 base PRISM models without precomputed thresholds."""
+    """Generate map_0..3 base PRISM models without precomputed thresholds."""
     for i, size in SCALING_MAPS.items():
         update_input(i, size)
         prism_model_generator_interval_scaling.generate_model(i)
@@ -54,7 +54,7 @@ def generate_base_models():
 
 def calculate_thresholds():
     """
-    Analyse mean interval widths after steps 1..20 for model_0..2.
+    Analyse mean interval widths after steps 1..20 for model_0..3.
     The analysis writes thresholds_per_map.py into its output directory.
     """
     subprocess.run(
@@ -88,13 +88,13 @@ def calculate_thresholds():
 def synthesize_models():
     """
     Import the URC module only after interval_thresholds_scaling.py exists,
-    then create the UMC models for maps 0..2.
+    then create the UMC models for maps 0..3.
     """
     urc_module = importlib.import_module("urc_synthesis_interval_scaling")
 
     for i in SCALING_MAPS:
-        infile = MODELS_DIR / f"model_{i}.prism"
-        outfile = MODELS_DIR / f"model_{i}_umc.prism"
+        infile = MODELS_DIR / f"model_interval_{i}.prism"
+        outfile = MODELS_DIR / f"model_interval_{i}_umc.prism"
 
         urc_module.manipulate_prism_model(
             str(infile),
@@ -125,8 +125,8 @@ def save_runtime(i, size, runtime):
 
 
 def main():
-    # 1. Create map_0=5x5, map_1=15x15, map_2=20x20.
-    create_maps.create_3_maps()
+    # 1. Create map_0=5x5, map_1=15x15, map_2=20x20, map_3=25x25.
+    #create_maps.create_4_maps()
 
     # 2. Generate the base interval models with size-dependent targets.
     generate_base_models()

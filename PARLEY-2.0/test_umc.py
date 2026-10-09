@@ -1,5 +1,6 @@
 import prism_model_generator_interval_per_map
 import urc_synthesis_interval_per_map
+import RQ3_interval_scaling
 
 def main():
    
