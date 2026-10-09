@@ -121,7 +121,7 @@ def main():
 
         save_runtime(i, size, evochecker_runtime)
 
-        fronts(i)
+        #fronts(i)
 
         print(f"Finished map {i} ({size}x{size})")
 
