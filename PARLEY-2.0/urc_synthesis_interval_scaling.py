@@ -15,7 +15,7 @@ def manipulate_prism_model(input_path, output_path, possible_decisions=[1, 10], 
 
     remove_counter_from_module(output_path)
 
-    map_match = re.search(r'model_(\d+)', os.path.basename(input_path))
+    map_match = re.search(r'model_interval_(\d+)', os.path.basename(input_path))
     if not map_match:
         raise ValueError(f'Could not determine map number from {input_path}')
     thresholds = THRESHOLDS_PER_MAP[int(map_match.group(1))]

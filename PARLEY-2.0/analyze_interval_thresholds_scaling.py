@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
-MODEL_FILENAME_PATTERN=re.compile(r"model_([0-2])\.prism$")
+MODEL_FILENAME_PATTERN=re.compile(r"model_interval_([0-3])\.prism$")
 
 @dataclass(frozen=True)
 class ModelData:
@@ -29,7 +29,7 @@ def parse_controller(text):
 
 def parse_model(path):
     m=MODEL_FILENAME_PATTERN.fullmatch(path.name)
-    if not m: raise ValueError("Dateiname entspricht nicht model_0.prism bis model_2.prism.")
+    if not m: raise ValueError("Dateiname entspricht nicht model_interval_0.prism bis model_interval_3.prism.")
     text=path.read_text(encoding='utf-8')
     return ModelData(path,int(m.group(1)),parse_int_constant(text,'N'),parse_controller(text))
 
@@ -37,7 +37,7 @@ def discover_models(models_dir):
     arr=[]
     for p in models_dir.iterdir():
         m=MODEL_FILENAME_PATTERN.fullmatch(p.name)
-        if p.is_file() and m and 0<=int(m.group(1))<=2: arr.append(p)
+        if p.is_file() and m and 0<=int(m.group(1))<=3: arr.append(p)
     return sorted(arr,key=lambda p:int(MODEL_FILENAME_PATTERN.fullmatch(p.name).group(1)))
 
 def advance_symmetric(state,direction,n):
@@ -76,12 +76,16 @@ def analyze_model(model,steps):
     thresholds=[]; rows=[]
     for step in range(1,steps+1):
         vals=widths[step]
-        if not vals: raise ValueError(f"Map {model.number}: keine auswertbaren Routen für Schritt {step}.")
+        if not vals:
+            print(f"Map {model.number}: keine Routen ab Schritt {step}; verwende die bisherigen Schwellen.")
+            break
         mean=statistics.fmean(vals); thr=round_half_up(mean)
         is_new_threshold = thr not in thresholds
         if is_new_threshold:
             thresholds.append(thr)
         rows.append({'model':model.number,'step':step,'threshold_rounded_mean':thr,'selected_as_threshold':int(is_new_threshold),'width_mean':mean,'width_median':statistics.median(vals),'width_q1':linear_quantile(vals,0.25),'width_q3':linear_quantile(vals,0.75),'width_min':min(vals),'width_max':max(vals),'width_stddev':statistics.pstdev(vals) if len(vals)>1 else 0.0,'total_mape_start_states':total,'contributing_start_states':len(vals),'contributing_fraction':len(vals)/total if total else 0.0})
+    if not thresholds:
+        raise ValueError(f"Map {model.number}: keine Schwellenwerte ermittelbar.")
     return thresholds,rows
 
 def write_csv(path,rows):
@@ -90,8 +94,8 @@ def write_csv(path,rows):
         w=csv.DictWriter(f,fieldnames=list(rows[0].keys())); w.writeheader(); w.writerows(rows)
 
 def main():
-    ap=argparse.ArgumentParser(description='Berechnet pro Skalierungs-Map unterschiedliche Schwellen aus der durchschnittlichen symmetrischen Intervallbreite nach Schritt 1..20.')
-    ap.add_argument('models_dir',type=Path); ap.add_argument('--steps',type=int,default=20); ap.add_argument('--output-dir',type=Path,default=Path('interval_thresholds_mean_by_step'))
+    ap=argparse.ArgumentParser(description='Berechnet pro Skalierungs-Map unterschiedliche Schwellen aus der durchschnittlichen symmetrischen Intervallbreite nach Schritt 1..10.')
+    ap.add_argument('models_dir',type=Path); ap.add_argument('--steps',type=int,default=10); ap.add_argument('--output-dir',type=Path,default=Path('interval_thresholds_mean_by_step'))
     a=ap.parse_args(); a.output_dir.mkdir(parents=True,exist_ok=True)
     models=discover_models(a.models_dir); thresholds_per_map={}; stats=[]; skipped=[]
     for p in models:
@@ -100,9 +104,13 @@ def main():
             print(f"Map {m.number}: thresholds = {th} ({len(th)} unterschiedliche Schwellen)")
         except Exception as e:
             skipped.append({'model':p.name,'reason':str(e)}); print(f"Übersprungen: {p.name}: {e}")
+    expected={0,1,2,3}
+    missing=expected-set(thresholds_per_map)
+    if missing:
+        raise RuntimeError(f"Schwellenwertanalyse unvollständig: fehlende Maps {sorted(missing)}; Details: {skipped}")
     write_csv(a.output_dir/'mean_interval_width_per_step.csv',stats); write_csv(a.output_dir/'skipped_models.csv',skipped)
     with (a.output_dir/'thresholds_per_map.py').open('w',encoding='utf-8') as f:
-        f.write('# Skalierung: unterschiedliche Schwellen = gerundete mittlere Intervallbreite nach Schritt 1..20\nTHRESHOLDS_PER_MAP = {\n')
+        f.write('# Skalierung: unterschiedliche Schwellen = gerundete mittlere Intervallbreite nach Schritt 1..10\nTHRESHOLDS_PER_MAP = {\n')
         for k in sorted(thresholds_per_map): f.write(f'    {k}: {thresholds_per_map[k]},\n')
         f.write('}\n')
 

@@ -194,7 +194,7 @@ def read_params_from_file():
 # i depicts which map should be used
 def generate_model(i):
     global prism_file, max_interval_width
-    prism_file = "Applications/EvoChecker-master/models/model_" + str(i) + ".prism"
+    prism_file = "Applications/EvoChecker-master/models/model_interval_" + str(i) + ".prism"
     read_params_from_file()
     # RQ3 scaling: the base model must be generated before its
     # map-specific thresholds can be analysed. Use the optional value from

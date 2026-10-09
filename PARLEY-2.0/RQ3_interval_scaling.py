@@ -54,7 +54,7 @@ def generate_base_models():
 
 def calculate_thresholds():
     """
-    Analyse mean interval widths after steps 1..20 for model_0..3.
+    Analyse mean interval widths after steps 1..10 for model_0..3.
     The analysis writes thresholds_per_map.py into its output directory.
     """
     subprocess.run(
@@ -63,7 +63,7 @@ def calculate_thresholds():
             "analyze_interval_thresholds_scaling.py",
             str(MODELS_DIR),
             "--steps",
-            "20",
+            "10",
             "--output-dir",
             str(THRESHOLD_OUTPUT_DIR),
         ],
@@ -90,7 +90,9 @@ def synthesize_models():
     Import the URC module only after interval_thresholds_scaling.py exists,
     then create the UMC models for maps 0..3.
     """
+    importlib.invalidate_caches()
     urc_module = importlib.import_module("urc_synthesis_interval_scaling")
+    urc_module = importlib.reload(urc_module)
 
     for i in SCALING_MAPS:
         infile = MODELS_DIR / f"model_interval_{i}.prism"
@@ -131,7 +133,7 @@ def main():
     # 2. Generate the base interval models with size-dependent targets.
     generate_base_models()
 
-    # 3. Determine map-specific interval thresholds from steps 1..20.
+    # 3. Determine map-specific interval thresholds from steps 1..10.
     calculate_thresholds()
 
     # 4. Build the URC/UMC models using those thresholds.

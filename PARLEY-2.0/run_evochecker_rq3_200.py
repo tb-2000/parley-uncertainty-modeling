@@ -22,7 +22,7 @@ def run_task(args):
 
     with open(properties_path, "w") as f:
         f.write(f"PROBLEM = ROBOT{i}_REP{rep}\n")
-        f.write(f"       MODEL_TEMPLATE_FILE = models/model_{i}_umc.prism\n")
+        f.write(f"       MODEL_TEMPLATE_FILE = models/model_interval_{i}_umc.prism\n")
         f.write(f"       PROPERTIES_FILE = robot_rq3_map_{i}.pctl\n")
         f.write("       ALGORITHM = NSGAII\n")
         f.write(f"       POPULATION_SIZE = {POPULATION_SIZE}\n")
