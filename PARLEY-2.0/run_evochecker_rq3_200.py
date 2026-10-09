@@ -21,7 +21,7 @@ def run_task(args):
     init_port = 10000 + i * 100 + rep * 10
 
     with open(properties_path, "w") as f:
-        f.write(f"PROBLEM = ROBOT{i}_REP{rep}\n")
+        f.write(f"PROBLEM = ROBOT_BELIEF_RQ3_MAP{i}_REP{rep}\n")
         f.write(f"       MODEL_TEMPLATE_FILE = models/model_belief_{i}_umc.prism\n")
         f.write(f"       PROPERTIES_FILE = robot_rq3_map_{i}.pctl\n")
         f.write("       ALGORITHM = NSGAII\n")

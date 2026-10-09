@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=parleyPE
+#SBATCH --job-name=parleyBe
 #SBATCH --partition=compute
 #SBATCH --output=%x_%j.out
 #SBATCH --error=%x_%j.err
@@ -15,4 +15,4 @@ cd "$HOME/parley-uncertainty-modeling/PARLEY-2.0"
 
 source venv/bin/activate
 
-srun python RQ3.py
+srun python RQ3_belief_scaling.py
