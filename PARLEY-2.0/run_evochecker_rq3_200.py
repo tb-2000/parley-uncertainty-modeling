@@ -22,7 +22,7 @@ def run_task(args):
 
     with open(properties_path, "w") as f:
         f.write(f"PROBLEM = ROBOT{i}_REP{rep}\n")
-        f.write(f"       MODEL_TEMPLATE_FILE = models/model_{i}_umc.prism\n")
+        f.write(f"       MODEL_TEMPLATE_FILE = models/model_belief_{i}_umc.prism\n")
         f.write(f"       PROPERTIES_FILE = robot_rq3_map_{i}.pctl\n")
         f.write("       ALGORITHM = NSGAII\n")
         f.write(f"       POPULATION_SIZE = {POPULATION_SIZE}\n")
@@ -33,7 +33,7 @@ def run_task(args):
         f.write(f"       INIT_PORT = {init_port}\n")
 
     env = os.environ.copy()
-    env["LD_LIBRARY_PATH"] = "libs/runtime"
+    env["LD_LIBRARY_PATH"] = "libs/runtime" + (os.pathsep + env["LD_LIBRARY_PATH"] if env.get("LD_LIBRARY_PATH") else "")
 
     # This blocks until this EvoChecker replication has completely finished.
     # Multiple run_task calls are executed concurrently by run().

@@ -1,8 +1,9 @@
 import json
+import csv
+from pathlib import Path
 import os
 import time
 
-import create_maps
 import prism_model_generator_belief_exact_local_scaling
 import urc_synthesis_belief_exact_local_scaling
 import run_evochecker_rq3_200 as run_evochecker
@@ -17,6 +18,17 @@ SCALING_MAPS = {
     2: 15,
     3: 20,
 }
+
+
+def validate_map(i, size):
+    path = Path(f"maps/map_{i}.csv")
+    with path.open(newline="") as f:
+        grid = [[int(cell) for cell in row] for row in csv.reader(f)]
+    if len(grid) != size or any(len(row) != size for row in grid):
+        raise ValueError(f"{path}: expected {size}x{size} grid")
+    # build_map transposes and reverses the CSV: (0,0) is bottom-left.
+    if grid[size - 1][0] > 9 or grid[0][size - 1] > 9:
+        raise ValueError(f"{path}: start (0,0) or target ({size-1},{size-1}) blocked")
 
 
 def update_input(i, size):
@@ -38,8 +50,8 @@ def models(i):
     """Generate the exact-local-belief model and its URC synthesis model."""
     prism_model_generator_belief_exact_local_scaling.generate_model(i)
 
-    infile = f"Applications/EvoChecker-master/models/model_{i}.prism"
-    outfile = f"Applications/EvoChecker-master/models/model_{i}_umc.prism"
+    infile = f"Applications/EvoChecker-master/models/model_belief_{i}.prism"
+    outfile = f"Applications/EvoChecker-master/models/model_belief_{i}_umc.prism"
 
     urc_synthesis_belief_exact_local_scaling.manipulate_prism_model(
         infile,
@@ -78,10 +90,10 @@ def save_runtime(i, size, runtime):
 
 
 def main():
-    # Generate the 5x5, 15x15 and 20x20 maps.
-    #create_maps.create_3_maps()
+    # Existing scaling maps are reused unchanged.
 
     for i, size in SCALING_MAPS.items():
+        validate_map(i, size)
         print("=" * 70)
         print(f"Starting belief scalability experiment: map {i}, {size}x{size}")
         print("=" * 70)

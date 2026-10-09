@@ -1,0 +1,158 @@
+dtmc
+const int c = 1;
+// Map-specific exact-belief Gini thresholds:
+// c=1 -> max_belief_uncertainty=588
+const int belief_threshold_1 = 588;
+// c=2 -> max_belief_uncertainty=1136
+const int belief_threshold_2 = 1136;
+// c=3 -> max_belief_uncertainty=1649
+const int belief_threshold_3 = 1649;
+// c=4 -> max_belief_uncertainty=2130
+const int belief_threshold_4 = 2130;
+// c=5 -> max_belief_uncertainty=2579
+const int belief_threshold_5 = 2579;
+// c=6 -> max_belief_uncertainty=2998
+const int belief_threshold_6 = 2998;
+// c=7 -> max_belief_uncertainty=3385
+const int belief_threshold_7 = 3385;
+// c=8 -> max_belief_uncertainty=3739
+const int belief_threshold_8 = 3739;
+// c=9 -> max_belief_uncertainty=3739
+const int belief_threshold_9 = 3739;
+// c=10 -> max_belief_uncertainty=3739
+const int belief_threshold_10 = 3739;
+const int N=4;
+const int xstart = 0;
+const int ystart = 0;
+const int xtarget = 4;
+const int ytarget = 4;
+const double p = 0.01;
+
+formula hasCrashed = (1=0) | (x=1 & y=0) | (x=1 & y=1) | (x=1 & y=3) | (x=2 & y=2) | (x=3 & y=0) | (x=3 & y=1) | (x=4 & y=2) ;
+
+formula belief_u_1 = (xhat=0 & yhat=2 & belief_state=1) | (xhat=0 & yhat=2 & belief_state=2) | (xhat=0 & yhat=2 & belief_state=3) | (xhat=0 & yhat=3 & belief_state=1) | (xhat=0 & yhat=4 & belief_state=1) | (xhat=2 & yhat=4 & belief_state=1) | (xhat=2 & yhat=4 & belief_state=2) | (xhat=2 & yhat=4 & belief_state=3) | (xhat=3 & yhat=3 & belief_state=1) | (xhat=3 & yhat=4 & belief_state=1) | (xhat=3 & yhat=4 & belief_state=2) | (xhat=4 & yhat=4 & belief_state=1) | (xhat=4 & yhat=4 & belief_state=2);
+formula belief_u_2 = (xhat=0 & yhat=3 & belief_state=2) | (xhat=0 & yhat=3 & belief_state=3) | (xhat=0 & yhat=3 & belief_state=4) | (xhat=0 & yhat=4 & belief_state=2) | (xhat=0 & yhat=4 & belief_state=3) | (xhat=1 & yhat=4 & belief_state=2) | (xhat=3 & yhat=4 & belief_state=3) | (xhat=3 & yhat=4 & belief_state=4) | (xhat=3 & yhat=4 & belief_state=5) | (xhat=3 & yhat=4 & belief_state=6) | (xhat=4 & yhat=4 & belief_state=3) | (xhat=4 & yhat=4 & belief_state=4) | (xhat=4 & yhat=4 & belief_state=5);
+formula belief_u_3 = (xhat=0 & yhat=4 & belief_state=4) | (xhat=0 & yhat=4 & belief_state=5) | (xhat=1 & yhat=4 & belief_state=3) | (xhat=2 & yhat=4 & belief_state=4) | (xhat=4 & yhat=4 & belief_state=6) | (xhat=4 & yhat=4 & belief_state=7) | (xhat=4 & yhat=4 & belief_state=8);
+formula belief_u_4 = (xhat=1 & yhat=4 & belief_state=4) | (xhat=1 & yhat=4 & belief_state=5) | (xhat=1 & yhat=4 & belief_state=6) | (xhat=2 & yhat=4 & belief_state=5) | (xhat=3 & yhat=4 & belief_state=7) | (xhat=4 & yhat=4 & belief_state=9);
+formula belief_u_5 = (xhat=2 & yhat=4 & belief_state=6) | (xhat=2 & yhat=4 & belief_state=7) | (xhat=3 & yhat=4 & belief_state=8) | (xhat=3 & yhat=4 & belief_state=10) | (xhat=4 & yhat=4 & belief_state=10);
+formula belief_u_6 = (xhat=2 & yhat=4 & belief_state=8) | (xhat=3 & yhat=4 & belief_state=9) | (xhat=4 & yhat=4 & belief_state=12);
+formula belief_u_7 = (xhat=3 & yhat=4 & belief_state=11) | (xhat=4 & yhat=4 & belief_state=11);
+formula belief_u_10 = (xhat=4 & yhat=4 & belief_state=13);
+formula update_required = (belief_u_1 & c<=1) | (belief_u_2 & c<=2) | (belief_u_3 & c<=3) | (belief_u_4 & c<=4) | (belief_u_5 & c<=5) | (belief_u_6 & c<=6) | (belief_u_7 & c<=7) | belief_u_10;
+
+module Robot
+  x : [0..N] init xstart;
+  y : [0..N] init ystart;
+  move_ready : [0..1] init 1;
+  crashed : [0..1] init 0;
+
+  [east] (move_ready=1) ->
+    (1-3*p): (x'=min(x+1, N)) & (move_ready'=0) +
+    p: (y'=min(y+1, N)) & (move_ready'=0) +
+    p: (y'=max(y-1, 0)) & (move_ready'=0) +
+    p: (x'=max(x-1, 0)) & (move_ready'=0);
+  [west] (move_ready=1) ->
+    p: (x'=min(x+1, N)) & (move_ready'=0) +
+    p: (y'=min(y+1, N)) & (move_ready'=0) +
+    p: (y'=max(y-1, 0)) & (move_ready'=0) +
+    (1-3*p): (x'=max(x-1, 0)) & (move_ready'=0);
+  [north] (move_ready=1) ->
+    p: (x'=min(x+1, N)) & (move_ready'=0) +
+    (1-3*p): (y'=min(y+1, N)) & (move_ready'=0) +
+    p: (y'=max(y-1, 0)) & (move_ready'=0) +
+    p: (x'=max(x-1, 0)) & (move_ready'=0);
+  [south] (move_ready=1) ->
+    p: (x'=min(x+1, N)) & (move_ready'=0) +
+    p: (y'=min(y+1, N)) & (move_ready'=0) +
+    (1-3*p): (y'=max(y-1, 0)) & (move_ready'=0) +
+    p: (x'=max(x-1, 0)) & (move_ready'=0);
+  [check] (move_ready=0) & hasCrashed -> (crashed'=1) & (move_ready'=1);
+  [check] (move_ready=0) & !hasCrashed -> (move_ready'=1);
+endmodule
+
+module Adaptation_MAPE_controller
+  [north] (xhat=0) & (yhat=0) -> true;
+  [north] (xhat=0) & (yhat=1) -> true;
+  [north] (xhat=0) & (yhat=2) -> true;
+  [north] (xhat=0) & (yhat=3) -> true;
+  [east] (xhat=0) & (yhat=4) -> true;
+  [west] (xhat=1) & (yhat=2) -> true;
+  [east] (xhat=1) & (yhat=4) -> true;
+  [north] (xhat=2) & (yhat=3) -> true;
+  [east] (xhat=2) & (yhat=4) -> true;
+  [north] (xhat=3) & (yhat=2) -> true;
+  [north] (xhat=3) & (yhat=3) -> true;
+  [east] (xhat=3) & (yhat=4) -> true;
+  [north] (xhat=4) & (yhat=3) -> true;
+endmodule
+
+module Knowledge
+  xhat : [0..N] init xstart;
+  yhat : [0..N] init ystart;
+  belief_state : [0..13] init 0;
+  ready : [0..1] init 1;
+
+  [north] ready=1 & xhat=0 & yhat=0 & belief_state=0 -> (xhat'=0) & (yhat'=1) & (belief_state'=1) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=1 & belief_state=0 -> (xhat'=0) & (yhat'=2) & (belief_state'=1) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=2 & belief_state=0 -> (xhat'=0) & (yhat'=3) & (belief_state'=1) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=3 & belief_state=0 -> (xhat'=0) & (yhat'=4) & (belief_state'=1) & (ready'=0);
+  [east] ready=1 & xhat=0 & yhat=4 & belief_state=0 -> (xhat'=1) & (yhat'=4) & (belief_state'=1) & (ready'=0);
+  [west] ready=1 & xhat=1 & yhat=2 & belief_state=0 -> (xhat'=0) & (yhat'=2) & (belief_state'=2) & (ready'=0);
+  [east] ready=1 & xhat=1 & yhat=4 & belief_state=0 -> (xhat'=2) & (yhat'=4) & (belief_state'=1) & (ready'=0);
+  [north] ready=1 & xhat=2 & yhat=3 & belief_state=0 -> (xhat'=2) & (yhat'=4) & (belief_state'=2) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & belief_state=0 -> (xhat'=3) & (yhat'=4) & (belief_state'=1) & (ready'=0);
+  [north] ready=1 & xhat=3 & yhat=2 & belief_state=0 -> (xhat'=3) & (yhat'=3) & (belief_state'=1) & (ready'=0);
+  [north] ready=1 & xhat=3 & yhat=3 & belief_state=0 -> (xhat'=3) & (yhat'=4) & (belief_state'=2) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & belief_state=0 -> (xhat'=4) & (yhat'=4) & (belief_state'=1) & (ready'=0);
+  [north] ready=1 & xhat=4 & yhat=3 & belief_state=0 -> (xhat'=4) & (yhat'=4) & (belief_state'=2) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=1 & belief_state=1 -> (xhat'=0) & (yhat'=2) & (belief_state'=3) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=2 & belief_state=1 -> (xhat'=0) & (yhat'=3) & (belief_state'=2) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=3 & belief_state=1 -> (xhat'=0) & (yhat'=4) & (belief_state'=2) & (ready'=0);
+  [east] ready=1 & xhat=0 & yhat=4 & belief_state=1 -> (xhat'=1) & (yhat'=4) & (belief_state'=2) & (ready'=0);
+  [east] ready=1 & xhat=1 & yhat=4 & belief_state=1 -> (xhat'=2) & (yhat'=4) & (belief_state'=3) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=2 & belief_state=2 -> (xhat'=0) & (yhat'=3) & (belief_state'=3) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & belief_state=1 -> (xhat'=3) & (yhat'=4) & (belief_state'=3) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & belief_state=2 -> (xhat'=3) & (yhat'=4) & (belief_state'=4) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & belief_state=1 -> (xhat'=4) & (yhat'=4) & (belief_state'=3) & (ready'=0);
+  [north] ready=1 & xhat=3 & yhat=3 & belief_state=1 -> (xhat'=3) & (yhat'=4) & (belief_state'=5) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & belief_state=2 -> (xhat'=4) & (yhat'=4) & (belief_state'=4) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=2 & belief_state=3 -> (xhat'=0) & (yhat'=3) & (belief_state'=4) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=3 & belief_state=2 -> (xhat'=0) & (yhat'=4) & (belief_state'=3) & (ready'=0);
+  [east] ready=1 & xhat=0 & yhat=4 & belief_state=2 -> (xhat'=1) & (yhat'=4) & (belief_state'=3) & (ready'=0);
+  [east] ready=1 & xhat=1 & yhat=4 & belief_state=2 -> (xhat'=2) & (yhat'=4) & (belief_state'=4) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & belief_state=3 -> (xhat'=3) & (yhat'=4) & (belief_state'=6) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=3 & belief_state=3 -> (xhat'=0) & (yhat'=4) & (belief_state'=4) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & belief_state=3 -> (xhat'=4) & (yhat'=4) & (belief_state'=5) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & belief_state=4 -> (xhat'=4) & (yhat'=4) & (belief_state'=6) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & belief_state=5 -> (xhat'=4) & (yhat'=4) & (belief_state'=7) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=3 & belief_state=4 -> (xhat'=0) & (yhat'=4) & (belief_state'=5) & (ready'=0);
+  [east] ready=1 & xhat=0 & yhat=4 & belief_state=3 -> (xhat'=1) & (yhat'=4) & (belief_state'=4) & (ready'=0);
+  [east] ready=1 & xhat=1 & yhat=4 & belief_state=3 -> (xhat'=2) & (yhat'=4) & (belief_state'=5) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & belief_state=4 -> (xhat'=3) & (yhat'=4) & (belief_state'=7) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & belief_state=6 -> (xhat'=4) & (yhat'=4) & (belief_state'=8) & (ready'=0);
+  [east] ready=1 & xhat=0 & yhat=4 & belief_state=4 -> (xhat'=1) & (yhat'=4) & (belief_state'=5) & (ready'=0);
+  [east] ready=1 & xhat=0 & yhat=4 & belief_state=5 -> (xhat'=1) & (yhat'=4) & (belief_state'=6) & (ready'=0);
+  [east] ready=1 & xhat=1 & yhat=4 & belief_state=4 -> (xhat'=2) & (yhat'=4) & (belief_state'=6) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & belief_state=5 -> (xhat'=3) & (yhat'=4) & (belief_state'=8) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & belief_state=7 -> (xhat'=4) & (yhat'=4) & (belief_state'=9) & (ready'=0);
+  [east] ready=1 & xhat=1 & yhat=4 & belief_state=5 -> (xhat'=2) & (yhat'=4) & (belief_state'=7) & (ready'=0);
+  [east] ready=1 & xhat=1 & yhat=4 & belief_state=6 -> (xhat'=2) & (yhat'=4) & (belief_state'=8) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & belief_state=6 -> (xhat'=3) & (yhat'=4) & (belief_state'=9) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & belief_state=8 -> (xhat'=4) & (yhat'=4) & (belief_state'=10) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & belief_state=7 -> (xhat'=3) & (yhat'=4) & (belief_state'=10) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & belief_state=8 -> (xhat'=3) & (yhat'=4) & (belief_state'=11) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & belief_state=9 -> (xhat'=4) & (yhat'=4) & (belief_state'=11) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & belief_state=10 -> (xhat'=4) & (yhat'=4) & (belief_state'=12) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & belief_state=11 -> (xhat'=4) & (yhat'=4) & (belief_state'=13) & (ready'=0);
+  [update] update_required & ready=0 -> (xhat'=x) & (yhat'=y) & (belief_state'=0) & (ready'=1);
+  [skip_update] !update_required & ready=0 -> (ready'=1);
+endmodule
+
+rewards "cost"
+  [east] true : 1;
+  [west] true : 1;
+  [north] true : 1;
+  [south] true : 1;
+  [update] true : 5;
+endrewards
+

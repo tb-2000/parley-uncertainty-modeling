@@ -60,8 +60,10 @@ def preambel():
         f.write('dtmc\n')
 
         thresholds = belief_model["thresholds"]
+        if len(thresholds) != 10:
+            raise ValueError(f"Expected 10 belief thresholds, got {len(thresholds)}")
 
-        # Scaling base model: fixed c. URC synthesis replaces this by c:[1..20].
+        # Scaling base model: fixed c. URC synthesis replaces this by c:[1..10].
         f.write(f'const int c = {period};\n')
 
         f.write('// Map-specific exact-belief Gini thresholds:\n')
@@ -94,7 +96,7 @@ def preambel():
         # include xhat and yhat.
         belief_classes = {
             stage: []
-            for stage in range(21)
+            for stage in range(11)
         }
 
         for position, values in belief_model["uncertainties"].items():
@@ -112,7 +114,7 @@ def preambel():
 
         written_stages = []
 
-        for stage in range(1, 21):
+        for stage in range(1, 11):
             terms = belief_classes[stage]
             if not terms:
                 continue
@@ -128,7 +130,7 @@ def preambel():
 
         update_terms = []
         for stage in written_stages:
-            if stage < 20:
+            if stage < 10:
                 update_terms.append(
                     f'(belief_u_{stage} & c<={stage})'
                 )
@@ -295,7 +297,7 @@ def generate_model(i):
 
     prism_file = (
         "Applications/EvoChecker-master/models/"
-        f"model_{i}.prism"
+        f"model_belief_{i}.prism"
     )
 
     read_params_from_file()
@@ -314,7 +316,7 @@ def generate_model(i):
         map_data=map_data,
         target=target_pos,
         p=p,
-        max_steps=20,
+        max_steps=10,
     )
 
     print(

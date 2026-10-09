@@ -3,7 +3,7 @@ import re
 import shutil
 
 
-def manipulate_prism_model(input_path, output_path, possible_decisions=[1, 20], decision_variables=[],
+def manipulate_prism_model(input_path, output_path, possible_decisions=[1, 10], decision_variables=[],
                            before_actions=['east', 'west', 'north', 'south'], after_actions=['update', 'skip_update'], module_name='Knowledge', baseline=False):
     if os.path.abspath(input_path) == os.path.abspath(output_path):
         raise ValueError("Input and output files cannot be the same.")
@@ -85,7 +85,7 @@ def __get_limit(string, constants):
 def remove_counter_from_module(output_path):
     """
     Remove the base-model constant c so the synthesized model can replace
-    it with the URC-controlled state variable c:[1..20].
+    it with the URC-controlled state variable c:[1..10].
     """
     pattern = re.compile(
         r"^\s*const\s+int\s+c\d*\s*=\s*\d+\s*;"
@@ -115,12 +115,12 @@ def get_belief_thresholds(file_path):
             if match:
                 thresholds[int(match.group(1))] = int(match.group(2))
 
-    if len(thresholds) != 20:
+    if sorted(thresholds) != list(range(1, 11)):
         raise ValueError(
-            "Expected belief_threshold_1..belief_threshold_20 in PRISM model."
+            "Expected belief_threshold_1..belief_threshold_10 in PRISM model."
         )
 
-    return [thresholds[i] for i in range(1, 21)]
+    return [thresholds[i] for i in range(1, 11)]
 
 
 def add_controller(
@@ -145,10 +145,10 @@ def add_controller(
     with open(file_path, 'a') as file:
         # Same URC state representation as in the original point-estimate
         # model: EvoChecker chooses a discrete uncertainty stage 1..10.
-        file.write('  c : [1..20] init 1;\n')
+        file.write('  c : [1..10] init 1;\n')
 
         # Map-specific documentation. The numerical Gini thresholds differ
-        # between maps, but the URC always synthesizes only stages 1..20.
+        # between maps, but the URC always synthesizes only stages 1..10.
         file.write(
             '  // Map-specific exact-belief Gini thresholds:\n'
         )
