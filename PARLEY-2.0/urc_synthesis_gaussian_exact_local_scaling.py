@@ -6,7 +6,7 @@ import shutil
 def manipulate_prism_model(
     input_path,
     output_path,
-    possible_decisions=[1, 20],
+    possible_decisions=[1, 10],
     decision_variables=[],
     before_actions=[
         "east",
@@ -25,7 +25,7 @@ def manipulate_prism_model(
     Position-local exact reachable Gaussian URC using MSE thresholds.
 
     This intentionally mirrors urc_synthesis_belief_full.py:
-      * position-dependent decision_x_y in [1..20]
+      * position-dependent decision_x_y in [1..10]
       * each decision selects one map-specific Gaussian MSE threshold
       * one compact ternary [URC] command per position
     """
@@ -210,13 +210,13 @@ def add_controller(
         "a",
     ) as file:
         # Exactly like the point-estimate period variable: the mutable URC
-        # state contains only the selected level 1..20, never the raw
+        # state contains only the selected level 1..10, never the raw
         # MSE value.
         file.write(
-            "  max_gaussian_uncertainty : [1..20] init 1;\n"
+            "  max_gaussian_uncertainty : [1..10] init 1;\n"
         )
         file.write(
-            "  // Levels 1..20 refer to the raw MSE thresholds "
+            "  // Levels 1..10 refer to the raw MSE thresholds "
             "documented at the top of this model.\n"
         )
 
@@ -316,7 +316,7 @@ def add_turn(
             "module Turn\n"
         )
         file.write(
-            "  t : [0..2] init 0;\n"
+            "  t : [0..3] init 0;\n"
         )
 
         for action in before_actions:
@@ -326,20 +326,21 @@ def add_turn(
 
         file.write(
             "\n"
-            "  [URC] (t=1) -> (t'=2);\n"
+            "  [check] (t=1) -> (t'=2);\n"
+            "  [URC] (t=2) -> (t'=3);\n"
             "\n"
         )
 
         for action in after_actions:
             file.write(
-                f"  [{action}] (t=2) -> (t'=0);\n"
+                f"  [{action}] (t=3) -> (t'=0);\n"
             )
 
         if len(
             after_actions
         ) == 0:
             file.write(
-                "  [] (t=2) -> (t'=0);\n"
+                "  [] (t=3) -> (t'=0);\n"
             )
 
         file.write(

@@ -28,7 +28,7 @@ mapSize = len(map_data)
 prism_file = ""
 gaussian_model = None
 
-GAUSSIAN_MAX_STEPS = 20
+GAUSSIAN_MAX_STEPS = 10
 
 
 def build_map(filename):
@@ -79,14 +79,14 @@ def preambel():
             for value in gaussian_model["thresholds"]
         ]
 
-        if len(thresholds) != 20:
+        if len(thresholds) != 10:
             raise ValueError(
-                "Expected exactly 20 Gaussian thresholds."
+                "Expected exactly 10 Gaussian thresholds."
             )
 
         if any(
             thresholds[i] > thresholds[i + 1]
-            for i in range(19)
+            for i in range(9)
         ):
             raise ValueError(
                 "Gaussian thresholds must be monotonically nondecreasing."
@@ -130,7 +130,7 @@ def preambel():
         # xhat and yhat as well as gaussian_state.
         gaussian_classes = {
             stage: []
-            for stage in range(21)
+            for stage in range(11)
         }
 
         for position, values in gaussian_model["uncertainties"].items():
@@ -152,7 +152,7 @@ def preambel():
 
         written_stages = []
 
-        for stage in range(1, 21):
+        for stage in range(1, 11):
             terms = gaussian_classes[stage]
 
             if not terms:
@@ -169,7 +169,7 @@ def preambel():
         update_terms = []
 
         for stage in written_stages:
-            if stage < 20:
+            if stage < 10:
                 update_terms.append(
                     f"(gaussian_u_{stage} & "
                     f"max_gaussian_uncertainty<={stage})"
@@ -362,13 +362,16 @@ def generate_model(i):
 
     prism_file = (
         "Applications/EvoChecker-master/models/"
-        f"model_{i}.prism"
+        f"model_gaussian_{i}.prism"
     )
 
     read_params_from_file()
     build_map(
         f"maps/map_{i}.csv"
     )
+
+    if (targetX, targetY) != (mapSize - 1, mapSize - 1):
+        raise ValueError(f"Map {i}: unexpected target ({targetX},{targetY}) for size {mapSize}")
 
     target_pos = (
         targetX,

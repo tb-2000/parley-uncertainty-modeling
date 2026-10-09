@@ -2,7 +2,8 @@ import json
 import os
 import time
 
-import create_maps
+import csv
+from pathlib import Path
 import prism_model_generator_gaussian_exact_local_scaling
 import urc_synthesis_gaussian_exact_local_scaling
 import run_evochecker_rq3_200 as run_evochecker
@@ -11,13 +12,36 @@ import plot_fronts
 
 max_replications = 10
 
-# map_0 = 5x5, map_1 = 15x15, map_2 = 20x20
+# Existing maps: 5x5, 10x10, 15x15, 20x20
 SCALING_MAPS = {
     0: 5,
     1: 10,
     2: 15,
     3: 20,
 }
+
+
+def validate_map(i, size):
+    path = Path(f"maps/map_{i}.csv")
+    with path.open(newline="") as f:
+        grid = [[int(v) for v in row] for row in csv.reader(f)]
+    if len(grid) != size or any(len(row) != size for row in grid):
+        raise ValueError(f"{path}: expected {size}x{size} map")
+    if grid[size - 1][0] > 9 or grid[0][size - 1] > 9:
+        raise ValueError(f"{path}: start or target is blocked")
+
+
+def write_properties(i, size):
+    # Generate properties for each map; avoid stale coordinates from other runs.
+    path = Path("Applications/EvoChecker-master") / f"robot_rq3_map_{i}.pctl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    goal = f"x={size - 1} & y={size - 1} & crashed=0"
+    path.write_text(
+        f"//Objective, max\nP=? [ F ({goal}) ]\n\n"
+        '//Objective, min\nR{"cost"}=? [ C<=100 ]\n',
+        encoding="utf-8",
+    )
+    print(f"Using {path} with target ({size-1},{size-1})")
 
 
 def update_input(i, size):
@@ -44,8 +68,8 @@ def models(i):
     """Generate Gaussian base PRISM model and synthesized UMC model."""
     prism_model_generator_gaussian_exact_local_scaling.generate_model(i)
 
-    infile = f"Applications/EvoChecker-master/models/model_{i}.prism"
-    outfile = f"Applications/EvoChecker-master/models/model_{i}_umc.prism"
+    infile = f"Applications/EvoChecker-master/models/model_gaussian_{i}.prism"
+    outfile = f"Applications/EvoChecker-master/models/model_gaussian_{i}_umc.prism"
 
     urc_synthesis_gaussian_exact_local_scaling.manipulate_prism_model(
         infile,
@@ -79,10 +103,11 @@ def save_runtime(i, size, runtime):
 
 
 def main():
-    # Generate map_0=5x5, map_1=15x15 and map_2=20x20.
-    create_maps.create_3_maps()
+    # Reuse the same maps as the belief-scaling experiment; never overwrite them.
 
     for i, size in SCALING_MAPS.items():
+        validate_map(i, size)
+        write_properties(i, size)
         print("=" * 70)
         print(
             f"Starting Gaussian scalability experiment: "
@@ -111,7 +136,7 @@ def main():
         )
 
         save_runtime(i, size, evochecker_runtime)
-        fronts(i)
+        # fronts(i)  # optional; avoid missing/obsolete front files during scaling
 
         print(f"Finished map {i} ({size}x{size})")
 
