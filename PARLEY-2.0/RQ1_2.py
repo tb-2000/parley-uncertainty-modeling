@@ -55,31 +55,31 @@ def main():
                      40, 43, 44, 46, 47, 48, 49, 50, 52, 53, 54, 55,
                      56, 57, 61, 62, 63, 64, 65, 66, 67, 68, 69, 71, 73,
                      75, 76, 79, 81, 82, 83, 85, 86, 87, 89, 90, 97]
-    fewer_maps = [21, 23, 30, 31, 32, 40, 43, 44, 46, 47, 48, 49, 50, 
+    fewer_maps = [14, 21, 23, 30, 31, 32, 40, 43, 44, 46, 47, 48, 49, 50, 
                   54, 55, 56, 57, 63, 66, 71, 75, 81, 82, 83, 85, 87, 89, 90, 97]
     remaining_maps = [16, 20, 22, 29, 33, 36, 37, 52, 53, 61, 62, 64, 65, 67, 68, 69, 73, 76, 79, 86]
                     
     # maps()
     maps = [43, 16] # selected_maps
-    for i in maps: # lasse auf map 43, 16 laufen
-        models(i)
-        #baseline(i)
-        print('Starting EvoChecker for map {0}'.format(str(i)))
-        wall_start = time.time()
-        evochecker_runtime = evo_checker(i)
-        wall_runtime = time.time() - wall_start
+    for i in fewer_maps: # lasse auf map 43, 16 laufen
+        # models(i)
+        # #baseline(i)
+        # print('Starting EvoChecker for map {0}'.format(str(i)))
+        # wall_start = time.time()
+        # evochecker_runtime = evo_checker(i)
+        # wall_runtime = time.time() - wall_start
 
-        print(f"EvoChecker wall-clock runtime for map {i}: {evochecker_runtime:.3f} seconds")
-        print(f"Measured outer wall-clock runtime for map {i}: {wall_runtime:.3f} seconds")
+        # print(f"EvoChecker wall-clock runtime for map {i}: {evochecker_runtime:.3f} seconds")
+        # print(f"Measured outer wall-clock runtime for map {i}: {wall_runtime:.3f} seconds")
 
-        # Store one file per map. A rerun of the same map replaces the old
-        # measurement with the newest complete run.
-        times_dir = "times_gaussian"
-        os.makedirs(times_dir, exist_ok=True)
-        times_file = os.path.join(times_dir, f"map_{i}.txt")
+        # # Store one file per map. A rerun of the same map replaces the old
+        # # measurement with the newest complete run.
+        # times_dir = "times_gaussian"
+        # os.makedirs(times_dir, exist_ok=True)
+        # times_file = os.path.join(times_dir, f"map_{i}.txt")
 
-        with open(times_file, "w") as f:
-            f.write(f"WallClock: {evochecker_runtime:.3f}\n")
+        # with open(times_file, "w") as f:
+        #     f.write(f"WallClock: {evochecker_runtime:.3f}\n")
        
         fronts(i)
         print(f'Finished map {i}')
