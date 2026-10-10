@@ -62,7 +62,7 @@ def main():
                     
     # maps()
     # maps = [48, 49, 50] # selected_maps
-    for i in fewer_maps: # lasse auf maps ... laufen
+    # for i in fewer_maps: # lasse auf maps ... laufen
         # models(i)
         # baseline(i)
         # print('Starting EvoChecker for map {0}'.format(str(i)))
@@ -71,17 +71,18 @@ def main():
         # end = time.time()
         # runtime = end - start
         # print(f"Total runtime of EvoChecker for map {i} is {runtime:.3f} seconds")
-        
+
         # times_dir = "times_interval"
         # os.makedirs(times_dir, exist_ok=True)
         # times_file = os.path.join(times_dir, f"map_{i}.txt")
         # with open(times_file, "w") as f:
         #     f.write(f"{runtime:.3f}\n")
-        
-        fronts(i)
-        print(f'Finished map {i}')
+
+        # fronts(i)
+        # print(f'Finished map {i}')
+
     # evaluation
-    #evaluation.main()
+    evaluation.main()
 
 
 
