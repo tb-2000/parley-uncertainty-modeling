@@ -64,7 +64,7 @@ def main():
     # maps = [48, 49, 50] # selected_maps
     for i in fewer_maps: # lasse auf maps ... laufen
         # models(i)
-        baseline(i)
+        # baseline(i)
         # print('Starting EvoChecker for map {0}'.format(str(i)))
         # start = time.time()
         # evo_checker(i)
@@ -78,8 +78,8 @@ def main():
         # with open(times_file, "w") as f:
         #     f.write(f"{runtime:.3f}\n")
         
-        # fronts(i)
-        # print(f'Finished map {i}')
+        fronts(i)
+        print(f'Finished map {i}')
     # evaluation
     #evaluation.main()
 
