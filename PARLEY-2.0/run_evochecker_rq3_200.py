@@ -18,7 +18,7 @@ def run_task(args):
     properties_name = f"{i}_{rep}.properties"
     properties_path = evochecker_dir / properties_name
 
-    init_port = 10000 + i * 100 + rep * 10
+    init_port = 20000 + i * 100 + rep * 10
 
     with open(properties_path, "w") as f:
         f.write(f"PROBLEM = ROBOT_BELIEF_RQ3_MAP{i}_REP{rep}\n")
