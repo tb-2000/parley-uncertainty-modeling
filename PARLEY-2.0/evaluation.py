@@ -1,4 +1,6 @@
 import os
+import re
+from datetime import datetime
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -6,6 +8,30 @@ import matplotlib.pyplot as plt
 from moocore import hypervolume
 from scipy.stats import wilcoxon, anderson, mannwhitneyu
 from scipy.stats import t
+
+
+def newest_front_set_pair(directory):
+    """Neueste vollständige EvoChecker-Version nach Zeitstempel im Dateinamen."""
+    pairs = []
+    for name in os.listdir(directory):
+        if not name.endswith('_Front'):
+            continue
+        prefix = name[:-len('_Front')]
+        set_name = prefix + '_Set'
+        if not os.path.isfile(os.path.join(directory, set_name)):
+            continue
+        match = re.search(r'_(\d{6})_(\d{6})$', prefix)
+        if not match:
+            continue
+        try:
+            timestamp = datetime.strptime(match.group(2) + match.group(1), '%d%m%y%H%M%S')
+        except ValueError:
+            continue
+        pairs.append((timestamp, name, set_name))
+    if not pairs:
+        raise FileNotFoundError(f'Kein vollständiges, datiertes Front-/Set-Paar in {directory}')
+    _, front, set_file = max(pairs, key=lambda item: (item[0], item[1]))
+    return front, set_file
 
 
 MAXIMUM_SPREAD_VALUE = 1.5
@@ -395,29 +421,21 @@ def random_subset_stability_analysis(
 
 
 def is_dominated(x, y, data):
-    for other_x, other_y in data:
-        if other_x <= x and other_y <= y:
-            return True
-        # # verhindert, dass ein Punkt als dominiert gilt, wenn er gleich ist
-        # strictly_better = other_x < x and other_y < y
-        # no_worse = other_x <= x and other_y <= y
-        # if strictly_better and no_worse:
-        #     return True
-    return False
+    """Minimierung beider Ziele; ein anderer Punkt muss strikt besser sein."""
+    return any((ox <= x and oy <= y) and (ox < x or oy < y)
+               for ox, oy in data)
 
 
 def filter_dominated_points(data):
-    non_dominated_data = []
-    for x, y in data:
-        if is_dominated(x, y, data):
-            non_dominated_data.append((x, y))
-    return non_dominated_data
+    """Entfernt dominierte Punkte und Duplikate."""
+    unique = list(dict.fromkeys(tuple(p) for p in data))
+    return [p for p in unique if not is_dominated(p[0], p[1], unique)]
 
 
 def compute_spread(front_data):
     # Normalize objectives
     front_data = np.array(front_data)
-    if any(np.max(front_data, axis=0) - np.min(front_data, axis=0)) == 0:
+    if len(front_data) < 2 or np.any(np.ptp(front_data, axis=0) == 0):
         return MAXIMUM_SPREAD_VALUE
 
     normalized_front = (front_data - np.min(front_data, axis=0)) / \
@@ -504,30 +522,32 @@ def perform_mann_whitney_u_test(data, alpha=0.05):
 
 
 def create_selected_box_plots(gains_data, selected_maps, ylabel, title):
-    # Extract gains for the selected maps
-    gains_selected = [gains_data[i] for i in selected_maps]
-
-    # Create a single plot for the selected gains
-    plt.figure(figsize=(12, 6))
-    sns.boxplot(data=gains_selected)
-
-    # Add a dashed line at y=0
+    """gains_data ist in derselben Reihenfolge wie selected_maps angeordnet."""
+    if len(gains_data) != len(selected_maps):
+        raise ValueError(f"{len(gains_data)} Datensätze für {len(selected_maps)} Karten")
+    plt.figure(figsize=(15, 6))
+    sns.boxplot(data=gains_data)
     plt.axhline(y=0, color='black', linestyle='--')
-    plt.xticks(np.arange(0, len(selected_maps), 5))
-
+    plt.xticks(range(len(selected_maps)), selected_maps, rotation=90)
     plt.xlabel('Map')
     plt.ylabel(ylabel)
-    # plt.title(title)
-    # plt.legend()  # Add legend to show the zero line
-    plt.savefig(f'plots/box-plots/{ylabel}_{title[:1]}_{title[2:]}.pdf')
-
+    plt.tight_layout()
+    os.makedirs('plots/box-plots', exist_ok=True)
+    plt.savefig(f'plots/box-plots/{ylabel}_{title}.pdf')
+    plt.close()
 
 
 # Specify the paths to CSV files and the file containing expected values
 fronts_dir = 'Applications/EvoChecker-master/data/'
 
-maps = 100
+SELECTED_MAPS = [
+    14, 21, 23, 30, 31, 32, 40, 43, 44, 46,
+    47, 48, 49, 50, 54, 55, 56, 57, 63, 66,
+    71, 75, 81, 82, 83, 85, 87, 89, 90, 97
+]
+REPETITIONS = 10
 
+# (minimale Erfolgswahrscheinlichkeit, maximale Kosten)
 acceptable_intervals = [(0.8, 100), (0.8, 80), (0.8, 60),
                         (0.7, 100), (0.7, 80), (0.7, 60),
                         (0.6, 100), (0.6, 80), (0.6, 60)]
@@ -535,7 +555,7 @@ acceptable_intervals = [(0.8, 100), (0.8, 80), (0.8, 60),
 
 def main():
     for acceptable_interval in acceptable_intervals:
-        ref_point = np.array(acceptable_interval)
+        ref_point = np.array((1 - acceptable_interval[0], acceptable_interval[1]))
 
         hv_map = []
         baseline_hv = []
@@ -544,15 +564,17 @@ def main():
         umc_spread = []
 
         # for each map
-        for m in range(10, maps):
+        for m in SELECTED_MAPS:
             # first let's get the hypervolume for the baseline
             periodic = []
             with open(f'Applications/EvoChecker-master/data/ROBOT{m}_BASELINE/Front', 'r') as file:
                 for line in file:
-                    x, y = map(float, line.strip().split('	'))
+                    if not line.strip():
+                        continue
+                    x, y = map(float, line.split())
                     if x > acceptable_interval[0] and y < acceptable_interval[1]:
                         periodic.append((1 - x, y))
-            periodic = filter_dominated_points(periodic[0:20])
+            periodic = filter_dominated_points(periodic)
             if len(periodic) == 0:
                 hv_periodic = 0
                 baseline_spread.append(MAXIMUM_SPREAD_VALUE)
@@ -566,13 +588,12 @@ def main():
             rep_hv = []
             rep_spread = []
             # for each replication
-            for rep in range(0, 10):
+            for rep in range(REPETITIONS):
                 # Read the expected values from the external file (excluding the first line)
                 pareto_data = []
-                filename = ""
-                for filename_ in os.listdir(fronts_dir + 'ROBOT{0}_REP{1}/NSGAII/'.format(str(m), str(rep))):
-                    if "Front" in filename_:
-                        filename = filename_
+                directory = fronts_dir + f'ROBOT{m}_REP{rep}/NSGAII/'
+                filename, set_filename = newest_front_set_pair(directory)
+                print(f'Map {m}, Rep {rep}: {filename} | {set_filename}')
 
                 # directory = (
                 #     fronts_dir
@@ -605,7 +626,7 @@ def main():
                 # with open(front_path, 'r') as f:
                     next(f)  # Skip the first line
                     for line in f:
-                        values = line.strip().split('\t')
+                        values = line.strip().split()
                         if len(values) >= 2 and float(values[0]) > acceptable_interval[0] and float(values[1]) < \
                                 acceptable_interval[1]:
                             pareto_data.append((1 - float(values[0]), float(values[1])))
@@ -625,12 +646,12 @@ def main():
                     rep_hv.append(hv)
             umc_spread.append(rep_spread)
             umc_hv.append(rep_hv)
-            hv_map.append(hv_rep / 10)
+            hv_map.append(hv_rep / REPETITIONS)
 
         # Calculate differences for spread and hypervolume
-        spread_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_spread)] for repetition in umc_spread]
+        spread_gain = [[value - baseline_spread[i] for value in reps] for i, reps in enumerate(umc_spread)]
         # spread_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_spread, baseline_spread)]
-        hv_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_hv)] for repetition in umc_hv]
+        hv_gain = [[value - baseline_hv[i] for value in reps] for i, reps in enumerate(umc_hv)]
         # hv_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_hv, baseline_hv)]
 
         # mean_hv_gain_per_map = np.mean(
@@ -690,8 +711,10 @@ def main():
         #             f"90-Map-Mittel = {deviation:.4f}"
         #         )
 
+        fewer_maps = [14, 21, 23, 30, 31, 32, 40, 43, 44, 46, 47, 48, 49, 50, 
+             54, 55, 56, 57, 63, 66, 71, 75, 81, 82, 83, 85, 87, 89, 90, 97]
         # Select the maps shown in the plots (if too many maps)
-        selected_maps = range(maps-10)
+        selected_maps = SELECTED_MAPS
 
         # Create box plots for spread gains
         create_selected_box_plots(spread_gain, selected_maps, 'Spread-Gains',
@@ -732,8 +755,18 @@ def main():
         #     )
         # )
 
-        print(perform_mann_whitney_u_test(spread_gain))
-        print(perform_mann_whitney_u_test(hv_gain))
+        mean_gains = np.mean(np.asarray(hv_gain), axis=1)
+        print(f"Schwellen {acceptable_interval}: {len(SELECTED_MAPS)} Maps, "
+              f"mittlerer HV-Gain={np.mean(mean_gains):.6f}, "
+              f"Median={np.median(mean_gains):.6f}, "
+              f"positiv={np.sum(mean_gains > 0)}, negativ={np.sum(mean_gains < 0)}")
+        if np.any(mean_gains != 0):
+            stat, p_value = wilcoxon(mean_gains, alternative='two-sided')
+            print(f"Wilcoxon (gepaarte Map-Mittelwerte): W={stat:.3f}, p={p_value:.6g}")
+        else:
+            print("Wilcoxon nicht definiert: alle Map-Gains sind 0")
+        print("Hinweis: Spread ist weiterhin die ursprüngliche Abstandsheuristik, "
+              "nicht der standardisierte Deb-Spread.")
 
 if __name__ == '__main__':
     main()
