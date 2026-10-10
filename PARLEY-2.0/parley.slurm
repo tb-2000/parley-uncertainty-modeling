@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=parleyPE
+#SBATCH --job-name=parleyGaussian
 #SBATCH --partition=compute
 #SBATCH --output=%x_%j.out
 #SBATCH --error=%x_%j.err
@@ -7,7 +7,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=10
 #SBATCH --mem=200G
-#SBATCH --time=1-00:00:00
+#SBATCH --time=2-00:00:00
 
 set -euo pipefail
 

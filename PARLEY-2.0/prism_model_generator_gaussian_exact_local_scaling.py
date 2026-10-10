@@ -345,7 +345,7 @@ def read_params_from_file():
     global startX, startY, targetX, targetY
     global map_file, p, updates
 
-    with open("input.json", "r") as file:
+    with open("input_gaussian_scaling.json", "r") as file:
         params = json.load(file)
 
     startX = params["startX"]

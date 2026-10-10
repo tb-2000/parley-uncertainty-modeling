@@ -6,7 +6,7 @@ import csv
 from pathlib import Path
 import prism_model_generator_gaussian_exact_local_scaling
 import urc_synthesis_gaussian_exact_local_scaling
-import run_evochecker_rq3_200 as run_evochecker
+import run_evochecker_gaussian_rq3_200 as run_evochecker
 import plot_fronts
 
 
@@ -14,9 +14,6 @@ max_replications = 10
 
 # Existing maps: 5x5, 10x10, 15x15, 20x20
 SCALING_MAPS = {
-    0: 5,
-    1: 10,
-    2: 15,
     3: 20,
 }
 
@@ -33,7 +30,7 @@ def validate_map(i, size):
 
 def write_properties(i, size):
     # Generate properties for each map; avoid stale coordinates from other runs.
-    path = Path("Applications/EvoChecker-master") / f"robot_rq3_map_{i}.pctl"
+    path = Path("Applications/EvoChecker-master") / f"robot_rq3_gaussian_map_{i}.pctl"
     path.parent.mkdir(parents=True, exist_ok=True)
     goal = f"x={size - 1} & y={size - 1} & crashed=0"
     path.write_text(
@@ -46,7 +43,7 @@ def write_properties(i, size):
 
 def update_input(i, size):
     """Set the current scaling map and its opposite-corner target."""
-    with open("input.json", "r") as f:
+    with open("input_gaussian_scaling.json", "r") as f:
         params = json.load(f)
 
     params["startX"] = 0
@@ -55,7 +52,7 @@ def update_input(i, size):
     params["targetY"] = size - 1
     params["map_file"] = f"maps/map_{i}.csv"
 
-    with open("input.json", "w") as f:
+    with open("input_gaussian_scaling.json", "w") as f:
         json.dump(params, f, indent=4)
 
     print(
