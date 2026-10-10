@@ -18,7 +18,7 @@ def run_task(args):
     properties_name = f"belief_rq3_map_{i}_rep_{rep}.properties"
     properties_path = evochecker_dir / properties_name
 
-    init_port = 20000 + i * 100 + rep * 10
+    init_port = 40000 + i * 100 + rep * 10
 
     model_path = evochecker_dir / "models" / f"model_belief_{i}_umc.prism"
     pctl_path = evochecker_dir / f"robot_rq3_belief_map_{i}.pctl"
