@@ -6,7 +6,7 @@ import time
 
 import prism_model_generator_belief_exact_local_scaling
 import urc_synthesis_belief_exact_local_scaling
-import run_evochecker_rq3_200 as run_evochecker
+import run_evochecker_belief_rq3_200 as run_evochecker
 import plot_fronts
 
 
@@ -33,7 +33,7 @@ def validate_map(i, size):
 
 def update_input(i, size):
     """Set map and target coordinates for the current scaling experiment."""
-    with open("input.json", "r") as f:
+    with open("input_belief_scaling.json", "r") as f:
         params = json.load(f)
 
     params["startX"] = 0
@@ -42,8 +42,21 @@ def update_input(i, size):
     params["targetY"] = size - 1
     params["map_file"] = f"maps/map_{i}.csv"
 
-    with open("input.json", "w") as f:
+    with open("input_belief_scaling.json", "w") as f:
         json.dump(params, f, indent=4)
+
+
+def write_properties(i, size):
+    """Create model-specific PCTL objective file for this map."""
+    path = Path("Applications/EvoChecker-master") / f"robot_rq3_belief_map_{i}.pctl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    goal = f"x={size - 1} & y={size - 1} & crashed=0"
+    path.write_text(
+        f"//Objective, max\nP=? [ F ({goal}) ]\n\n"
+        '//Objective, min\nR{"cost"}=? [ C<=100 ]\n',
+        encoding="utf-8",
+    )
+    print(f"Using {path} with target ({size - 1},{size - 1})")
 
 
 def models(i):
@@ -98,8 +111,10 @@ def main():
         print(f"Starting belief scalability experiment: map {i}, {size}x{size}")
         print("=" * 70)
 
-        # The belief generator reads these values from input.json.
+        # The belief generator reads these values from input_belief_scaling.json.
         update_input(i, size)
+
+        write_properties(i, size)
 
         # Generate only the belief model on the belief-state branch.
         models(i)

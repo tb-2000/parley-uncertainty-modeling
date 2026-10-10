@@ -15,15 +15,21 @@ def run_task(args):
     # Otherwise the second serial replication would try to chdir into
     # Applications/EvoChecker-master a second time.
     evochecker_dir = Path(__file__).resolve().parent / "Applications" / "EvoChecker-master"
-    properties_name = f"belief_{i}_{rep}.properties"
+    properties_name = f"belief_rq3_map_{i}_rep_{rep}.properties"
     properties_path = evochecker_dir / properties_name
 
     init_port = 20000 + i * 100 + rep * 10
 
+    model_path = evochecker_dir / "models" / f"model_belief_{i}_umc.prism"
+    pctl_path = evochecker_dir / f"robot_rq3_belief_map_{i}.pctl"
+    for required_path in (model_path, pctl_path):
+        if not required_path.is_file():
+            raise FileNotFoundError(f"Missing EvoChecker input: {required_path}")
+
     with open(properties_path, "w") as f:
         f.write(f"PROBLEM = ROBOT_BELIEF_RQ3_MAP{i}_REP{rep}\n")
         f.write(f"       MODEL_TEMPLATE_FILE = models/model_belief_{i}_umc.prism\n")
-        f.write(f"       PROPERTIES_FILE = robot_rq3_map_{i}.pctl\n")
+        f.write(f"       PROPERTIES_FILE = robot_rq3_belief_map_{i}.pctl\n")
         f.write("       ALGORITHM = NSGAII\n")
         f.write(f"       POPULATION_SIZE = {POPULATION_SIZE}\n")
         f.write(f"       MAX_EVALUATIONS = {MAX_EVALUATIONS}\n")

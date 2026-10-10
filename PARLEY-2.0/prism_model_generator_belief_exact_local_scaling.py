@@ -277,7 +277,7 @@ def rewards():
 
 
 def read_params_from_file():
-    with open('input.json', 'r') as file:
+    with open('input_belief_scaling.json', 'r') as file:
         params = json.load(file)
 
     global startX, startY, targetX, targetY
