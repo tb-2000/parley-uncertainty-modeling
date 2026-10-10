@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=parleyBe
+#SBATCH --job-name=parleyBelief
 #SBATCH --partition=compute
 #SBATCH --output=%x_%j.out
 #SBATCH --error=%x_%j.err
