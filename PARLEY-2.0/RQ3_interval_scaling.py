@@ -14,7 +14,6 @@ import plot_fronts
 max_replications = 10
 
 SCALING_MAPS = {
-    2: 15,
     3: 20,
 }
 
