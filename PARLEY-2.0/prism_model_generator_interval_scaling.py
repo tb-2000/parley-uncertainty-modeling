@@ -177,7 +177,7 @@ def rewards():
 
 
 def read_params_from_file():
-    with open('input.json', 'r') as file:
+    with open('input_interval_scaling.json', 'r') as file:
         params = json.load(file)
     global startX, startY, targetX, targetY, map_file, p, updates, max_interval_width
     startX = params["startX"]
@@ -200,7 +200,11 @@ def generate_model(i):
     # map-specific thresholds can be analysed. Use the optional value from
     # input.json (or the module default) only as a temporary initial value.
     # The URC synthesis later replaces this fixed threshold.
-    build_map("maps/map_" + str(i) + ".csv")
+    build_map(map_file)
+    if not (0 <= startX < mapSize and 0 <= startY < mapSize and 0 <= targetX < mapSize and 0 <= targetY < mapSize):
+        raise ValueError(f"Map {i}: coordinates outside {mapSize}x{mapSize}: start=({startX},{startY}), target=({targetX},{targetY})")
+    if [startX, startY] in obstacles or [targetX, targetY] in obstacles:
+        raise ValueError(f"Map {i}: start or target is blocked")
     target_pos = (targetX, targetY)
     _d = dijkstra.compute_directions(map_data, target_pos)
     # we have to transpose the matrix in the end, similar to what we did when reading the map_data in the first place
@@ -216,4 +220,4 @@ def generate_model(i):
     print("finished map " + str(i))
 
 if __name__ == "__main__":
-    generate_model(10)  # Example usage, replace with desired map index
+    generate_model(2)  # Example for scaling map 2

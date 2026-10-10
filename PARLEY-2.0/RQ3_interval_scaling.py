@@ -6,17 +6,14 @@ import sys
 import time
 from pathlib import Path
 
-import create_maps
 import prism_model_generator_interval_scaling
-import run_evochecker_rq3_200 as run_evochecker
+import run_evochecker_interval_rq3_200 as run_evochecker
 import plot_fronts
 
 
 max_replications = 10
 
 SCALING_MAPS = {
-    0: 5,
-    1: 10,
     2: 15,
     3: 20,
 }
@@ -27,16 +24,24 @@ THRESHOLD_FILE = Path("interval_thresholds_scaling.py")
 
 
 def update_input(i, size):
-    with open("input.json", "r") as f:
+    with open("input_interval_scaling.json", "r") as f:
         params = json.load(f)
 
+    map_path = Path(f"maps/map_{i}.csv")
+    import csv
+    with map_path.open(newline="") as map_file:
+        rows = list(csv.reader(map_file))
+    if len(rows) != size or any(len(row) != size for row in rows):
+        raise ValueError(f"{map_path}: expected {size}x{size} map")
+    if int(rows[-1][0]) > 9 or int(rows[0][-1]) > 9:
+        raise ValueError(f"{map_path}: start (0,0) or target ({size-1},{size-1}) blocked")
     params["startX"] = 0
     params["startY"] = 0
     params["targetX"] = size - 1
     params["targetY"] = size - 1
     params["map_file"] = f"maps/map_{i}.csv"
 
-    with open("input.json", "w") as f:
+    with open("input_interval_scaling.json", "w") as f:
         json.dump(params, f, indent=4)
 
     print(
@@ -66,6 +71,8 @@ def calculate_thresholds():
             "10",
             "--output-dir",
             str(THRESHOLD_OUTPUT_DIR),
+            "--maps",
+            *[str(i) for i in SCALING_MAPS],
         ],
         check=True,
     )
@@ -105,6 +112,15 @@ def synthesize_models():
         )
 
 
+def verify_properties(i, size):
+    pctl = Path("Applications/EvoChecker-master") / f"robot_rq3_map_{i}.pctl"
+    if not pctl.is_file():
+        raise FileNotFoundError(f"Missing {pctl}")
+    import re
+    compact = re.sub(r"\s+", "", pctl.read_text(encoding="utf-8"))
+    if not re.search(rf"P=\?\[F\(x={size-1}&y={size-1}&crashed=0\)\]", compact):
+        raise ValueError(f"{pctl}: expected success goal ({size-1},{size-1}); inspect PCTL")
+
 def evo_checker(i):
     return run_evochecker.run(i, max_replications)
 
@@ -127,7 +143,7 @@ def save_runtime(i, size, runtime):
 
 
 def main():
-    # 1. Create map_0=5x5, map_1=15x15, map_2=20x20, map_3=25x25.
+    # 1. Reuse existing scaling maps; never overwrite them.
     #create_maps.create_4_maps()
 
     # 2. Generate the base interval models with size-dependent targets.
@@ -145,6 +161,7 @@ def main():
         print(f"Starting EvoChecker: map {i}, {size}x{size}")
         print("=" * 70)
 
+        verify_properties(i, size)
         wall_start = time.time()
         evochecker_runtime = evo_checker(i)
         outer_wall_runtime = time.time() - wall_start

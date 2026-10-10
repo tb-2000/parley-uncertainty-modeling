@@ -96,15 +96,16 @@ def write_csv(path,rows):
 def main():
     ap=argparse.ArgumentParser(description='Berechnet pro Skalierungs-Map unterschiedliche Schwellen aus der durchschnittlichen symmetrischen Intervallbreite nach Schritt 1..10.')
     ap.add_argument('models_dir',type=Path); ap.add_argument('--steps',type=int,default=10); ap.add_argument('--output-dir',type=Path,default=Path('interval_thresholds_mean_by_step'))
+    ap.add_argument('--maps',type=int,nargs='+',default=[0,1,2,3],help='Map IDs required in this run')
     a=ap.parse_args(); a.output_dir.mkdir(parents=True,exist_ok=True)
-    models=discover_models(a.models_dir); thresholds_per_map={}; stats=[]; skipped=[]
+    models=[p for p in discover_models(a.models_dir) if int(MODEL_FILENAME_PATTERN.fullmatch(p.name).group(1)) in a.maps]; thresholds_per_map={}; stats=[]; skipped=[]
     for p in models:
         try:
             m=parse_model(p); th,rows=analyze_model(m,a.steps); thresholds_per_map[m.number]=th; stats.extend(rows)
             print(f"Map {m.number}: thresholds = {th} ({len(th)} unterschiedliche Schwellen)")
         except Exception as e:
             skipped.append({'model':p.name,'reason':str(e)}); print(f"Übersprungen: {p.name}: {e}")
-    expected={0,1,2,3}
+    expected=set(a.maps)
     missing=expected-set(thresholds_per_map)
     if missing:
         raise RuntimeError(f"Schwellenwertanalyse unvollständig: fehlende Maps {sorted(missing)}; Details: {skipped}")
