@@ -1,0 +1,158 @@
+dtmc
+// Gaussian uncertainty level -> raw scaled MSE threshold
+// level 1 -> MSE >= 70000
+const int gaussian_threshold_1 = 70000;
+// level 2 -> MSE >= 143400
+const int gaussian_threshold_2 = 143400;
+// level 3 -> MSE >= 220200
+const int gaussian_threshold_3 = 220200;
+// level 4 -> MSE >= 261900
+const int gaussian_threshold_4 = 261900;
+// level 5 -> MSE >= 332400
+const int gaussian_threshold_5 = 332400;
+// level 6 -> MSE >= 407300
+const int gaussian_threshold_6 = 407300;
+// level 7 -> MSE >= 481400
+const int gaussian_threshold_7 = 481400;
+// level 8 -> MSE >= 536000
+const int gaussian_threshold_8 = 536000;
+// level 9 -> MSE >= 536000
+const int gaussian_threshold_9 = 536000;
+// level 10 -> MSE >= 536000
+const int gaussian_threshold_10 = 536000;
+const int max_gaussian_uncertainty = 1;
+const int N=4;
+const int xstart=0;
+const int ystart=0;
+const int xtarget=4;
+const int ytarget=4;
+const double p=0.01;
+
+formula hasCrashed = (1=0) | (x=1 & y=0) | (x=1 & y=1) | (x=1 & y=3) | (x=2 & y=2) | (x=3 & y=0) | (x=3 & y=1) | (x=4 & y=2) ;
+
+formula gaussian_u_1 = (xhat=0 & yhat=2 & gaussian_state=1) | (xhat=0 & yhat=2 & gaussian_state=2) | (xhat=0 & yhat=2 & gaussian_state=3) | (xhat=0 & yhat=3 & gaussian_state=1) | (xhat=0 & yhat=4 & gaussian_state=1) | (xhat=1 & yhat=4 & gaussian_state=2) | (xhat=2 & yhat=4 & gaussian_state=1) | (xhat=2 & yhat=4 & gaussian_state=2) | (xhat=2 & yhat=4 & gaussian_state=3) | (xhat=3 & yhat=3 & gaussian_state=1) | (xhat=3 & yhat=4 & gaussian_state=1) | (xhat=3 & yhat=4 & gaussian_state=2) | (xhat=4 & yhat=4 & gaussian_state=1) | (xhat=4 & yhat=4 & gaussian_state=2);
+formula gaussian_u_2 = (xhat=0 & yhat=3 & gaussian_state=2) | (xhat=0 & yhat=3 & gaussian_state=3) | (xhat=0 & yhat=3 & gaussian_state=4) | (xhat=0 & yhat=4 & gaussian_state=2) | (xhat=1 & yhat=4 & gaussian_state=3) | (xhat=2 & yhat=4 & gaussian_state=4) | (xhat=3 & yhat=4 & gaussian_state=3) | (xhat=3 & yhat=4 & gaussian_state=4) | (xhat=3 & yhat=4 & gaussian_state=5) | (xhat=3 & yhat=4 & gaussian_state=6) | (xhat=4 & yhat=4 & gaussian_state=3) | (xhat=4 & yhat=4 & gaussian_state=4);
+formula gaussian_u_3 = (xhat=0 & yhat=4 & gaussian_state=3) | (xhat=0 & yhat=4 & gaussian_state=4) | (xhat=1 & yhat=4 & gaussian_state=4) | (xhat=2 & yhat=4 & gaussian_state=5) | (xhat=3 & yhat=4 & gaussian_state=7) | (xhat=4 & yhat=4 & gaussian_state=5) | (xhat=4 & yhat=4 & gaussian_state=6) | (xhat=4 & yhat=4 & gaussian_state=7);
+formula gaussian_u_4 = (xhat=0 & yhat=4 & gaussian_state=5) | (xhat=1 & yhat=4 & gaussian_state=5) | (xhat=1 & yhat=4 & gaussian_state=6) | (xhat=4 & yhat=4 & gaussian_state=8);
+formula gaussian_u_5 = (xhat=2 & yhat=4 & gaussian_state=6) | (xhat=2 & yhat=4 & gaussian_state=7) | (xhat=2 & yhat=4 & gaussian_state=8) | (xhat=3 & yhat=4 & gaussian_state=8) | (xhat=3 & yhat=4 & gaussian_state=10) | (xhat=4 & yhat=4 & gaussian_state=9);
+formula gaussian_u_6 = (xhat=3 & yhat=4 & gaussian_state=9) | (xhat=3 & yhat=4 & gaussian_state=11) | (xhat=4 & yhat=4 & gaussian_state=10);
+formula gaussian_u_7 = (xhat=4 & yhat=4 & gaussian_state=11) | (xhat=4 & yhat=4 & gaussian_state=12);
+formula gaussian_u_10 = (xhat=4 & yhat=4 & gaussian_state=13);
+formula update_required = (gaussian_u_1 & max_gaussian_uncertainty<=1) | (gaussian_u_2 & max_gaussian_uncertainty<=2) | (gaussian_u_3 & max_gaussian_uncertainty<=3) | (gaussian_u_4 & max_gaussian_uncertainty<=4) | (gaussian_u_5 & max_gaussian_uncertainty<=5) | (gaussian_u_6 & max_gaussian_uncertainty<=6) | (gaussian_u_7 & max_gaussian_uncertainty<=7) | gaussian_u_10;
+
+module Robot
+  x : [0..N] init xstart;
+  y : [0..N] init ystart;
+  move_ready : [0..1] init 1;
+  crashed : [0..1] init 0;
+
+  [east] (move_ready=1) ->
+    (1-3*p): (x'=min(x+1,N)) & (move_ready'=0) +
+    p: (y'=min(y+1,N)) & (move_ready'=0) +
+    p: (y'=max(y-1,0)) & (move_ready'=0) +
+    p: (x'=max(x-1,0)) & (move_ready'=0);
+  [west] (move_ready=1) ->
+    p: (x'=min(x+1,N)) & (move_ready'=0) +
+    p: (y'=min(y+1,N)) & (move_ready'=0) +
+    p: (y'=max(y-1,0)) & (move_ready'=0) +
+    (1-3*p): (x'=max(x-1,0)) & (move_ready'=0);
+  [north] (move_ready=1) ->
+    p: (x'=min(x+1,N)) & (move_ready'=0) +
+    (1-3*p): (y'=min(y+1,N)) & (move_ready'=0) +
+    p: (y'=max(y-1,0)) & (move_ready'=0) +
+    p: (x'=max(x-1,0)) & (move_ready'=0);
+  [south] (move_ready=1) ->
+    p: (x'=min(x+1,N)) & (move_ready'=0) +
+    p: (y'=min(y+1,N)) & (move_ready'=0) +
+    (1-3*p): (y'=max(y-1,0)) & (move_ready'=0) +
+    p: (x'=max(x-1,0)) & (move_ready'=0);
+  [check] (move_ready=0) & hasCrashed -> (crashed'=1) & (move_ready'=1);
+  [check] (move_ready=0) & !hasCrashed -> (move_ready'=1);
+endmodule
+
+module Adaptation_MAPE_controller
+  [north] xhat=0 & yhat=0 -> true;
+  [north] xhat=0 & yhat=1 -> true;
+  [north] xhat=0 & yhat=2 -> true;
+  [north] xhat=0 & yhat=3 -> true;
+  [east] xhat=0 & yhat=4 -> true;
+  [west] xhat=1 & yhat=2 -> true;
+  [east] xhat=1 & yhat=4 -> true;
+  [north] xhat=2 & yhat=3 -> true;
+  [east] xhat=2 & yhat=4 -> true;
+  [north] xhat=3 & yhat=2 -> true;
+  [north] xhat=3 & yhat=3 -> true;
+  [east] xhat=3 & yhat=4 -> true;
+  [north] xhat=4 & yhat=3 -> true;
+endmodule
+
+module Knowledge
+  xhat : [0..N] init xstart;
+  yhat : [0..N] init ystart;
+  gaussian_state : [0..13] init 0;
+  ready : [0..1] init 1;
+
+  [north] ready=1 & xhat=0 & yhat=0 & gaussian_state=0 -> (xhat'=0) & (yhat'=1) & (gaussian_state'=1) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=1 & gaussian_state=0 -> (xhat'=0) & (yhat'=2) & (gaussian_state'=1) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=2 & gaussian_state=0 -> (xhat'=0) & (yhat'=3) & (gaussian_state'=1) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=3 & gaussian_state=0 -> (xhat'=0) & (yhat'=4) & (gaussian_state'=1) & (ready'=0);
+  [east] ready=1 & xhat=0 & yhat=4 & gaussian_state=0 -> (xhat'=1) & (yhat'=4) & (gaussian_state'=1) & (ready'=0);
+  [west] ready=1 & xhat=1 & yhat=2 & gaussian_state=0 -> (xhat'=0) & (yhat'=2) & (gaussian_state'=2) & (ready'=0);
+  [east] ready=1 & xhat=1 & yhat=4 & gaussian_state=0 -> (xhat'=2) & (yhat'=4) & (gaussian_state'=1) & (ready'=0);
+  [north] ready=1 & xhat=2 & yhat=3 & gaussian_state=0 -> (xhat'=2) & (yhat'=4) & (gaussian_state'=2) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & gaussian_state=0 -> (xhat'=3) & (yhat'=4) & (gaussian_state'=1) & (ready'=0);
+  [north] ready=1 & xhat=3 & yhat=2 & gaussian_state=0 -> (xhat'=3) & (yhat'=3) & (gaussian_state'=1) & (ready'=0);
+  [north] ready=1 & xhat=3 & yhat=3 & gaussian_state=0 -> (xhat'=3) & (yhat'=4) & (gaussian_state'=2) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & gaussian_state=0 -> (xhat'=4) & (yhat'=4) & (gaussian_state'=1) & (ready'=0);
+  [north] ready=1 & xhat=4 & yhat=3 & gaussian_state=0 -> (xhat'=4) & (yhat'=4) & (gaussian_state'=2) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=1 & gaussian_state=1 -> (xhat'=0) & (yhat'=2) & (gaussian_state'=3) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=2 & gaussian_state=1 -> (xhat'=0) & (yhat'=3) & (gaussian_state'=2) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=3 & gaussian_state=1 -> (xhat'=0) & (yhat'=4) & (gaussian_state'=2) & (ready'=0);
+  [east] ready=1 & xhat=0 & yhat=4 & gaussian_state=1 -> (xhat'=1) & (yhat'=4) & (gaussian_state'=2) & (ready'=0);
+  [east] ready=1 & xhat=1 & yhat=4 & gaussian_state=1 -> (xhat'=2) & (yhat'=4) & (gaussian_state'=3) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=2 & gaussian_state=2 -> (xhat'=0) & (yhat'=3) & (gaussian_state'=3) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & gaussian_state=1 -> (xhat'=3) & (yhat'=4) & (gaussian_state'=3) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & gaussian_state=2 -> (xhat'=3) & (yhat'=4) & (gaussian_state'=4) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & gaussian_state=1 -> (xhat'=4) & (yhat'=4) & (gaussian_state'=3) & (ready'=0);
+  [north] ready=1 & xhat=3 & yhat=3 & gaussian_state=1 -> (xhat'=3) & (yhat'=4) & (gaussian_state'=5) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & gaussian_state=2 -> (xhat'=4) & (yhat'=4) & (gaussian_state'=4) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=2 & gaussian_state=3 -> (xhat'=0) & (yhat'=3) & (gaussian_state'=4) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=3 & gaussian_state=2 -> (xhat'=0) & (yhat'=4) & (gaussian_state'=3) & (ready'=0);
+  [east] ready=1 & xhat=0 & yhat=4 & gaussian_state=2 -> (xhat'=1) & (yhat'=4) & (gaussian_state'=3) & (ready'=0);
+  [east] ready=1 & xhat=1 & yhat=4 & gaussian_state=2 -> (xhat'=2) & (yhat'=4) & (gaussian_state'=4) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & gaussian_state=3 -> (xhat'=3) & (yhat'=4) & (gaussian_state'=6) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=3 & gaussian_state=3 -> (xhat'=0) & (yhat'=4) & (gaussian_state'=4) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & gaussian_state=3 -> (xhat'=4) & (yhat'=4) & (gaussian_state'=5) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & gaussian_state=4 -> (xhat'=4) & (yhat'=4) & (gaussian_state'=6) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & gaussian_state=5 -> (xhat'=4) & (yhat'=4) & (gaussian_state'=7) & (ready'=0);
+  [north] ready=1 & xhat=0 & yhat=3 & gaussian_state=4 -> (xhat'=0) & (yhat'=4) & (gaussian_state'=5) & (ready'=0);
+  [east] ready=1 & xhat=0 & yhat=4 & gaussian_state=3 -> (xhat'=1) & (yhat'=4) & (gaussian_state'=4) & (ready'=0);
+  [east] ready=1 & xhat=1 & yhat=4 & gaussian_state=3 -> (xhat'=2) & (yhat'=4) & (gaussian_state'=5) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & gaussian_state=4 -> (xhat'=3) & (yhat'=4) & (gaussian_state'=7) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & gaussian_state=6 -> (xhat'=4) & (yhat'=4) & (gaussian_state'=8) & (ready'=0);
+  [east] ready=1 & xhat=0 & yhat=4 & gaussian_state=4 -> (xhat'=1) & (yhat'=4) & (gaussian_state'=5) & (ready'=0);
+  [east] ready=1 & xhat=0 & yhat=4 & gaussian_state=5 -> (xhat'=1) & (yhat'=4) & (gaussian_state'=6) & (ready'=0);
+  [east] ready=1 & xhat=1 & yhat=4 & gaussian_state=4 -> (xhat'=2) & (yhat'=4) & (gaussian_state'=6) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & gaussian_state=5 -> (xhat'=3) & (yhat'=4) & (gaussian_state'=8) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & gaussian_state=7 -> (xhat'=4) & (yhat'=4) & (gaussian_state'=9) & (ready'=0);
+  [east] ready=1 & xhat=1 & yhat=4 & gaussian_state=5 -> (xhat'=2) & (yhat'=4) & (gaussian_state'=7) & (ready'=0);
+  [east] ready=1 & xhat=1 & yhat=4 & gaussian_state=6 -> (xhat'=2) & (yhat'=4) & (gaussian_state'=8) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & gaussian_state=6 -> (xhat'=3) & (yhat'=4) & (gaussian_state'=9) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & gaussian_state=8 -> (xhat'=4) & (yhat'=4) & (gaussian_state'=10) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & gaussian_state=7 -> (xhat'=3) & (yhat'=4) & (gaussian_state'=10) & (ready'=0);
+  [east] ready=1 & xhat=2 & yhat=4 & gaussian_state=8 -> (xhat'=3) & (yhat'=4) & (gaussian_state'=11) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & gaussian_state=9 -> (xhat'=4) & (yhat'=4) & (gaussian_state'=11) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & gaussian_state=10 -> (xhat'=4) & (yhat'=4) & (gaussian_state'=12) & (ready'=0);
+  [east] ready=1 & xhat=3 & yhat=4 & gaussian_state=11 -> (xhat'=4) & (yhat'=4) & (gaussian_state'=13) & (ready'=0);
+  [update] update_required & ready=0 -> (xhat'=x) & (yhat'=y) & (gaussian_state'=0) & (ready'=1);
+  [skip_update] !update_required & ready=0 -> (ready'=1);
+endmodule
+
+rewards "cost"
+  [east] true : 1;
+  [west] true : 1;
+  [north] true : 1;
+  [south] true : 1;
+  [update] true : 5;
+endrewards
+
