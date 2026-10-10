@@ -1,4 +1,7 @@
 import os
+import csv
+import re
+from datetime import datetime
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -6,6 +9,30 @@ import matplotlib.pyplot as plt
 from moocore import hypervolume
 from scipy.stats import wilcoxon, anderson, mannwhitneyu
 from scipy.stats import t
+
+
+def newest_front_set_pair(directory):
+    """Neueste vollständige EvoChecker-Version nach Zeitstempel im Dateinamen."""
+    pairs = []
+    for name in os.listdir(directory):
+        if not name.endswith('_Front'):
+            continue
+        prefix = name[:-len('_Front')]
+        set_name = prefix + '_Set'
+        if not os.path.isfile(os.path.join(directory, set_name)):
+            continue
+        match = re.search(r'_(\d{6})_(\d{6})$', prefix)
+        if not match:
+            continue
+        try:
+            timestamp = datetime.strptime(match.group(2) + match.group(1), '%d%m%y%H%M%S')
+        except ValueError:
+            continue
+        pairs.append((timestamp, name, set_name))
+    if not pairs:
+        raise FileNotFoundError(f'Kein vollständiges, datiertes Front-/Set-Paar in {directory}')
+    _, front, set_file = max(pairs, key=lambda item: (item[0], item[1]))
+    return front, set_file
 
 
 MAXIMUM_SPREAD_VALUE = 1.5
@@ -395,29 +422,21 @@ def random_subset_stability_analysis(
 
 
 def is_dominated(x, y, data):
-    for other_x, other_y in data:
-        if other_x <= x and other_y <= y:
-            return True
-        # # verhindert, dass ein Punkt als dominiert gilt, wenn er gleich ist
-        # strictly_better = other_x < x and other_y < y
-        # no_worse = other_x <= x and other_y <= y
-        # if strictly_better and no_worse:
-        #     return True
-    return False
+    """Minimierung beider Ziele; ein anderer Punkt muss strikt besser sein."""
+    return any((ox <= x and oy <= y) and (ox < x or oy < y)
+               for ox, oy in data)
 
 
 def filter_dominated_points(data):
-    non_dominated_data = []
-    for x, y in data:
-        if is_dominated(x, y, data):
-            non_dominated_data.append((x, y))
-    return non_dominated_data
+    """Entfernt dominierte Punkte und Duplikate."""
+    unique = list(dict.fromkeys(tuple(p) for p in data))
+    return [p for p in unique if not is_dominated(p[0], p[1], unique)]
 
 
 def compute_spread(front_data):
     # Normalize objectives
     front_data = np.array(front_data)
-    if any(np.max(front_data, axis=0) - np.min(front_data, axis=0)) == 0:
+    if len(front_data) < 2 or np.any(np.ptp(front_data, axis=0) == 0):
         return MAXIMUM_SPREAD_VALUE
 
     normalized_front = (front_data - np.min(front_data, axis=0)) / \
@@ -435,6 +454,61 @@ def compute_spread(front_data):
     if spread != spread:
         return MAXIMUM_SPREAD_VALUE
     return spread
+
+
+
+def success_probability_coverage(front):
+    """Maximale minus minimale Erfolgswahrscheinlichkeit der akzeptierten Front.
+
+    Ein Punkt: Abdeckung 0; keine akzeptierten Punkte: nicht definiert (NaN).
+    Die Eingabe enthält (1 - Erfolg, Kosten).
+    """
+    if not front:
+        return np.nan
+    probabilities = 1.0 - np.asarray(front, dtype=float)[:, 0]
+    return float(np.max(probabilities) - np.min(probabilities))
+
+
+def load_current_front(map_id, repetition, min_success, max_cost):
+    directory = os.path.join(fronts_dir, f'ROBOT{map_id}_REP{repetition}', 'NSGAII')
+    filename, set_filename = newest_front_set_pair(directory)
+    print(f'Map {map_id}, Rep {repetition}: {filename} | {set_filename}')
+    points = []
+    with open(os.path.join(directory, filename), encoding='utf-8') as f:
+        next(f)
+        for line in f:
+            values = line.split()
+            if len(values) >= 2:
+                probability, cost = float(values[0]), float(values[1])
+                if probability > min_success and cost < max_cost:
+                    points.append((1.0 - probability, cost))
+    return filter_dominated_points(points)
+
+
+def load_periodic_front(map_id, min_success, max_cost):
+    points = []
+    path = os.path.join(fronts_dir, f'ROBOT{map_id}_BASELINE', 'Front')
+    with open(path, encoding='utf-8') as f:
+        for line in f:
+            values = line.split()
+            if len(values) >= 2:
+                probability, cost = float(values[0]), float(values[1])
+                if probability > min_success and cost < max_cost:
+                    points.append((1.0 - probability, cost))
+    return filter_dominated_points(points)
+
+
+def per_map_diversity(periodic, repetitions):
+    """Originale PARLEY-Spread-Kennzahl und Erfolgswahrscheinlichkeits-Abdeckung.
+
+    Spread: frontweise Min-Max-Normalisierung und mittlerer euklidischer
+    Abstand benachbarter Punkte. Bei <2 Punkten oder konstanter Zielgröße
+    wird wie in der GitHub-Evaluation der Ersatzwert 1.5 verwendet.
+    """
+    fronts = [periodic] + repetitions
+    spreads = [compute_spread(front) for front in fronts]
+    coverages = [success_probability_coverage(front) for front in fronts]
+    return spreads, coverages
 
 
 def anderson_darling(umc, baseline):
@@ -504,134 +578,163 @@ def perform_mann_whitney_u_test(data, alpha=0.05):
 
 
 def create_selected_box_plots(gains_data, selected_maps, ylabel, title):
-    # Extract gains for the selected maps
-    gains_selected = [gains_data[i] for i in selected_maps]
-
-    # Create a single plot for the selected gains
-    plt.figure(figsize=(12, 6))
-    sns.boxplot(data=gains_selected)
-
-    # Add a dashed line at y=0
+    """gains_data ist in derselben Reihenfolge wie selected_maps angeordnet."""
+    if len(gains_data) != len(selected_maps):
+        raise ValueError(f"{len(gains_data)} Datensätze für {len(selected_maps)} Karten")
+    plt.figure(figsize=(15, 6))
+    sns.boxplot(data=gains_data)
     plt.axhline(y=0, color='black', linestyle='--')
-    plt.xticks(np.arange(0, len(selected_maps), 5))
-
+    plt.xticks(range(len(selected_maps)), selected_maps, rotation=90)
     plt.xlabel('Map')
     plt.ylabel(ylabel)
-    # plt.title(title)
-    # plt.legend()  # Add legend to show the zero line
-    plt.savefig(f'plots/box-plots/{ylabel}_{title[:1]}_{title[2:]}.pdf')
-
+    plt.tight_layout()
+    os.makedirs('plots/box-plots', exist_ok=True)
+    plt.savefig(f'plots/box-plots/{ylabel}_{title}.pdf')
+    plt.close()
 
 
 # Specify the paths to CSV files and the file containing expected values
 fronts_dir = 'Applications/EvoChecker-master/data/'
 
-maps = 100
+SELECTED_MAPS = [
+    14, 21, 23, 30, 31, 32, 40, 43, 44, 46,
+    47, 48, 49, 50, 54, 55, 56, 57, 63, 66,
+    71, 75, 81, 82, 83, 85, 87, 89, 90, 97
+]
+REPETITIONS = 10
 
+# (minimale Erfolgswahrscheinlichkeit, maximale Kosten)
 acceptable_intervals = [(0.8, 100), (0.8, 80), (0.8, 60),
                         (0.7, 100), (0.7, 80), (0.7, 60),
                         (0.6, 100), (0.6, 80), (0.6, 60)]
 
 
+def summarize_gains_by_map(gains, metric, min_success, max_cost):
+    """Mapweise Wilcoxon-Tests (10 Repetitionen) und globaler Test (30 Map-Mittelwerte).
+
+    Positive HV-/COV-Gains und negative PARLEY-Spread-Gains sind besser.
+    Die mapweisen p-Werte sind explorativ und werden innerhalb der 30 Maps
+    mit Benjamini-Hochberg korrigiert.
+    """
+    values = np.asarray(gains, dtype=float)
+    if values.shape != (len(SELECTED_MAPS), REPETITIONS):
+        raise ValueError(f'Unerwartete Gain-Form: {values.shape}')
+    per_map = []
+    for map_id, row in zip(SELECTED_MAPS, values):
+        valid = row[np.isfinite(row)]
+        p = np.nan
+        if len(valid) >= 2 and np.any(valid != 0):
+            p = float(wilcoxon(valid, alternative='two-sided', method='auto').pvalue)
+        per_map.append({'map': map_id, 'metric': metric,
+                        'min_success': min_success, 'max_cost': max_cost,
+                        'n_reps': len(valid), 'mean_gain': float(np.mean(valid)) if len(valid) else np.nan,
+                        'median_gain': float(np.median(valid)) if len(valid) else np.nan,
+                        'p_raw': p, 'p_bh': np.nan})
+
+    # Benjamini-Hochberg über die 30 mapweisen Tests eines Zielbereichs.
+    indexed = [(i, r['p_raw']) for i, r in enumerate(per_map) if np.isfinite(r['p_raw'])]
+    indexed.sort(key=lambda x: x[1])
+    ntests = len(indexed)
+    previous = 1.0
+    for rank in range(ntests, 0, -1):
+        idx, pval = indexed[rank - 1]
+        previous = min(previous, pval * ntests / rank)
+        per_map[idx]['p_bh'] = previous
+
+    better = worse = 0
+    for row in per_map:
+        if np.isfinite(row['p_bh']) and row['p_bh'] < 0.05:
+            if (row['mean_gain'] > 0 and metric in ('HV', 'COV')) or (row['mean_gain'] < 0 and metric == 'SP'):
+                better += 1
+            elif row['mean_gain'] != 0:
+                worse += 1
+    inconclusive = len(per_map) - better - worse
+
+    map_means = np.asarray([r['mean_gain'] for r in per_map], dtype=float)
+    valid_means = map_means[np.isfinite(map_means)]
+    n = len(valid_means)
+    mean = float(np.mean(valid_means)) if n else np.nan
+    median = float(np.median(valid_means)) if n else np.nan
+    if n >= 2:
+        margin = float(t.ppf(0.975, n - 1) * np.std(valid_means, ddof=1) / np.sqrt(n))
+        ci_low, ci_high = mean - margin, mean + margin
+    else:
+        ci_low = ci_high = np.nan
+    global_p = float(wilcoxon(valid_means, alternative='two-sided').pvalue) if n and np.any(valid_means != 0) else np.nan
+    summary = {'metric': metric, 'min_success': min_success, 'max_cost': max_cost,
+               'better': better, 'worse': worse, 'not_significant': inconclusive,
+               'n_maps': n, 'mean_gain': mean, 'median_gain': median,
+               'ci95_low': ci_low, 'ci95_high': ci_high, 'wilcoxon_maps_p': global_p,
+               'positive_map_means': int(np.sum(valid_means > 0)),
+               'negative_map_means': int(np.sum(valid_means < 0))}
+    return summary, per_map
+
+
+def write_statistical_tables(summaries, map_rows, output_dir='plots/statistics'):
+    os.makedirs(output_dir, exist_ok=True)
+    for filename, rows in [('summary.csv', summaries), ('per_map_tests.csv', map_rows)]:
+        with open(os.path.join(output_dir, filename), 'w', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=list(rows[0]))
+            writer.writeheader()
+            writer.writerows(rows)
+
+    # Tabelle 1 des Papers: Erfolgsschwelle x Kostenlimit, HV/SP,
+    # Einträge signifikant besser / schlechter / nicht signifikant.
+    lookup = {(r['metric'], r['min_success'], r['max_cost']): r for r in summaries}
+    with open(os.path.join(output_dir, 'paper_table.md'), 'w', encoding='utf-8') as f:
+        f.write('| min_success | Metrik | max_cost 60 | max_cost 80 | max_cost 100 |\n')
+        f.write('|---|---|---|---|---|\n')
+        for threshold in (0.6, 0.7, 0.8):
+            for metric in ('HV', 'SP', 'COV'):
+                cells = []
+                for cost in (60, 80, 100):
+                    r = lookup[(metric, threshold, cost)]
+                    cells.append(f"{r['better']}/{r['worse']}/{r['not_significant']}")
+                f.write(f'| {threshold:.0%} | {metric} | ' + ' | '.join(cells) + ' |\n')
+        f.write('\nReihenfolge: signifikant besser / signifikant schlechter / nicht signifikant.\n')
+        f.write('Mapweise Wilcoxon-Tests mit BH-Korrektur innerhalb der 30 Karten je Zielbereich.\n')
+        f.write('SP = originaler PARLEY-Spread (mittlerer normalisierter Nachbarabstand; kleiner = dichter; Ersatzwert 1.5 bei ungueltiger Front); COV = Spannweite der Erfolgswahrscheinlichkeit (groesser = breiter).\n')
+
+    with open(os.path.join(output_dir, 'paper_table.tex'), 'w', encoding='utf-8') as f:
+        f.write('\\begin{tabular}{llccc}\n\\hline\n')
+        f.write('min\\_success & Metrik & max\\_cost 60 & 80 & 100 \\\\ \n\\hline\n')
+        for threshold in (0.6, 0.7, 0.8):
+            for metric in ('HV', 'SP', 'COV'):
+                cells = []
+                for cost in (60, 80, 100):
+                    r = lookup[(metric, threshold, cost)]
+                    cells.append(f"{r['better']}/{r['worse']}/{r['not_significant']}")
+                f.write(f'{threshold:.0%} & {metric} & ' + ' & '.join(cells) + ' \\\\ \n')
+        f.write('\\hline\n\\end{tabular}\n')
+
+
 def main():
+    all_summaries = []
+    all_map_rows = []
     for acceptable_interval in acceptable_intervals:
-        ref_point = np.array(acceptable_interval)
+        ref_point = np.array((1 - acceptable_interval[0], acceptable_interval[1]))
 
         hv_map = []
-        baseline_hv = []
-        baseline_spread = []
-        umc_hv = []
-        umc_spread = []
-
-        # for each map
-        for m in range(10, maps):
-            # first let's get the hypervolume for the baseline
-            periodic = []
-            with open(f'Applications/EvoChecker-master/data/ROBOT{m}_BASELINE/Front', 'r') as file:
-                for line in file:
-                    x, y = map(float, line.strip().split('	'))
-                    if x > acceptable_interval[0] and y < acceptable_interval[1]:
-                        periodic.append((1 - x, y))
-            periodic = filter_dominated_points(periodic[0:20])
-            if len(periodic) == 0:
-                hv_periodic = 0
-                baseline_spread.append(MAXIMUM_SPREAD_VALUE)
-            else:
-                hv_periodic = hypervolume(np.array(periodic), ref_point)
-                baseline_spread.append(compute_spread(periodic))
-
-            baseline_hv.append(hv_periodic)
-
-            hv_rep = 0
-            rep_hv = []
-            rep_spread = []
-            # for each replication
-            for rep in range(0, 10):
-                # Read the expected values from the external file (excluding the first line)
-                pareto_data = []
-                filename = ""
-                for filename_ in os.listdir(fronts_dir + 'ROBOT{0}_REP{1}/NSGAII/'.format(str(m), str(rep))):
-                    if "Front" in filename_:
-                        filename = filename_
-
-                # directory = (
-                #     fronts_dir
-                #     + f"ROBOT{m}_REP{rep}/NSGAII/"
-                # )
-
-                # front_files = [
-                #     filename
-                #     for filename in os.listdir(directory)
-                #     if "Front" in filename
-                # ]
-
-                # if not front_files:
-                #     raise FileNotFoundError(
-                #         f"Keine Front-Datei in {directory} gefunden."
-                #     )
-
-                # filename = max(
-                #     front_files,
-                #     key=lambda name: os.path.getmtime(
-                #         os.path.join(directory, name)
-                #     )
-                # )
-
-                # front_path = os.path.join(directory, filename)
-
-                # print(f"Map {m}, Rep {rep}: verwende {filename}")
-
-                with open(fronts_dir + 'ROBOT{0}_REP{1}/NSGAII/'.format(str(m), str(rep)) + filename, 'r') as f:
-                # with open(front_path, 'r') as f:
-                    next(f)  # Skip the first line
-                    for line in f:
-                        values = line.strip().split('\t')
-                        if len(values) >= 2 and float(values[0]) > acceptable_interval[0] and float(values[1]) < \
-                                acceptable_interval[1]:
-                            pareto_data.append((1 - float(values[0]), float(values[1])))
-
-                    # Convert the pareto_data to a NumPy array
-                    pareto_array = np.array(filter_dominated_points(pareto_data))
-                    # Calculate the hypervolume
-                    if len(pareto_array) == 0:
-                        hv = 0
-                        rep_spread.append(MAXIMUM_SPREAD_VALUE)
-                    else:
-                        # Sort the Pareto front based on the first objective (probability)
-                        pareto_array = pareto_array[np.argsort(pareto_array[:, 0])]
-                        hv = hypervolume(np.array(pareto_array), np.array(ref_point))
-                        rep_spread.append(compute_spread(pareto_array))
-                    hv_rep += hv - hv_periodic
-                    rep_hv.append(hv)
-            umc_spread.append(rep_spread)
-            umc_hv.append(rep_hv)
-            hv_map.append(hv_rep / 10)
-
-        # Calculate differences for spread and hypervolume
-        spread_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_spread)] for repetition in umc_spread]
-        # spread_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_spread, baseline_spread)]
-        hv_gain = [[umc - baseline for umc, baseline in zip(repetition, baseline_hv)] for repetition in umc_hv]
-        # hv_gain = [[value - baseline for value in repetition] for repetition, baseline in zip(umc_hv, baseline_hv)]
+        hv_gain = []
+        spread_gain = []
+        coverage_gain = []
+        # Spread wie im Original PARLEY frontweise normalisiert; Coverage unverändert.
+        for m in SELECTED_MAPS:
+            periodic = load_periodic_front(m, *acceptable_interval)
+            fronts = [load_current_front(m, rep, *acceptable_interval)
+                      for rep in range(REPETITIONS)]
+            hv_periodic = (float(hypervolume(np.asarray(periodic), ref_point))
+                           if periodic else 0.0)
+            hv_reps = [(float(hypervolume(np.asarray(front), ref_point))
+                        if front else 0.0) for front in fronts]
+            spreads, coverages = per_map_diversity(periodic, fronts)
+            hv_row = [v - hv_periodic for v in hv_reps]
+            sp_row = [v - spreads[0] for v in spreads[1:]]
+            cov_row = [v - coverages[0] for v in coverages[1:]]
+            hv_gain.append(hv_row)
+            spread_gain.append(sp_row)
+            coverage_gain.append(cov_row)
+            hv_map.append(float(np.mean(hv_row)))
 
         # mean_hv_gain_per_map = np.mean(
         #             np.asarray(hv_gain, dtype=float),
@@ -690,8 +793,10 @@ def main():
         #             f"90-Map-Mittel = {deviation:.4f}"
         #         )
 
+        fewer_maps = [14, 21, 23, 30, 31, 32, 40, 43, 44, 46, 47, 48, 49, 50, 
+             54, 55, 56, 57, 63, 66, 71, 75, 81, 82, 83, 85, 87, 89, 90, 97]
         # Select the maps shown in the plots (if too many maps)
-        selected_maps = range(maps-10)
+        selected_maps = SELECTED_MAPS
 
         # Create box plots for spread gains
         create_selected_box_plots(spread_gain, selected_maps, 'Spread-Gains',
@@ -700,6 +805,8 @@ def main():
         # Create box plots for hypervolume gains
         create_selected_box_plots(hv_gain, selected_maps, 'Hypervolume-Gains',
                                    f'{acceptable_interval[0]}-{acceptable_interval[1]}')
+        create_selected_box_plots(coverage_gain, selected_maps, 'Success-Coverage-Gains',
+                                  f'{acceptable_interval[0]}-{acceptable_interval[1]}')
         # perform_wilcoxon_test_against_zero(hv_gain, alternative='greater')
         # perform_wilcoxon_test_against_zero(spread_gain, alternative='less')
 
@@ -732,8 +839,31 @@ def main():
         #     )
         # )
 
-        print(perform_mann_whitney_u_test(spread_gain))
-        print(perform_mann_whitney_u_test(hv_gain))
+        for metric, gains in [('HV', hv_gain), ('SP', spread_gain), ('COV', coverage_gain)]:
+            summary, map_rows = summarize_gains_by_map(
+                gains, metric, acceptable_interval[0], acceptable_interval[1]
+            )
+            all_summaries.append(summary)
+            all_map_rows.extend(map_rows)
+            print(f"{metric} {acceptable_interval}: besser/schlechter/nicht signifikant "
+                  f"{summary['better']}/{summary['worse']}/{summary['not_significant']}; "
+                  f"95%-KI des mittleren Map-Gains "
+                  f"[{summary['ci95_low']:.4f}, {summary['ci95_high']:.4f}]")
+
+        mean_gains = np.mean(np.asarray(hv_gain), axis=1)
+        print(f"Schwellen {acceptable_interval}: {len(SELECTED_MAPS)} Maps, "
+              f"mittlerer HV-Gain={np.mean(mean_gains):.6f}, "
+              f"Median={np.median(mean_gains):.6f}, "
+              f"positiv={np.sum(mean_gains > 0)}, negativ={np.sum(mean_gains < 0)}")
+        if np.any(mean_gains != 0):
+            stat, p_value = wilcoxon(mean_gains, alternative='two-sided')
+            print(f"Wilcoxon (gepaarte Map-Mittelwerte): W={stat:.3f}, p={p_value:.6g}")
+        else:
+            print("Wilcoxon nicht definiert: alle Map-Gains sind 0")
+        print("SP = originaler PARLEY-Spread (kleiner = dichter); COV = Erfolgswahrscheinlichkeits-Abdeckung (größer = breiter).")
+
+    write_statistical_tables(all_summaries, all_map_rows)
+    print('Statistische Tabellen: plots/statistics/')
 
 if __name__ == '__main__':
     main()
