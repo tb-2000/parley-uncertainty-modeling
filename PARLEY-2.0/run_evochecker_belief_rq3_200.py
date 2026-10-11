@@ -5,8 +5,8 @@ from pathlib import Path
 from multiprocessing import Pool, cpu_count
 
 
-MAX_EVALUATIONS = 200  # RQ3: total evaluations, including initial population
-POPULATION_SIZE = 100
+MAX_EVALUATIONS = 20  # RQ3: total evaluations, including initial population
+POPULATION_SIZE = 10
 
 def run_task(args):
     i, rep = args
