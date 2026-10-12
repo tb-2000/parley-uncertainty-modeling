@@ -78,9 +78,9 @@ def load_exact_local_hmm_beliefs(map_id):
             f"{path}: map_id={data['map_id']} does not match map {map_id}."
         )
 
-    if len(data.get("thresholds", [])) != 20:
+    if len(data.get("thresholds", [])) != 10:
         raise ValueError(
-            f"{path}: expected exactly twenty HMM-MSE thresholds."
+            f"{path}: expected exactly ten HMM-MSE thresholds."
         )
 
     return data
@@ -130,7 +130,7 @@ def preambel(hmm):
         # Therefore update formulas must include xhat/yhat/hmm_state.
         classes = {
             stage: []
-            for stage in range(21)
+            for stage in range(11)
         }
 
         for position, levels in hmm["urc_levels"].items():
@@ -147,7 +147,7 @@ def preambel(hmm):
 
         written_stages = []
 
-        for stage in range(1, 21):
+        for stage in range(1, 11):
             terms = classes[stage]
 
             if not terms:
@@ -163,13 +163,13 @@ def preambel(hmm):
         update_terms = []
 
         for stage in written_stages:
-            if stage < 20:
+            if stage < 10:
                 update_terms.append(
                     f'(hmm_u_{stage} & c<={stage})'
                 )
             else:
                 update_terms.append(
-                    f'hmm_u_{stage}'
+                    'hmm_u_10'
                 )
 
         f.write(
@@ -366,7 +366,7 @@ def generate_model(i):
     global prism_file
 
     prism_file = (
-        "Applications/EvoChecker-master/models/model_"
+        "Applications/EvoChecker-master/models/model_hmm_"
         + str(i)
         + ".prism"
     )

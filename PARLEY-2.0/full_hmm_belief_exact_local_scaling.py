@@ -4,14 +4,14 @@ Exact reachable HMM-belief model for PARLEY with position-local state IDs.
 Pipeline
 --------
 1. Load the exact HMM dynamics from hmm_models/map_<id>.json.
-2. Use prediction ages 1..20 ONLY to calibrate the twenty monotone HMM-MSE
+2. Use prediction ages 1..10 ONLY to calibrate the ten monotone HMM-MSE
    thresholds.
 3. Enumerate ALL exact reachable HMM-belief contexts
        (xhat, yhat, beta)
    from every post-localization estimate position under the fixed MAPE policy.
 4. Continue exact reachability until:
        * target / no MAPE action, or
-       * HMM-MSE >= tau_20.
+       * HMM-MSE >= tau_10.
 5. Encode every exact context in PRISM as:
        (xhat, yhat, hmm_state)
    where hmm_state is a POSITION-LOCAL ID of one exact HMM belief beta.
@@ -59,11 +59,11 @@ from full_hmm_belief_representatives import (
     sparse_belief,
 )
 
-DEFAULT_MAX_STEPS = 20
+DEFAULT_MAX_STEPS = 10
 
 
 def uncertainty_level(value: float, thresholds: Sequence[float]) -> int:
-    """Highest HMM-MSE threshold reached: 0..20."""
+    """Highest HMM-MSE threshold reached: 0..10."""
     level = 0
 
     for i, threshold in enumerate(thresholds, start=1):
@@ -78,7 +78,7 @@ def uncertainty_level(value: float, thresholds: Sequence[float]) -> int:
 def calibrate_thresholds(model: dict, max_steps: int = DEFAULT_MAX_STEPS):
     """
     Calibrate:
-        tau_k = median HMM-MSE at prediction age k, k=1..20
+        tau_k = median HMM-MSE at prediction age k, k=1..10
     and enforce monotonicity.
 
     max_steps affects threshold calibration only, not runtime reachability.
@@ -161,9 +161,9 @@ def calibrate_thresholds(model: dict, max_steps: int = DEFAULT_MAX_STEPS):
         max_steps=max_steps,
     )
 
-    if len(thresholds) != 20:
+    if len(thresholds) != 10:
         raise ValueError(
-            f"Expected exactly 20 HMM thresholds, got {len(thresholds)}."
+            f"Expected exactly 10 HMM thresholds, got {len(thresholds)}."
         )
 
     return [float(v) for v in thresholds]
@@ -192,7 +192,7 @@ def build_exact_local_hmm_model(
     transition_index, policy = build_transition_index(model)
     pi = build_initial_belief(model)
     squared_errors = hidden_squared_errors(model)
-    tau20 = float(thresholds[-1])
+    tau10 = float(thresholds[-1])
 
     # Global distinct-beta table for diagnostics only.
     beliefs: List[np.ndarray] = []
@@ -270,8 +270,8 @@ def build_exact_local_hmm_model(
         mse = float(np.dot(beta, squared_errors))
         level = uncertainty_level(mse, thresholds)
 
-        # At level 20 every c in 1..20 localizes.
-        if level >= 20 or mse + 1e-15 >= tau20:
+        # At level 10 every c in 1..10 localizes.
+        if level >= 10 or mse + 1e-15 >= tau10:
             continue
 
         if (xhat, yhat) == tuple(target):
@@ -411,7 +411,7 @@ def build_exact_local_hmm_model(
             "observation_between_moves": False,
             "on_update": "beta = pi",
             "reachability_stop":
-                "target/no-action or HMM-MSE >= tau_20",
+                "target/no-action or HMM-MSE >= tau_10",
             "frontier": False,
         },
     }
@@ -467,7 +467,7 @@ def main():
     )
 
     parser.add_argument("--first-map", type=int, default=0)
-    parser.add_argument("--last-map", type=int, default=2)
+    parser.add_argument("--last-map", type=int, default=3)
 
     parser.add_argument(
         "--hmm-dir",
@@ -486,7 +486,7 @@ def main():
         type=int,
         default=DEFAULT_MAX_STEPS,
         help=(
-            "Used only to calibrate the twenty HMM-MSE thresholds. "
+            "Used only to calibrate the ten HMM-MSE thresholds. "
             "It does not truncate exact reachability."
         ),
     )
@@ -495,8 +495,9 @@ def main():
 
     scaling_sizes = {
         0: 5,
-        1: 15,
-        2: 20,
+        1: 10,
+        2: 15,
+        3: 20,
     }
 
     for map_id in range(
@@ -505,7 +506,7 @@ def main():
     ):
         if map_id not in scaling_sizes:
             raise ValueError(
-                f"RQ3 scaling supports map IDs 0, 1 and 2, got {map_id}."
+                f"RQ3 scaling supports map IDs 0, 1, 2 and 3, got {map_id}."
             )
 
         size = scaling_sizes[map_id]

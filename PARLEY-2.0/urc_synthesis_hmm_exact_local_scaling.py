@@ -6,7 +6,7 @@ import shutil
 def manipulate_prism_model(
     input_path,
     output_path,
-    possible_decisions=[1, 20],
+    possible_decisions=[1, 10],
     decision_variables=[],
     before_actions=['east', 'west', 'north', 'south'],
     after_actions=['update', 'skip_update'],
@@ -14,7 +14,7 @@ def manipulate_prism_model(
     baseline=False,
 ):
     """
-    Add the PARLEY/EvoChecker URC to a PRISM model (RQ3 scaling: 20 uncertainty levels).
+    Add the PARLEY/EvoChecker URC to a PRISM model.
 
     HMM semantics
     -------------
@@ -236,7 +236,7 @@ def add_controller(
     )
 
     with open(file_path, 'a') as file:
-        file.write('  c : [1..20] init 1;\n')
+        file.write('  c : [1..10] init 1;\n')
 
         for combination in combinations:
             new_line = '  [URC] true'
