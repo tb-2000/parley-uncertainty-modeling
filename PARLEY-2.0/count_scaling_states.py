@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """Count reachable PRISM states/transitions for fixed URC policies.
+PRISM builds the reachable model when invoked with the model file alone;
+there is no -build switch in PRISM 4.x.
 Run: python3 count_scaling_states.py scaling_prism_models.zip --prism /path/to/prism
 """
 import argparse, csv, re, shutil, subprocess, tempfile, zipfile
@@ -46,7 +48,7 @@ def main():
                 target.write_text(instantiated,encoding='utf-8')
                 print(f'Counting {model:17s} {size:2d}x{size:<2d} {policy} ...',flush=True)
                 try:
-                    proc=subprocess.run([args.prism,str(target),'-build'],capture_output=True,text=True,timeout=args.timeout)
+                    proc=subprocess.run([args.prism,str(target)],capture_output=True,text=True,timeout=args.timeout)
                     output=proc.stdout+'\n'+proc.stderr
                     values={key: (int(m.group(1).replace(',','')) if (m:=regex.search(output)) else None)
                             for key,regex in COUNT.items()}
