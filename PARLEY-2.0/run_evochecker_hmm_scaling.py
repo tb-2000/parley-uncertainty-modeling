@@ -12,6 +12,19 @@ def run_task(map_id, rep):
     properties_path = EVO_DIR / properties_name
     model_name = f"models/model_hmm_{map_id}_umc.prism"
     pctl_name = f"robot_rq3_hmm_map_{map_id}.pctl"
+    # EvoChecker recognizes optimization objectives through these PCTL comments.
+    # Rewrite the per-map PCTL here, so an upstream generator cannot omit them.
+    grid_sizes = {0: 5, 1: 10, 2: 15, 3: 20}
+    if map_id not in grid_sizes:
+        raise ValueError(f"Unsupported HMM scaling map: {map_id}")
+    target = grid_sizes[map_id] - 1
+    (EVO_DIR / pctl_name).write_text(
+        "//Objective, max\n"
+        f"P=? [ F (x={target} & y={target} & crashed=0) ]\n\n"
+        "//Objective, min\n"
+        'R{"cost"}=? [ C<=100 ]\n',
+        encoding="utf-8",
+    )
     for required in (EVO_DIR / model_name, EVO_DIR / pctl_name):
         if not required.is_file():
             raise FileNotFoundError(f"Missing HMM scaling input: {required}")
