@@ -18,109 +18,1813 @@
   "transition_definition": "A[xhat,yhat,action][i,j] = P(S_{t+1}=j | S_t=i, Xhat_t=(xhat,yhat), action)",
   "policy_only": true,
   "A": {
-    "1,0,east,0": [
+    "0,0,north,0": [
       {
         "next_state": 0,
         "probability": 0.97
       },
       {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      }
-    ],
-    "1,0,east,32": [
-      {
-        "next_state": 23,
+        "next_state": 40,
         "probability": 0.02
       },
       {
-        "next_state": 24,
+        "next_state": 48,
         "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.97
       }
     ],
-    "1,0,east,33": [
+    "0,0,north,41": [
       {
-        "next_state": 23,
+        "next_state": 0,
         "probability": 0.01
       },
       {
-        "next_state": 24,
+        "next_state": 40,
         "probability": 0.01
       },
       {
-        "next_state": 25,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
+        "next_state": 41,
         "probability": 0.97
+      },
+      {
+        "next_state": 49,
+        "probability": 0.01
       }
     ],
-    "1,0,east,34": [
+    "0,0,north,42": [
       {
-        "next_state": 24,
+        "next_state": 0,
         "probability": 0.01
       },
       {
-        "next_state": 25,
+        "next_state": 41,
         "probability": 0.01
       },
       {
-        "next_state": 26,
-        "probability": 0.01
-      },
-      {
-        "next_state": 34,
+        "next_state": 42,
         "probability": 0.97
+      },
+      {
+        "next_state": 50,
+        "probability": 0.01
       }
     ],
-    "1,0,east,35": [
+    "0,0,north,43": [
       {
-        "next_state": 25,
+        "next_state": 41,
         "probability": 0.01
       },
       {
-        "next_state": 26,
+        "next_state": 42,
         "probability": 0.01
       },
       {
-        "next_state": 27,
-        "probability": 0.01
-      },
-      {
-        "next_state": 35,
+        "next_state": 43,
         "probability": 0.97
+      },
+      {
+        "next_state": 51,
+        "probability": 0.01
       }
     ],
-    "1,0,east,36": [
+    "0,0,north,44": [
       {
-        "next_state": 26,
+        "next_state": 42,
         "probability": 0.01
       },
       {
-        "next_state": 27,
+        "next_state": 43,
+        "probability": 0.98
+      },
+      {
+        "next_state": 52,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,49": [
+      {
+        "next_state": 40,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.01
+      },
+      {
+        "next_state": 49,
+        "probability": 0.97
+      },
+      {
+        "next_state": 57,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,50": [
+      {
+        "next_state": 0,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.01
+      },
+      {
+        "next_state": 50,
+        "probability": 0.97
+      },
+      {
+        "next_state": 58,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,51": [
+      {
+        "next_state": 41,
+        "probability": 0.01
+      },
+      {
+        "next_state": 49,
+        "probability": 0.01
+      },
+      {
+        "next_state": 51,
+        "probability": 0.97
+      },
+      {
+        "next_state": 59,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,52": [
+      {
+        "next_state": 42,
+        "probability": 0.01
+      },
+      {
+        "next_state": 50,
+        "probability": 0.01
+      },
+      {
+        "next_state": 52,
+        "probability": 0.97
+      },
+      {
+        "next_state": 60,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,53": [
+      {
+        "next_state": 43,
+        "probability": 0.01
+      },
+      {
+        "next_state": 51,
+        "probability": 0.01
+      },
+      {
+        "next_state": 52,
+        "probability": 0.97
+      },
+      {
+        "next_state": 61,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,58": [
+      {
+        "next_state": 48,
+        "probability": 0.01
+      },
+      {
+        "next_state": 57,
+        "probability": 0.01
+      },
+      {
+        "next_state": 58,
+        "probability": 0.97
+      },
+      {
+        "next_state": 66,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,59": [
+      {
+        "next_state": 49,
+        "probability": 0.01
+      },
+      {
+        "next_state": 57,
+        "probability": 0.01
+      },
+      {
+        "next_state": 59,
+        "probability": 0.97
+      },
+      {
+        "next_state": 67,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,60": [
+      {
+        "next_state": 50,
+        "probability": 0.01
+      },
+      {
+        "next_state": 58,
+        "probability": 0.01
+      },
+      {
+        "next_state": 60,
+        "probability": 0.97
+      },
+      {
+        "next_state": 68,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,61": [
+      {
+        "next_state": 51,
+        "probability": 0.01
+      },
+      {
+        "next_state": 59,
+        "probability": 0.01
+      },
+      {
+        "next_state": 61,
+        "probability": 0.97
+      },
+      {
+        "next_state": 69,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,62": [
+      {
+        "next_state": 52,
+        "probability": 0.01
+      },
+      {
+        "next_state": 60,
+        "probability": 0.01
+      },
+      {
+        "next_state": 61,
+        "probability": 0.97
+      },
+      {
+        "next_state": 70,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,67": [
+      {
+        "next_state": 57,
+        "probability": 0.01
+      },
+      {
+        "next_state": 66,
+        "probability": 0.01
+      },
+      {
+        "next_state": 67,
+        "probability": 0.97
+      },
+      {
+        "next_state": 75,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,68": [
+      {
+        "next_state": 58,
+        "probability": 0.01
+      },
+      {
+        "next_state": 66,
+        "probability": 0.01
+      },
+      {
+        "next_state": 68,
+        "probability": 0.97
+      },
+      {
+        "next_state": 76,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,69": [
+      {
+        "next_state": 59,
+        "probability": 0.01
+      },
+      {
+        "next_state": 67,
+        "probability": 0.01
+      },
+      {
+        "next_state": 69,
+        "probability": 0.97
+      },
+      {
+        "next_state": 77,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,70": [
+      {
+        "next_state": 60,
+        "probability": 0.01
+      },
+      {
+        "next_state": 68,
+        "probability": 0.01
+      },
+      {
+        "next_state": 70,
+        "probability": 0.97
+      },
+      {
+        "next_state": 78,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,71": [
+      {
+        "next_state": 61,
+        "probability": 0.01
+      },
+      {
+        "next_state": 69,
+        "probability": 0.01
+      },
+      {
+        "next_state": 70,
+        "probability": 0.97
+      },
+      {
+        "next_state": 79,
+        "probability": 0.01
+      }
+    ],
+    "0,0,north,76": [
+      {
+        "next_state": 66,
+        "probability": 0.01
+      },
+      {
+        "next_state": 75,
         "probability": 0.02
       },
       {
-        "next_state": 36,
+        "next_state": 76,
         "probability": 0.97
       }
     ],
-    "1,0,east,41": [
+    "0,0,north,77": [
       {
-        "next_state": 24,
+        "next_state": 67,
+        "probability": 0.01
+      },
+      {
+        "next_state": 75,
+        "probability": 0.01
+      },
+      {
+        "next_state": 76,
+        "probability": 0.01
+      },
+      {
+        "next_state": 77,
+        "probability": 0.97
+      }
+    ],
+    "0,0,north,78": [
+      {
+        "next_state": 68,
+        "probability": 0.01
+      },
+      {
+        "next_state": 76,
+        "probability": 0.01
+      },
+      {
+        "next_state": 77,
+        "probability": 0.01
+      },
+      {
+        "next_state": 78,
+        "probability": 0.97
+      }
+    ],
+    "0,0,north,79": [
+      {
+        "next_state": 69,
+        "probability": 0.01
+      },
+      {
+        "next_state": 77,
+        "probability": 0.01
+      },
+      {
+        "next_state": 78,
+        "probability": 0.01
+      },
+      {
+        "next_state": 79,
+        "probability": 0.97
+      }
+    ],
+    "0,0,north,80": [
+      {
+        "next_state": 70,
+        "probability": 0.01
+      },
+      {
+        "next_state": 78,
+        "probability": 0.01
+      },
+      {
+        "next_state": 79,
+        "probability": 0.98
+      }
+    ],
+    "0,1,north,0": [
+      {
+        "next_state": 0,
+        "probability": 0.97
+      },
+      {
+        "next_state": 39,
+        "probability": 0.01
+      },
+      {
+        "next_state": 40,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,40": [
+      {
+        "next_state": 39,
+        "probability": 0.02
+      },
+      {
+        "next_state": 40,
+        "probability": 0.97
+      },
+      {
+        "next_state": 47,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,41": [
+      {
+        "next_state": 0,
+        "probability": 0.01
+      },
+      {
+        "next_state": 40,
+        "probability": 0.01
+      },
+      {
+        "next_state": 41,
+        "probability": 0.97
+      },
+      {
+        "next_state": 49,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,42": [
+      {
+        "next_state": 0,
+        "probability": 0.01
+      },
+      {
+        "next_state": 41,
+        "probability": 0.01
+      },
+      {
+        "next_state": 42,
+        "probability": 0.97
+      },
+      {
+        "next_state": 50,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,43": [
+      {
+        "next_state": 41,
+        "probability": 0.01
+      },
+      {
+        "next_state": 42,
+        "probability": 0.98
+      },
+      {
+        "next_state": 51,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,48": [
+      {
+        "next_state": 39,
+        "probability": 0.01
+      },
+      {
+        "next_state": 47,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.97
+      },
+      {
+        "next_state": 56,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,49": [
+      {
+        "next_state": 40,
+        "probability": 0.01
+      },
+      {
+        "next_state": 47,
+        "probability": 0.01
+      },
+      {
+        "next_state": 49,
+        "probability": 0.97
+      },
+      {
+        "next_state": 57,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,50": [
+      {
+        "next_state": 0,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.01
+      },
+      {
+        "next_state": 50,
+        "probability": 0.97
+      },
+      {
+        "next_state": 58,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,51": [
+      {
+        "next_state": 41,
+        "probability": 0.01
+      },
+      {
+        "next_state": 49,
+        "probability": 0.01
+      },
+      {
+        "next_state": 51,
+        "probability": 0.97
+      },
+      {
+        "next_state": 59,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,52": [
+      {
+        "next_state": 42,
+        "probability": 0.01
+      },
+      {
+        "next_state": 50,
+        "probability": 0.01
+      },
+      {
+        "next_state": 51,
+        "probability": 0.97
+      },
+      {
+        "next_state": 60,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,57": [
+      {
+        "next_state": 47,
+        "probability": 0.01
+      },
+      {
+        "next_state": 56,
+        "probability": 0.01
+      },
+      {
+        "next_state": 57,
+        "probability": 0.97
+      },
+      {
+        "next_state": 65,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,58": [
+      {
+        "next_state": 48,
+        "probability": 0.01
+      },
+      {
+        "next_state": 56,
+        "probability": 0.01
+      },
+      {
+        "next_state": 58,
+        "probability": 0.97
+      },
+      {
+        "next_state": 66,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,59": [
+      {
+        "next_state": 49,
+        "probability": 0.01
+      },
+      {
+        "next_state": 57,
+        "probability": 0.01
+      },
+      {
+        "next_state": 59,
+        "probability": 0.97
+      },
+      {
+        "next_state": 67,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,60": [
+      {
+        "next_state": 50,
+        "probability": 0.01
+      },
+      {
+        "next_state": 58,
+        "probability": 0.01
+      },
+      {
+        "next_state": 60,
+        "probability": 0.97
+      },
+      {
+        "next_state": 68,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,61": [
+      {
+        "next_state": 51,
+        "probability": 0.01
+      },
+      {
+        "next_state": 59,
+        "probability": 0.01
+      },
+      {
+        "next_state": 60,
+        "probability": 0.97
+      },
+      {
+        "next_state": 69,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,66": [
+      {
+        "next_state": 56,
+        "probability": 0.01
+      },
+      {
+        "next_state": 65,
+        "probability": 0.01
+      },
+      {
+        "next_state": 66,
+        "probability": 0.97
+      },
+      {
+        "next_state": 74,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,67": [
+      {
+        "next_state": 57,
+        "probability": 0.01
+      },
+      {
+        "next_state": 65,
+        "probability": 0.01
+      },
+      {
+        "next_state": 67,
+        "probability": 0.97
+      },
+      {
+        "next_state": 75,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,68": [
+      {
+        "next_state": 58,
+        "probability": 0.01
+      },
+      {
+        "next_state": 66,
+        "probability": 0.01
+      },
+      {
+        "next_state": 68,
+        "probability": 0.97
+      },
+      {
+        "next_state": 76,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,69": [
+      {
+        "next_state": 59,
+        "probability": 0.01
+      },
+      {
+        "next_state": 67,
+        "probability": 0.01
+      },
+      {
+        "next_state": 69,
+        "probability": 0.97
+      },
+      {
+        "next_state": 77,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,70": [
+      {
+        "next_state": 60,
+        "probability": 0.01
+      },
+      {
+        "next_state": 68,
+        "probability": 0.01
+      },
+      {
+        "next_state": 69,
+        "probability": 0.97
+      },
+      {
+        "next_state": 78,
+        "probability": 0.01
+      }
+    ],
+    "0,1,north,75": [
+      {
+        "next_state": 65,
+        "probability": 0.01
+      },
+      {
+        "next_state": 74,
+        "probability": 0.02
+      },
+      {
+        "next_state": 75,
+        "probability": 0.97
+      }
+    ],
+    "0,1,north,76": [
+      {
+        "next_state": 66,
+        "probability": 0.01
+      },
+      {
+        "next_state": 74,
+        "probability": 0.01
+      },
+      {
+        "next_state": 75,
+        "probability": 0.01
+      },
+      {
+        "next_state": 76,
+        "probability": 0.97
+      }
+    ],
+    "0,1,north,77": [
+      {
+        "next_state": 67,
+        "probability": 0.01
+      },
+      {
+        "next_state": 75,
+        "probability": 0.01
+      },
+      {
+        "next_state": 76,
+        "probability": 0.01
+      },
+      {
+        "next_state": 77,
+        "probability": 0.97
+      }
+    ],
+    "0,1,north,78": [
+      {
+        "next_state": 68,
+        "probability": 0.01
+      },
+      {
+        "next_state": 76,
+        "probability": 0.01
+      },
+      {
+        "next_state": 77,
+        "probability": 0.01
+      },
+      {
+        "next_state": 78,
+        "probability": 0.97
+      }
+    ],
+    "0,1,north,79": [
+      {
+        "next_state": 69,
+        "probability": 0.01
+      },
+      {
+        "next_state": 77,
+        "probability": 0.01
+      },
+      {
+        "next_state": 78,
+        "probability": 0.98
+      }
+    ],
+    "0,2,north,0": [
+      {
+        "next_state": 0,
+        "probability": 0.97
+      },
+      {
+        "next_state": 39,
+        "probability": 0.01
+      },
+      {
+        "next_state": 40,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,39": [
+      {
+        "next_state": 38,
+        "probability": 0.02
+      },
+      {
+        "next_state": 39,
+        "probability": 0.97
+      },
+      {
+        "next_state": 46,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,40": [
+      {
+        "next_state": 38,
+        "probability": 0.01
+      },
+      {
+        "next_state": 39,
+        "probability": 0.01
+      },
+      {
+        "next_state": 40,
+        "probability": 0.97
+      },
+      {
+        "next_state": 47,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,41": [
+      {
+        "next_state": 0,
+        "probability": 0.01
+      },
+      {
+        "next_state": 40,
+        "probability": 0.01
+      },
+      {
+        "next_state": 41,
+        "probability": 0.97
+      },
+      {
+        "next_state": 49,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,42": [
+      {
+        "next_state": 0,
+        "probability": 0.01
+      },
+      {
+        "next_state": 41,
+        "probability": 0.98
+      },
+      {
+        "next_state": 50,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,47": [
+      {
+        "next_state": 38,
+        "probability": 0.01
+      },
+      {
+        "next_state": 46,
+        "probability": 0.01
+      },
+      {
+        "next_state": 47,
+        "probability": 0.97
+      },
+      {
+        "next_state": 55,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,48": [
+      {
+        "next_state": 39,
+        "probability": 0.01
+      },
+      {
+        "next_state": 46,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.97
+      },
+      {
+        "next_state": 56,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,49": [
+      {
+        "next_state": 40,
+        "probability": 0.01
+      },
+      {
+        "next_state": 47,
+        "probability": 0.01
+      },
+      {
+        "next_state": 49,
+        "probability": 0.97
+      },
+      {
+        "next_state": 57,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,50": [
+      {
+        "next_state": 0,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.01
+      },
+      {
+        "next_state": 50,
+        "probability": 0.97
+      },
+      {
+        "next_state": 58,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,51": [
+      {
+        "next_state": 41,
+        "probability": 0.01
+      },
+      {
+        "next_state": 49,
+        "probability": 0.01
+      },
+      {
+        "next_state": 50,
+        "probability": 0.97
+      },
+      {
+        "next_state": 59,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,56": [
+      {
+        "next_state": 46,
+        "probability": 0.01
+      },
+      {
+        "next_state": 55,
+        "probability": 0.01
+      },
+      {
+        "next_state": 56,
+        "probability": 0.97
+      },
+      {
+        "next_state": 64,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,57": [
+      {
+        "next_state": 47,
+        "probability": 0.01
+      },
+      {
+        "next_state": 55,
+        "probability": 0.01
+      },
+      {
+        "next_state": 57,
+        "probability": 0.97
+      },
+      {
+        "next_state": 65,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,58": [
+      {
+        "next_state": 48,
+        "probability": 0.01
+      },
+      {
+        "next_state": 56,
+        "probability": 0.01
+      },
+      {
+        "next_state": 58,
+        "probability": 0.97
+      },
+      {
+        "next_state": 66,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,59": [
+      {
+        "next_state": 49,
+        "probability": 0.01
+      },
+      {
+        "next_state": 57,
+        "probability": 0.01
+      },
+      {
+        "next_state": 59,
+        "probability": 0.97
+      },
+      {
+        "next_state": 67,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,60": [
+      {
+        "next_state": 50,
+        "probability": 0.01
+      },
+      {
+        "next_state": 58,
+        "probability": 0.01
+      },
+      {
+        "next_state": 59,
+        "probability": 0.97
+      },
+      {
+        "next_state": 68,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,65": [
+      {
+        "next_state": 55,
+        "probability": 0.01
+      },
+      {
+        "next_state": 64,
+        "probability": 0.01
+      },
+      {
+        "next_state": 65,
+        "probability": 0.97
+      },
+      {
+        "next_state": 73,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,66": [
+      {
+        "next_state": 56,
+        "probability": 0.01
+      },
+      {
+        "next_state": 64,
+        "probability": 0.01
+      },
+      {
+        "next_state": 66,
+        "probability": 0.97
+      },
+      {
+        "next_state": 74,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,67": [
+      {
+        "next_state": 57,
+        "probability": 0.01
+      },
+      {
+        "next_state": 65,
+        "probability": 0.01
+      },
+      {
+        "next_state": 67,
+        "probability": 0.97
+      },
+      {
+        "next_state": 75,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,68": [
+      {
+        "next_state": 58,
+        "probability": 0.01
+      },
+      {
+        "next_state": 66,
+        "probability": 0.01
+      },
+      {
+        "next_state": 68,
+        "probability": 0.97
+      },
+      {
+        "next_state": 76,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,69": [
+      {
+        "next_state": 59,
+        "probability": 0.01
+      },
+      {
+        "next_state": 67,
+        "probability": 0.01
+      },
+      {
+        "next_state": 68,
+        "probability": 0.97
+      },
+      {
+        "next_state": 77,
+        "probability": 0.01
+      }
+    ],
+    "0,2,north,74": [
+      {
+        "next_state": 64,
+        "probability": 0.01
+      },
+      {
+        "next_state": 73,
+        "probability": 0.02
+      },
+      {
+        "next_state": 74,
+        "probability": 0.97
+      }
+    ],
+    "0,2,north,75": [
+      {
+        "next_state": 65,
+        "probability": 0.01
+      },
+      {
+        "next_state": 73,
+        "probability": 0.01
+      },
+      {
+        "next_state": 74,
+        "probability": 0.01
+      },
+      {
+        "next_state": 75,
+        "probability": 0.97
+      }
+    ],
+    "0,2,north,76": [
+      {
+        "next_state": 66,
+        "probability": 0.01
+      },
+      {
+        "next_state": 74,
+        "probability": 0.01
+      },
+      {
+        "next_state": 75,
+        "probability": 0.01
+      },
+      {
+        "next_state": 76,
+        "probability": 0.97
+      }
+    ],
+    "0,2,north,77": [
+      {
+        "next_state": 67,
+        "probability": 0.01
+      },
+      {
+        "next_state": 75,
+        "probability": 0.01
+      },
+      {
+        "next_state": 76,
+        "probability": 0.01
+      },
+      {
+        "next_state": 77,
+        "probability": 0.97
+      }
+    ],
+    "0,2,north,78": [
+      {
+        "next_state": 68,
+        "probability": 0.01
+      },
+      {
+        "next_state": 76,
+        "probability": 0.01
+      },
+      {
+        "next_state": 77,
+        "probability": 0.98
+      }
+    ],
+    "0,3,north,0": [
+      {
+        "next_state": 0,
+        "probability": 0.97
+      },
+      {
+        "next_state": 39,
+        "probability": 0.01
+      },
+      {
+        "next_state": 40,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,38": [
+      {
+        "next_state": 37,
+        "probability": 0.02
+      },
+      {
+        "next_state": 38,
+        "probability": 0.97
+      },
+      {
+        "next_state": 45,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,39": [
+      {
+        "next_state": 37,
+        "probability": 0.01
+      },
+      {
+        "next_state": 38,
+        "probability": 0.01
+      },
+      {
+        "next_state": 39,
+        "probability": 0.97
+      },
+      {
+        "next_state": 46,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,40": [
+      {
+        "next_state": 38,
+        "probability": 0.01
+      },
+      {
+        "next_state": 39,
+        "probability": 0.01
+      },
+      {
+        "next_state": 40,
+        "probability": 0.97
+      },
+      {
+        "next_state": 47,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,41": [
+      {
+        "next_state": 0,
+        "probability": 0.98
+      },
+      {
+        "next_state": 40,
+        "probability": 0.01
+      },
+      {
+        "next_state": 49,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,46": [
+      {
+        "next_state": 37,
+        "probability": 0.01
+      },
+      {
+        "next_state": 45,
+        "probability": 0.01
+      },
+      {
+        "next_state": 46,
+        "probability": 0.97
+      },
+      {
+        "next_state": 54,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,47": [
+      {
+        "next_state": 38,
+        "probability": 0.01
+      },
+      {
+        "next_state": 45,
+        "probability": 0.01
+      },
+      {
+        "next_state": 47,
+        "probability": 0.97
+      },
+      {
+        "next_state": 55,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,48": [
+      {
+        "next_state": 39,
+        "probability": 0.01
+      },
+      {
+        "next_state": 46,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.97
+      },
+      {
+        "next_state": 56,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,49": [
+      {
+        "next_state": 40,
+        "probability": 0.01
+      },
+      {
+        "next_state": 47,
+        "probability": 0.01
+      },
+      {
+        "next_state": 49,
+        "probability": 0.97
+      },
+      {
+        "next_state": 57,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,50": [
+      {
+        "next_state": 0,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.01
+      },
+      {
+        "next_state": 49,
+        "probability": 0.97
+      },
+      {
+        "next_state": 58,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,55": [
+      {
+        "next_state": 45,
+        "probability": 0.01
+      },
+      {
+        "next_state": 54,
+        "probability": 0.01
+      },
+      {
+        "next_state": 55,
+        "probability": 0.97
+      },
+      {
+        "next_state": 63,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,56": [
+      {
+        "next_state": 46,
+        "probability": 0.01
+      },
+      {
+        "next_state": 54,
+        "probability": 0.01
+      },
+      {
+        "next_state": 56,
+        "probability": 0.97
+      },
+      {
+        "next_state": 64,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,57": [
+      {
+        "next_state": 47,
+        "probability": 0.01
+      },
+      {
+        "next_state": 55,
+        "probability": 0.01
+      },
+      {
+        "next_state": 57,
+        "probability": 0.97
+      },
+      {
+        "next_state": 65,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,58": [
+      {
+        "next_state": 48,
+        "probability": 0.01
+      },
+      {
+        "next_state": 56,
+        "probability": 0.01
+      },
+      {
+        "next_state": 58,
+        "probability": 0.97
+      },
+      {
+        "next_state": 66,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,59": [
+      {
+        "next_state": 49,
+        "probability": 0.01
+      },
+      {
+        "next_state": 57,
+        "probability": 0.01
+      },
+      {
+        "next_state": 58,
+        "probability": 0.97
+      },
+      {
+        "next_state": 67,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,64": [
+      {
+        "next_state": 54,
+        "probability": 0.01
+      },
+      {
+        "next_state": 63,
+        "probability": 0.01
+      },
+      {
+        "next_state": 64,
+        "probability": 0.97
+      },
+      {
+        "next_state": 72,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,65": [
+      {
+        "next_state": 55,
+        "probability": 0.01
+      },
+      {
+        "next_state": 63,
+        "probability": 0.01
+      },
+      {
+        "next_state": 65,
+        "probability": 0.97
+      },
+      {
+        "next_state": 73,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,66": [
+      {
+        "next_state": 56,
+        "probability": 0.01
+      },
+      {
+        "next_state": 64,
+        "probability": 0.01
+      },
+      {
+        "next_state": 66,
+        "probability": 0.97
+      },
+      {
+        "next_state": 74,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,67": [
+      {
+        "next_state": 57,
+        "probability": 0.01
+      },
+      {
+        "next_state": 65,
+        "probability": 0.01
+      },
+      {
+        "next_state": 67,
+        "probability": 0.97
+      },
+      {
+        "next_state": 75,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,68": [
+      {
+        "next_state": 58,
+        "probability": 0.01
+      },
+      {
+        "next_state": 66,
+        "probability": 0.01
+      },
+      {
+        "next_state": 67,
+        "probability": 0.97
+      },
+      {
+        "next_state": 76,
+        "probability": 0.01
+      }
+    ],
+    "0,3,north,73": [
+      {
+        "next_state": 63,
+        "probability": 0.01
+      },
+      {
+        "next_state": 72,
+        "probability": 0.02
+      },
+      {
+        "next_state": 73,
+        "probability": 0.97
+      }
+    ],
+    "0,3,north,74": [
+      {
+        "next_state": 64,
+        "probability": 0.01
+      },
+      {
+        "next_state": 72,
+        "probability": 0.01
+      },
+      {
+        "next_state": 73,
+        "probability": 0.01
+      },
+      {
+        "next_state": 74,
+        "probability": 0.97
+      }
+    ],
+    "0,3,north,75": [
+      {
+        "next_state": 65,
+        "probability": 0.01
+      },
+      {
+        "next_state": 73,
+        "probability": 0.01
+      },
+      {
+        "next_state": 74,
+        "probability": 0.01
+      },
+      {
+        "next_state": 75,
+        "probability": 0.97
+      }
+    ],
+    "0,3,north,76": [
+      {
+        "next_state": 66,
+        "probability": 0.01
+      },
+      {
+        "next_state": 74,
+        "probability": 0.01
+      },
+      {
+        "next_state": 75,
+        "probability": 0.01
+      },
+      {
+        "next_state": 76,
+        "probability": 0.97
+      }
+    ],
+    "0,3,north,77": [
+      {
+        "next_state": 67,
+        "probability": 0.01
+      },
+      {
+        "next_state": 75,
+        "probability": 0.01
+      },
+      {
+        "next_state": 76,
+        "probability": 0.98
+      }
+    ],
+    "0,4,east,0": [
+      {
+        "next_state": 0,
+        "probability": 0.97
+      },
+      {
+        "next_state": 31,
+        "probability": 0.01
+      },
+      {
+        "next_state": 32,
+        "probability": 0.02
+      }
+    ],
+    "0,4,east,37": [
+      {
+        "next_state": 28,
+        "probability": 0.02
+      },
+      {
+        "next_state": 29,
+        "probability": 0.01
+      },
+      {
+        "next_state": 37,
+        "probability": 0.97
+      }
+    ],
+    "0,4,east,38": [
+      {
+        "next_state": 28,
+        "probability": 0.01
+      },
+      {
+        "next_state": 29,
+        "probability": 0.01
+      },
+      {
+        "next_state": 30,
+        "probability": 0.01
+      },
+      {
+        "next_state": 38,
+        "probability": 0.97
+      }
+    ],
+    "0,4,east,39": [
+      {
+        "next_state": 29,
+        "probability": 0.01
+      },
+      {
+        "next_state": 30,
+        "probability": 0.01
+      },
+      {
+        "next_state": 31,
+        "probability": 0.01
+      },
+      {
+        "next_state": 39,
+        "probability": 0.97
+      }
+    ],
+    "0,4,east,40": [
+      {
+        "next_state": 30,
+        "probability": 0.01
+      },
+      {
+        "next_state": 31,
         "probability": 0.01
       },
       {
@@ -128,69 +1832,83 @@
         "probability": 0.01
       },
       {
-        "next_state": 34,
-        "probability": 0.01
-      },
-      {
-        "next_state": 41,
+        "next_state": 40,
         "probability": 0.97
       }
     ],
-    "1,0,east,42": [
+    "0,4,east,45": [
       {
-        "next_state": 25,
+        "next_state": 28,
         "probability": 0.01
       },
       {
-        "next_state": 33,
+        "next_state": 37,
         "probability": 0.01
       },
       {
-        "next_state": 35,
+        "next_state": 38,
         "probability": 0.01
       },
       {
-        "next_state": 42,
+        "next_state": 45,
         "probability": 0.97
       }
     ],
-    "1,0,east,43": [
+    "0,4,east,46": [
       {
-        "next_state": 26,
+        "next_state": 29,
         "probability": 0.01
       },
       {
-        "next_state": 34,
+        "next_state": 37,
         "probability": 0.01
       },
       {
-        "next_state": 36,
+        "next_state": 39,
         "probability": 0.01
       },
       {
-        "next_state": 43,
+        "next_state": 46,
         "probability": 0.97
       }
     ],
-    "1,0,east,44": [
+    "0,4,east,47": [
       {
-        "next_state": 27,
+        "next_state": 30,
         "probability": 0.01
       },
       {
-        "next_state": 35,
+        "next_state": 38,
         "probability": 0.01
       },
       {
-        "next_state": 36,
+        "next_state": 40,
         "probability": 0.01
       },
       {
-        "next_state": 44,
+        "next_state": 47,
         "probability": 0.97
       }
     ],
-    "1,0,east,49": [
+    "0,4,east,48": [
+      {
+        "next_state": 0,
+        "probability": 0.01
+      },
+      {
+        "next_state": 31,
+        "probability": 0.01
+      },
+      {
+        "next_state": 39,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.97
+      }
+    ],
+    "0,4,east,49": [
       {
         "next_state": 0,
         "probability": 0.01
@@ -200,7 +1918,7 @@
         "probability": 0.01
       },
       {
-        "next_state": 41,
+        "next_state": 40,
         "probability": 0.01
       },
       {
@@ -208,97 +1926,327 @@
         "probability": 0.97
       }
     ],
-    "1,0,east,50": [
+    "0,4,east,54": [
+      {
+        "next_state": 37,
+        "probability": 0.01
+      },
+      {
+        "next_state": 45,
+        "probability": 0.01
+      },
+      {
+        "next_state": 46,
+        "probability": 0.01
+      },
+      {
+        "next_state": 54,
+        "probability": 0.97
+      }
+    ],
+    "0,4,east,55": [
+      {
+        "next_state": 38,
+        "probability": 0.01
+      },
+      {
+        "next_state": 45,
+        "probability": 0.01
+      },
+      {
+        "next_state": 47,
+        "probability": 0.01
+      },
+      {
+        "next_state": 55,
+        "probability": 0.97
+      }
+    ],
+    "0,4,east,56": [
+      {
+        "next_state": 39,
+        "probability": 0.01
+      },
+      {
+        "next_state": 46,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.01
+      },
+      {
+        "next_state": 56,
+        "probability": 0.97
+      }
+    ],
+    "0,4,east,57": [
+      {
+        "next_state": 40,
+        "probability": 0.01
+      },
+      {
+        "next_state": 47,
+        "probability": 0.01
+      },
+      {
+        "next_state": 49,
+        "probability": 0.01
+      },
+      {
+        "next_state": 57,
+        "probability": 0.97
+      }
+    ],
+    "0,4,east,58": [
       {
         "next_state": 0,
         "probability": 0.01
       },
       {
-        "next_state": 33,
+        "next_state": 48,
         "probability": 0.01
       },
       {
-        "next_state": 42,
+        "next_state": 49,
+        "probability": 0.01
+      },
+      {
+        "next_state": 58,
+        "probability": 0.97
+      }
+    ],
+    "0,4,east,63": [
+      {
+        "next_state": 45,
+        "probability": 0.01
+      },
+      {
+        "next_state": 54,
+        "probability": 0.01
+      },
+      {
+        "next_state": 55,
+        "probability": 0.01
+      },
+      {
+        "next_state": 63,
+        "probability": 0.97
+      }
+    ],
+    "0,4,east,64": [
+      {
+        "next_state": 46,
+        "probability": 0.01
+      },
+      {
+        "next_state": 54,
+        "probability": 0.01
+      },
+      {
+        "next_state": 56,
+        "probability": 0.01
+      },
+      {
+        "next_state": 64,
+        "probability": 0.97
+      }
+    ],
+    "0,4,east,65": [
+      {
+        "next_state": 47,
+        "probability": 0.01
+      },
+      {
+        "next_state": 55,
+        "probability": 0.01
+      },
+      {
+        "next_state": 57,
+        "probability": 0.01
+      },
+      {
+        "next_state": 65,
+        "probability": 0.97
+      }
+    ],
+    "0,4,east,66": [
+      {
+        "next_state": 48,
+        "probability": 0.01
+      },
+      {
+        "next_state": 56,
+        "probability": 0.01
+      },
+      {
+        "next_state": 58,
+        "probability": 0.01
+      },
+      {
+        "next_state": 66,
+        "probability": 0.97
+      }
+    ],
+    "0,4,east,67": [
+      {
+        "next_state": 49,
+        "probability": 0.01
+      },
+      {
+        "next_state": 57,
+        "probability": 0.01
+      },
+      {
+        "next_state": 58,
+        "probability": 0.01
+      },
+      {
+        "next_state": 67,
+        "probability": 0.97
+      }
+    ],
+    "0,4,east,72": [
+      {
+        "next_state": 54,
+        "probability": 0.01
+      },
+      {
+        "next_state": 63,
+        "probability": 0.98
+      },
+      {
+        "next_state": 64,
+        "probability": 0.01
+      }
+    ],
+    "0,4,east,73": [
+      {
+        "next_state": 55,
+        "probability": 0.01
+      },
+      {
+        "next_state": 63,
+        "probability": 0.01
+      },
+      {
+        "next_state": 64,
+        "probability": 0.97
+      },
+      {
+        "next_state": 65,
+        "probability": 0.01
+      }
+    ],
+    "0,4,east,74": [
+      {
+        "next_state": 56,
+        "probability": 0.01
+      },
+      {
+        "next_state": 64,
+        "probability": 0.01
+      },
+      {
+        "next_state": 65,
+        "probability": 0.97
+      },
+      {
+        "next_state": 66,
+        "probability": 0.01
+      }
+    ],
+    "0,4,east,75": [
+      {
+        "next_state": 57,
+        "probability": 0.01
+      },
+      {
+        "next_state": 65,
+        "probability": 0.01
+      },
+      {
+        "next_state": 66,
+        "probability": 0.97
+      },
+      {
+        "next_state": 67,
+        "probability": 0.01
+      }
+    ],
+    "0,4,east,76": [
+      {
+        "next_state": 58,
+        "probability": 0.01
+      },
+      {
+        "next_state": 66,
+        "probability": 0.01
+      },
+      {
+        "next_state": 67,
+        "probability": 0.98
+      }
+    ],
+    "1,2,west,0": [
+      {
+        "next_state": 0,
+        "probability": 0.97
+      },
+      {
+        "next_state": 48,
         "probability": 0.01
       },
       {
         "next_state": 50,
-        "probability": 0.97
+        "probability": 0.01
+      },
+      {
+        "next_state": 58,
+        "probability": 0.01
       }
     ],
-    "1,0,east,51": [
+    "1,2,west,30": [
       {
-        "next_state": 34,
+        "next_state": 39,
+        "probability": 0.98
+      },
+      {
+        "next_state": 40,
         "probability": 0.01
       },
       {
-        "next_state": 41,
+        "next_state": 47,
         "probability": 0.01
-      },
-      {
-        "next_state": 43,
-        "probability": 0.01
-      },
-      {
-        "next_state": 51,
-        "probability": 0.97
       }
     ],
-    "1,0,east,52": [
-      {
-        "next_state": 35,
-        "probability": 0.01
-      },
-      {
-        "next_state": 42,
-        "probability": 0.01
-      },
-      {
-        "next_state": 44,
-        "probability": 0.01
-      },
-      {
-        "next_state": 52,
-        "probability": 0.97
-      }
-    ],
-    "1,0,east,53": [
-      {
-        "next_state": 36,
-        "probability": 0.01
-      },
-      {
-        "next_state": 43,
-        "probability": 0.01
-      },
-      {
-        "next_state": 44,
-        "probability": 0.01
-      },
-      {
-        "next_state": 53,
-        "probability": 0.97
-      }
-    ],
-    "1,0,east,58": [
+    "1,2,west,31": [
       {
         "next_state": 0,
         "probability": 0.01
       },
       {
-        "next_state": 49,
+        "next_state": 39,
         "probability": 0.01
       },
       {
-        "next_state": 50,
-        "probability": 0.01
-      },
-      {
-        "next_state": 58,
+        "next_state": 40,
         "probability": 0.97
+      },
+      {
+        "next_state": 48,
+        "probability": 0.01
       }
     ],
-    "1,0,east,59": [
+    "1,2,west,32": [
+      {
+        "next_state": 0,
+        "probability": 0.97
+      },
+      {
+        "next_state": 40,
+        "probability": 0.01
+      },
       {
         "next_state": 41,
         "probability": 0.01
@@ -306,17 +2254,17 @@
       {
         "next_state": 49,
         "probability": 0.01
-      },
+      }
+    ],
+    "1,2,west,33": [
       {
-        "next_state": 51,
+        "next_state": 0,
         "probability": 0.01
       },
       {
-        "next_state": 59,
+        "next_state": 41,
         "probability": 0.97
-      }
-    ],
-    "1,0,east,60": [
+      },
       {
         "next_state": 42,
         "probability": 0.01
@@ -324,85 +2272,67 @@
       {
         "next_state": 50,
         "probability": 0.01
-      },
-      {
-        "next_state": 52,
-        "probability": 0.01
-      },
-      {
-        "next_state": 60,
-        "probability": 0.97
       }
     ],
-    "1,0,east,61": [
+    "1,2,west,34": [
       {
-        "next_state": 43,
+        "next_state": 41,
         "probability": 0.01
+      },
+      {
+        "next_state": 42,
+        "probability": 0.98
       },
       {
         "next_state": 51,
         "probability": 0.01
-      },
-      {
-        "next_state": 53,
-        "probability": 0.01
-      },
-      {
-        "next_state": 61,
-        "probability": 0.97
       }
     ],
-    "1,0,east,62": [
+    "1,2,west,39": [
       {
-        "next_state": 44,
-        "probability": 0.01
-      },
-      {
-        "next_state": 52,
-        "probability": 0.01
-      },
-      {
-        "next_state": 53,
-        "probability": 0.01
-      },
-      {
-        "next_state": 62,
+        "next_state": 39,
         "probability": 0.97
+      },
+      {
+        "next_state": 47,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.01
+      },
+      {
+        "next_state": 56,
+        "probability": 0.01
       }
     ],
-    "1,0,east,67": [
+    "1,2,west,40": [
+      {
+        "next_state": 40,
+        "probability": 0.97
+      },
+      {
+        "next_state": 47,
+        "probability": 0.01
+      },
       {
         "next_state": 49,
         "probability": 0.01
       },
       {
-        "next_state": 58,
-        "probability": 0.98
-      },
-      {
-        "next_state": 59,
+        "next_state": 57,
         "probability": 0.01
       }
     ],
-    "1,0,east,68": [
+    "1,2,west,41": [
       {
-        "next_state": 50,
-        "probability": 0.01
-      },
-      {
-        "next_state": 58,
-        "probability": 0.01
-      },
-      {
-        "next_state": 59,
+        "next_state": 41,
         "probability": 0.97
       },
       {
-        "next_state": 60,
+        "next_state": 49,
         "probability": 0.01
-      }
-    ],
-    "1,0,east,69": [
+      },
       {
         "next_state": 51,
         "probability": 0.01
@@ -410,46 +2340,286 @@
       {
         "next_state": 59,
         "probability": 0.01
+      }
+    ],
+    "1,2,west,42": [
+      {
+        "next_state": 42,
+        "probability": 0.97
       },
+      {
+        "next_state": 50,
+        "probability": 0.01
+      },
+      {
+        "next_state": 51,
+        "probability": 0.01
+      },
+      {
+        "next_state": 60,
+        "probability": 0.01
+      }
+    ],
+    "1,2,west,47": [
+      {
+        "next_state": 47,
+        "probability": 0.97
+      },
+      {
+        "next_state": 56,
+        "probability": 0.01
+      },
+      {
+        "next_state": 57,
+        "probability": 0.01
+      },
+      {
+        "next_state": 65,
+        "probability": 0.01
+      }
+    ],
+    "1,2,west,48": [
+      {
+        "next_state": 48,
+        "probability": 0.97
+      },
+      {
+        "next_state": 56,
+        "probability": 0.01
+      },
+      {
+        "next_state": 58,
+        "probability": 0.01
+      },
+      {
+        "next_state": 66,
+        "probability": 0.01
+      }
+    ],
+    "1,2,west,49": [
+      {
+        "next_state": 49,
+        "probability": 0.97
+      },
+      {
+        "next_state": 57,
+        "probability": 0.01
+      },
+      {
+        "next_state": 59,
+        "probability": 0.01
+      },
+      {
+        "next_state": 67,
+        "probability": 0.01
+      }
+    ],
+    "1,2,west,50": [
+      {
+        "next_state": 50,
+        "probability": 0.97
+      },
+      {
+        "next_state": 58,
+        "probability": 0.01
+      },
+      {
+        "next_state": 60,
+        "probability": 0.01
+      },
+      {
+        "next_state": 68,
+        "probability": 0.01
+      }
+    ],
+    "1,2,west,51": [
+      {
+        "next_state": 51,
+        "probability": 0.97
+      },
+      {
+        "next_state": 59,
+        "probability": 0.01
+      },
+      {
+        "next_state": 60,
+        "probability": 0.01
+      },
+      {
+        "next_state": 69,
+        "probability": 0.01
+      }
+    ],
+    "1,2,west,56": [
+      {
+        "next_state": 56,
+        "probability": 0.97
+      },
+      {
+        "next_state": 65,
+        "probability": 0.01
+      },
+      {
+        "next_state": 66,
+        "probability": 0.01
+      },
+      {
+        "next_state": 74,
+        "probability": 0.01
+      }
+    ],
+    "1,2,west,57": [
+      {
+        "next_state": 57,
+        "probability": 0.97
+      },
+      {
+        "next_state": 65,
+        "probability": 0.01
+      },
+      {
+        "next_state": 67,
+        "probability": 0.01
+      },
+      {
+        "next_state": 75,
+        "probability": 0.01
+      }
+    ],
+    "1,2,west,58": [
+      {
+        "next_state": 58,
+        "probability": 0.97
+      },
+      {
+        "next_state": 66,
+        "probability": 0.01
+      },
+      {
+        "next_state": 68,
+        "probability": 0.01
+      },
+      {
+        "next_state": 76,
+        "probability": 0.01
+      }
+    ],
+    "1,2,west,59": [
+      {
+        "next_state": 59,
+        "probability": 0.97
+      },
+      {
+        "next_state": 67,
+        "probability": 0.01
+      },
+      {
+        "next_state": 69,
+        "probability": 0.01
+      },
+      {
+        "next_state": 77,
+        "probability": 0.01
+      }
+    ],
+    "1,2,west,60": [
       {
         "next_state": 60,
         "probability": 0.97
       },
       {
-        "next_state": 61,
+        "next_state": 68,
+        "probability": 0.01
+      },
+      {
+        "next_state": 69,
+        "probability": 0.01
+      },
+      {
+        "next_state": 78,
         "probability": 0.01
       }
     ],
-    "1,0,east,70": [
+    "1,2,west,65": [
       {
-        "next_state": 52,
-        "probability": 0.01
-      },
-      {
-        "next_state": 60,
-        "probability": 0.01
-      },
-      {
-        "next_state": 61,
+        "next_state": 65,
         "probability": 0.97
       },
       {
-        "next_state": 62,
+        "next_state": 74,
+        "probability": 0.02
+      },
+      {
+        "next_state": 75,
         "probability": 0.01
       }
     ],
-    "1,0,east,71": [
+    "1,2,west,66": [
       {
-        "next_state": 53,
+        "next_state": 66,
+        "probability": 0.97
+      },
+      {
+        "next_state": 74,
         "probability": 0.01
       },
       {
-        "next_state": 61,
+        "next_state": 75,
         "probability": 0.01
       },
       {
-        "next_state": 62,
-        "probability": 0.98
+        "next_state": 76,
+        "probability": 0.01
+      }
+    ],
+    "1,2,west,67": [
+      {
+        "next_state": 67,
+        "probability": 0.97
+      },
+      {
+        "next_state": 75,
+        "probability": 0.01
+      },
+      {
+        "next_state": 76,
+        "probability": 0.01
+      },
+      {
+        "next_state": 77,
+        "probability": 0.01
+      }
+    ],
+    "1,2,west,68": [
+      {
+        "next_state": 68,
+        "probability": 0.97
+      },
+      {
+        "next_state": 76,
+        "probability": 0.01
+      },
+      {
+        "next_state": 77,
+        "probability": 0.01
+      },
+      {
+        "next_state": 78,
+        "probability": 0.01
+      }
+    ],
+    "1,2,west,69": [
+      {
+        "next_state": 69,
+        "probability": 0.97
+      },
+      {
+        "next_state": 77,
+        "probability": 0.01
+      },
+      {
+        "next_state": 78,
+        "probability": 0.02
       }
     ],
     "1,4,east,0": [
@@ -886,441 +3056,7 @@
         "probability": 0.98
       }
     ],
-    "2,0,north,0": [
-      {
-        "next_state": 0,
-        "probability": 0.97
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      },
-      {
-        "next_state": 40,
-        "probability": 0.01
-      },
-      {
-        "next_state": 48,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,23": [
-      {
-        "next_state": 22,
-        "probability": 0.02
-      },
-      {
-        "next_state": 23,
-        "probability": 0.97
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,24": [
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 24,
-        "probability": 0.97
-      },
-      {
-        "next_state": 32,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,25": [
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
-        "next_state": 25,
-        "probability": 0.97
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,26": [
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
-        "next_state": 25,
-        "probability": 0.01
-      },
-      {
-        "next_state": 26,
-        "probability": 0.97
-      },
-      {
-        "next_state": 34,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,27": [
-      {
-        "next_state": 25,
-        "probability": 0.01
-      },
-      {
-        "next_state": 26,
-        "probability": 0.98
-      },
-      {
-        "next_state": 35,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,32": [
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.97
-      },
-      {
-        "next_state": 40,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,33": [
-      {
-        "next_state": 0,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.97
-      }
-    ],
-    "2,0,north,34": [
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.01
-      },
-      {
-        "next_state": 34,
-        "probability": 0.97
-      },
-      {
-        "next_state": 41,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,35": [
-      {
-        "next_state": 25,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      },
-      {
-        "next_state": 35,
-        "probability": 0.97
-      },
-      {
-        "next_state": 42,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,36": [
-      {
-        "next_state": 26,
-        "probability": 0.01
-      },
-      {
-        "next_state": 34,
-        "probability": 0.01
-      },
-      {
-        "next_state": 35,
-        "probability": 0.97
-      },
-      {
-        "next_state": 43,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,41": [
-      {
-        "next_state": 32,
-        "probability": 0.01
-      },
-      {
-        "next_state": 40,
-        "probability": 0.01
-      },
-      {
-        "next_state": 41,
-        "probability": 0.97
-      },
-      {
-        "next_state": 49,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,42": [
-      {
-        "next_state": 0,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      },
-      {
-        "next_state": 42,
-        "probability": 0.97
-      },
-      {
-        "next_state": 50,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,43": [
-      {
-        "next_state": 34,
-        "probability": 0.01
-      },
-      {
-        "next_state": 41,
-        "probability": 0.01
-      },
-      {
-        "next_state": 43,
-        "probability": 0.97
-      },
-      {
-        "next_state": 51,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,44": [
-      {
-        "next_state": 35,
-        "probability": 0.01
-      },
-      {
-        "next_state": 42,
-        "probability": 0.01
-      },
-      {
-        "next_state": 43,
-        "probability": 0.97
-      },
-      {
-        "next_state": 52,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,49": [
-      {
-        "next_state": 40,
-        "probability": 0.01
-      },
-      {
-        "next_state": 48,
-        "probability": 0.01
-      },
-      {
-        "next_state": 49,
-        "probability": 0.97
-      },
-      {
-        "next_state": 57,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,50": [
-      {
-        "next_state": 0,
-        "probability": 0.01
-      },
-      {
-        "next_state": 48,
-        "probability": 0.01
-      },
-      {
-        "next_state": 50,
-        "probability": 0.97
-      },
-      {
-        "next_state": 58,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,51": [
-      {
-        "next_state": 41,
-        "probability": 0.01
-      },
-      {
-        "next_state": 49,
-        "probability": 0.01
-      },
-      {
-        "next_state": 51,
-        "probability": 0.97
-      },
-      {
-        "next_state": 59,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,52": [
-      {
-        "next_state": 42,
-        "probability": 0.01
-      },
-      {
-        "next_state": 50,
-        "probability": 0.01
-      },
-      {
-        "next_state": 52,
-        "probability": 0.97
-      },
-      {
-        "next_state": 60,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,53": [
-      {
-        "next_state": 43,
-        "probability": 0.01
-      },
-      {
-        "next_state": 51,
-        "probability": 0.01
-      },
-      {
-        "next_state": 52,
-        "probability": 0.97
-      },
-      {
-        "next_state": 61,
-        "probability": 0.01
-      }
-    ],
-    "2,0,north,58": [
-      {
-        "next_state": 48,
-        "probability": 0.01
-      },
-      {
-        "next_state": 57,
-        "probability": 0.02
-      },
-      {
-        "next_state": 58,
-        "probability": 0.97
-      }
-    ],
-    "2,0,north,59": [
-      {
-        "next_state": 49,
-        "probability": 0.01
-      },
-      {
-        "next_state": 57,
-        "probability": 0.01
-      },
-      {
-        "next_state": 58,
-        "probability": 0.01
-      },
-      {
-        "next_state": 59,
-        "probability": 0.97
-      }
-    ],
-    "2,0,north,60": [
-      {
-        "next_state": 50,
-        "probability": 0.01
-      },
-      {
-        "next_state": 58,
-        "probability": 0.01
-      },
-      {
-        "next_state": 59,
-        "probability": 0.01
-      },
-      {
-        "next_state": 60,
-        "probability": 0.97
-      }
-    ],
-    "2,0,north,61": [
-      {
-        "next_state": 51,
-        "probability": 0.01
-      },
-      {
-        "next_state": 59,
-        "probability": 0.01
-      },
-      {
-        "next_state": 60,
-        "probability": 0.01
-      },
-      {
-        "next_state": 61,
-        "probability": 0.97
-      }
-    ],
-    "2,0,north,62": [
-      {
-        "next_state": 52,
-        "probability": 0.01
-      },
-      {
-        "next_state": 60,
-        "probability": 0.01
-      },
-      {
-        "next_state": 61,
-        "probability": 0.98
-      }
-    ],
-    "2,1,north,0": [
+    "2,3,north,0": [
       {
         "next_state": 0,
         "probability": 0.97
@@ -1338,10 +3074,46 @@
         "probability": 0.01
       }
     ],
-    "2,1,north,22": [
+    "2,3,north,20": [
+      {
+        "next_state": 19,
+        "probability": 0.02
+      },
+      {
+        "next_state": 20,
+        "probability": 0.97
+      },
+      {
+        "next_state": 28,
+        "probability": 0.01
+      }
+    ],
+    "2,3,north,21": [
+      {
+        "next_state": 19,
+        "probability": 0.01
+      },
+      {
+        "next_state": 20,
+        "probability": 0.01
+      },
       {
         "next_state": 21,
-        "probability": 0.02
+        "probability": 0.97
+      },
+      {
+        "next_state": 29,
+        "probability": 0.01
+      }
+    ],
+    "2,3,north,22": [
+      {
+        "next_state": 20,
+        "probability": 0.01
+      },
+      {
+        "next_state": 21,
+        "probability": 0.01
       },
       {
         "next_state": 22,
@@ -1352,7 +3124,7 @@
         "probability": 0.01
       }
     ],
-    "2,1,north,23": [
+    "2,3,north,23": [
       {
         "next_state": 21,
         "probability": 0.01
@@ -1370,63 +3142,63 @@
         "probability": 0.01
       }
     ],
-    "2,1,north,24": [
+    "2,3,north,24": [
       {
         "next_state": 22,
         "probability": 0.01
       },
       {
         "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 24,
-        "probability": 0.97
+        "probability": 0.98
       },
       {
         "next_state": 32,
         "probability": 0.01
       }
     ],
-    "2,1,north,25": [
+    "2,3,north,29": [
       {
-        "next_state": 23,
+        "next_state": 19,
         "probability": 0.01
       },
       {
-        "next_state": 24,
+        "next_state": 28,
         "probability": 0.01
       },
       {
-        "next_state": 25,
+        "next_state": 29,
         "probability": 0.97
       },
       {
-        "next_state": 33,
+        "next_state": 37,
         "probability": 0.01
       }
     ],
-    "2,1,north,26": [
+    "2,3,north,30": [
       {
-        "next_state": 24,
+        "next_state": 20,
         "probability": 0.01
       },
       {
-        "next_state": 25,
-        "probability": 0.98
+        "next_state": 28,
+        "probability": 0.01
       },
       {
-        "next_state": 34,
+        "next_state": 30,
+        "probability": 0.97
+      },
+      {
+        "next_state": 38,
         "probability": 0.01
       }
     ],
-    "2,1,north,31": [
+    "2,3,north,31": [
       {
         "next_state": 21,
         "probability": 0.01
       },
       {
-        "next_state": 30,
+        "next_state": 29,
         "probability": 0.01
       },
       {
@@ -1438,7 +3210,7 @@
         "probability": 0.01
       }
     ],
-    "2,1,north,32": [
+    "2,3,north,32": [
       {
         "next_state": 22,
         "probability": 0.01
@@ -1456,7 +3228,7 @@
         "probability": 0.01
       }
     ],
-    "2,1,north,33": [
+    "2,3,north,33": [
       {
         "next_state": 0,
         "probability": 0.01
@@ -1470,53 +3242,53 @@
         "probability": 0.01
       },
       {
-        "next_state": 33,
-        "probability": 0.97
-      }
-    ],
-    "2,1,north,34": [
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
         "next_state": 32,
+        "probability": 0.97
+      }
+    ],
+    "2,3,north,38": [
+      {
+        "next_state": 28,
         "probability": 0.01
       },
       {
-        "next_state": 34,
+        "next_state": 37,
+        "probability": 0.01
+      },
+      {
+        "next_state": 38,
         "probability": 0.97
       },
       {
-        "next_state": 41,
+        "next_state": 45,
         "probability": 0.01
       }
     ],
-    "2,1,north,35": [
+    "2,3,north,39": [
       {
-        "next_state": 25,
+        "next_state": 29,
         "probability": 0.01
       },
       {
-        "next_state": 33,
+        "next_state": 37,
         "probability": 0.01
       },
       {
-        "next_state": 34,
+        "next_state": 39,
         "probability": 0.97
       },
       {
-        "next_state": 42,
+        "next_state": 46,
         "probability": 0.01
       }
     ],
-    "2,1,north,40": [
+    "2,3,north,40": [
       {
         "next_state": 30,
         "probability": 0.01
       },
       {
-        "next_state": 39,
+        "next_state": 38,
         "probability": 0.01
       },
       {
@@ -1528,7 +3300,11 @@
         "probability": 0.01
       }
     ],
-    "2,1,north,41": [
+    "2,3,north,41": [
+      {
+        "next_state": 0,
+        "probability": 0.97
+      },
       {
         "next_state": 32,
         "probability": 0.01
@@ -1538,57 +3314,53 @@
         "probability": 0.01
       },
       {
-        "next_state": 41,
-        "probability": 0.97
-      },
-      {
         "next_state": 49,
         "probability": 0.01
       }
     ],
-    "2,1,north,42": [
+    "2,3,north,46": [
       {
-        "next_state": 0,
+        "next_state": 37,
         "probability": 0.01
       },
       {
-        "next_state": 33,
+        "next_state": 45,
         "probability": 0.01
       },
       {
-        "next_state": 42,
+        "next_state": 46,
         "probability": 0.97
       },
       {
-        "next_state": 50,
+        "next_state": 54,
         "probability": 0.01
       }
     ],
-    "2,1,north,43": [
+    "2,3,north,47": [
       {
-        "next_state": 34,
+        "next_state": 38,
         "probability": 0.01
       },
       {
-        "next_state": 41,
+        "next_state": 45,
         "probability": 0.01
       },
       {
-        "next_state": 42,
+        "next_state": 47,
         "probability": 0.97
       },
       {
-        "next_state": 51,
+        "next_state": 55,
         "probability": 0.01
       }
     ],
-    "2,1,north,48": [
+    "2,3,north,48": [
       {
         "next_state": 39,
         "probability": 0.01
       },
       {
-        "next_state": 47,
+        "next_state": 46,
         "probability": 0.01
       },
       {
@@ -1600,7 +3372,7 @@
         "probability": 0.01
       }
     ],
-    "2,1,north,49": [
+    "2,3,north,49": [
       {
         "next_state": 40,
         "probability": 0.01
@@ -1618,7 +3390,7 @@
         "probability": 0.01
       }
     ],
-    "2,1,north,50": [
+    "2,3,north,50": [
       {
         "next_state": 0,
         "probability": 0.01
@@ -1628,7 +3400,7 @@
         "probability": 0.01
       },
       {
-        "next_state": 50,
+        "next_state": 49,
         "probability": 0.97
       },
       {
@@ -1636,57 +3408,57 @@
         "probability": 0.01
       }
     ],
-    "2,1,north,51": [
+    "2,3,north,55": [
       {
-        "next_state": 41,
+        "next_state": 45,
         "probability": 0.01
       },
       {
-        "next_state": 49,
-        "probability": 0.01
+        "next_state": 54,
+        "probability": 0.02
       },
       {
-        "next_state": 51,
+        "next_state": 55,
         "probability": 0.97
-      },
-      {
-        "next_state": 59,
-        "probability": 0.01
       }
     ],
-    "2,1,north,52": [
+    "2,3,north,56": [
       {
-        "next_state": 42,
+        "next_state": 46,
         "probability": 0.01
       },
       {
-        "next_state": 50,
+        "next_state": 54,
         "probability": 0.01
       },
       {
-        "next_state": 51,
+        "next_state": 55,
+        "probability": 0.01
+      },
+      {
+        "next_state": 56,
         "probability": 0.97
-      },
-      {
-        "next_state": 60,
-        "probability": 0.01
       }
     ],
-    "2,1,north,57": [
+    "2,3,north,57": [
       {
         "next_state": 47,
         "probability": 0.01
       },
       {
+        "next_state": 55,
+        "probability": 0.01
+      },
+      {
         "next_state": 56,
-        "probability": 0.02
+        "probability": 0.01
       },
       {
         "next_state": 57,
         "probability": 0.97
       }
     ],
-    "2,1,north,58": [
+    "2,3,north,58": [
       {
         "next_state": 48,
         "probability": 0.01
@@ -1704,7 +3476,7 @@
         "probability": 0.97
       }
     ],
-    "2,1,north,59": [
+    "2,3,north,59": [
       {
         "next_state": 49,
         "probability": 0.01
@@ -1715,46 +3487,10 @@
       },
       {
         "next_state": 58,
-        "probability": 0.01
-      },
-      {
-        "next_state": 59,
-        "probability": 0.97
-      }
-    ],
-    "2,1,north,60": [
-      {
-        "next_state": 50,
-        "probability": 0.01
-      },
-      {
-        "next_state": 58,
-        "probability": 0.01
-      },
-      {
-        "next_state": 59,
-        "probability": 0.01
-      },
-      {
-        "next_state": 60,
-        "probability": 0.97
-      }
-    ],
-    "2,1,north,61": [
-      {
-        "next_state": 51,
-        "probability": 0.01
-      },
-      {
-        "next_state": 59,
-        "probability": 0.01
-      },
-      {
-        "next_state": 60,
         "probability": 0.98
       }
     ],
-    "2,2,east,0": [
+    "2,4,east,0": [
       {
         "next_state": 0,
         "probability": 0.97
@@ -1768,448 +3504,32 @@
         "probability": 0.01
       },
       {
-        "next_state": 33,
+        "next_state": 32,
         "probability": 0.01
       }
     ],
-    "2,2,east,21": [
+    "2,4,east,19": [
       {
-        "next_state": 12,
+        "next_state": 10,
         "probability": 0.02
       },
-      {
-        "next_state": 13,
-        "probability": 0.01
-      },
-      {
-        "next_state": 21,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,22": [
-      {
-        "next_state": 12,
-        "probability": 0.01
-      },
-      {
-        "next_state": 13,
-        "probability": 0.01
-      },
-      {
-        "next_state": 14,
-        "probability": 0.01
-      },
-      {
-        "next_state": 22,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,23": [
-      {
-        "next_state": 13,
-        "probability": 0.01
-      },
-      {
-        "next_state": 14,
-        "probability": 0.01
-      },
-      {
-        "next_state": 15,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,24": [
-      {
-        "next_state": 14,
-        "probability": 0.01
-      },
-      {
-        "next_state": 15,
-        "probability": 0.01
-      },
-      {
-        "next_state": 16,
-        "probability": 0.01
-      },
-      {
-        "next_state": 24,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,25": [
-      {
-        "next_state": 15,
-        "probability": 0.01
-      },
-      {
-        "next_state": 16,
-        "probability": 0.02
-      },
-      {
-        "next_state": 25,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,30": [
-      {
-        "next_state": 12,
-        "probability": 0.01
-      },
-      {
-        "next_state": 21,
-        "probability": 0.01
-      },
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 30,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,31": [
-      {
-        "next_state": 13,
-        "probability": 0.01
-      },
-      {
-        "next_state": 21,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,32": [
-      {
-        "next_state": 14,
-        "probability": 0.01
-      },
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,33": [
-      {
-        "next_state": 15,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 25,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,34": [
-      {
-        "next_state": 16,
-        "probability": 0.01
-      },
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
-        "next_state": 25,
-        "probability": 0.01
-      },
-      {
-        "next_state": 34,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,39": [
-      {
-        "next_state": 21,
-        "probability": 0.01
-      },
-      {
-        "next_state": 30,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      },
-      {
-        "next_state": 39,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,40": [
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 30,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.01
-      },
-      {
-        "next_state": 40,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,41": [
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.01
-      },
-      {
-        "next_state": 34,
-        "probability": 0.01
-      },
-      {
-        "next_state": 41,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,42": [
-      {
-        "next_state": 25,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      },
-      {
-        "next_state": 34,
-        "probability": 0.01
-      },
-      {
-        "next_state": 42,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,47": [
-      {
-        "next_state": 30,
-        "probability": 0.01
-      },
-      {
-        "next_state": 39,
-        "probability": 0.01
-      },
-      {
-        "next_state": 40,
-        "probability": 0.01
-      },
-      {
-        "next_state": 47,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,48": [
-      {
-        "next_state": 0,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      },
-      {
-        "next_state": 39,
-        "probability": 0.01
-      },
-      {
-        "next_state": 48,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,49": [
-      {
-        "next_state": 32,
-        "probability": 0.01
-      },
-      {
-        "next_state": 40,
-        "probability": 0.01
-      },
-      {
-        "next_state": 41,
-        "probability": 0.01
-      },
-      {
-        "next_state": 49,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,50": [
-      {
-        "next_state": 0,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      },
-      {
-        "next_state": 42,
-        "probability": 0.01
-      },
-      {
-        "next_state": 50,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,51": [
-      {
-        "next_state": 34,
-        "probability": 0.01
-      },
-      {
-        "next_state": 41,
-        "probability": 0.01
-      },
-      {
-        "next_state": 42,
-        "probability": 0.01
-      },
-      {
-        "next_state": 51,
-        "probability": 0.97
-      }
-    ],
-    "2,2,east,56": [
-      {
-        "next_state": 39,
-        "probability": 0.01
-      },
-      {
-        "next_state": 47,
-        "probability": 0.98
-      },
-      {
-        "next_state": 48,
-        "probability": 0.01
-      }
-    ],
-    "2,2,east,57": [
-      {
-        "next_state": 40,
-        "probability": 0.01
-      },
-      {
-        "next_state": 47,
-        "probability": 0.01
-      },
-      {
-        "next_state": 48,
-        "probability": 0.97
-      },
-      {
-        "next_state": 49,
-        "probability": 0.01
-      }
-    ],
-    "2,2,east,58": [
-      {
-        "next_state": 0,
-        "probability": 0.01
-      },
-      {
-        "next_state": 48,
-        "probability": 0.01
-      },
-      {
-        "next_state": 49,
-        "probability": 0.97
-      },
-      {
-        "next_state": 50,
-        "probability": 0.01
-      }
-    ],
-    "2,2,east,59": [
-      {
-        "next_state": 41,
-        "probability": 0.01
-      },
-      {
-        "next_state": 49,
-        "probability": 0.01
-      },
-      {
-        "next_state": 50,
-        "probability": 0.97
-      },
-      {
-        "next_state": 51,
-        "probability": 0.01
-      }
-    ],
-    "2,2,east,60": [
-      {
-        "next_state": 42,
-        "probability": 0.01
-      },
-      {
-        "next_state": 50,
-        "probability": 0.01
-      },
-      {
-        "next_state": 51,
-        "probability": 0.98
-      }
-    ],
-    "2,3,east,0": [
-      {
-        "next_state": 0,
-        "probability": 0.97
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      }
-    ],
-    "2,3,east,20": [
       {
         "next_state": 11,
-        "probability": 0.02
+        "probability": 0.01
+      },
+      {
+        "next_state": 19,
+        "probability": 0.97
+      }
+    ],
+    "2,4,east,20": [
+      {
+        "next_state": 10,
+        "probability": 0.01
+      },
+      {
+        "next_state": 11,
+        "probability": 0.01
       },
       {
         "next_state": 12,
@@ -2220,7 +3540,7 @@
         "probability": 0.97
       }
     ],
-    "2,3,east,21": [
+    "2,4,east,21": [
       {
         "next_state": 11,
         "probability": 0.01
@@ -2238,7 +3558,7 @@
         "probability": 0.97
       }
     ],
-    "2,3,east,22": [
+    "2,4,east,22": [
       {
         "next_state": 12,
         "probability": 0.01
@@ -2256,45 +3576,45 @@
         "probability": 0.97
       }
     ],
-    "2,3,east,23": [
+    "2,4,east,23": [
       {
         "next_state": 13,
         "probability": 0.01
       },
       {
         "next_state": 14,
-        "probability": 0.01
-      },
-      {
-        "next_state": 15,
-        "probability": 0.01
+        "probability": 0.02
       },
       {
         "next_state": 23,
         "probability": 0.97
       }
     ],
-    "2,3,east,24": [
+    "2,4,east,28": [
       {
-        "next_state": 14,
+        "next_state": 10,
         "probability": 0.01
       },
       {
-        "next_state": 15,
-        "probability": 0.02
+        "next_state": 19,
+        "probability": 0.01
       },
       {
-        "next_state": 24,
+        "next_state": 20,
+        "probability": 0.01
+      },
+      {
+        "next_state": 28,
         "probability": 0.97
       }
     ],
-    "2,3,east,29": [
+    "2,4,east,29": [
       {
         "next_state": 11,
         "probability": 0.01
       },
       {
-        "next_state": 20,
+        "next_state": 19,
         "probability": 0.01
       },
       {
@@ -2306,7 +3626,7 @@
         "probability": 0.97
       }
     ],
-    "2,3,east,30": [
+    "2,4,east,30": [
       {
         "next_state": 12,
         "probability": 0.01
@@ -2324,7 +3644,7 @@
         "probability": 0.97
       }
     ],
-    "2,3,east,31": [
+    "2,4,east,31": [
       {
         "next_state": 13,
         "probability": 0.01
@@ -2342,7 +3662,7 @@
         "probability": 0.97
       }
     ],
-    "2,3,east,32": [
+    "2,4,east,32": [
       {
         "next_state": 14,
         "probability": 0.01
@@ -2352,7 +3672,7 @@
         "probability": 0.01
       },
       {
-        "next_state": 24,
+        "next_state": 23,
         "probability": 0.01
       },
       {
@@ -2360,31 +3680,31 @@
         "probability": 0.97
       }
     ],
-    "2,3,east,33": [
+    "2,4,east,37": [
       {
-        "next_state": 15,
+        "next_state": 19,
         "probability": 0.01
       },
       {
-        "next_state": 23,
+        "next_state": 28,
         "probability": 0.01
       },
       {
-        "next_state": 24,
+        "next_state": 29,
         "probability": 0.01
       },
       {
-        "next_state": 33,
+        "next_state": 37,
         "probability": 0.97
       }
     ],
-    "2,3,east,38": [
+    "2,4,east,38": [
       {
         "next_state": 20,
         "probability": 0.01
       },
       {
-        "next_state": 29,
+        "next_state": 28,
         "probability": 0.01
       },
       {
@@ -2396,7 +3716,7 @@
         "probability": 0.97
       }
     ],
-    "2,3,east,39": [
+    "2,4,east,39": [
       {
         "next_state": 21,
         "probability": 0.01
@@ -2414,7 +3734,7 @@
         "probability": 0.97
       }
     ],
-    "2,3,east,40": [
+    "2,4,east,40": [
       {
         "next_state": 22,
         "probability": 0.01
@@ -2432,31 +3752,31 @@
         "probability": 0.97
       }
     ],
-    "2,3,east,41": [
+    "2,4,east,45": [
       {
-        "next_state": 24,
+        "next_state": 28,
         "probability": 0.01
       },
       {
-        "next_state": 32,
+        "next_state": 37,
         "probability": 0.01
       },
       {
-        "next_state": 33,
+        "next_state": 38,
         "probability": 0.01
       },
       {
-        "next_state": 41,
+        "next_state": 45,
         "probability": 0.97
       }
     ],
-    "2,3,east,46": [
+    "2,4,east,46": [
       {
         "next_state": 29,
         "probability": 0.01
       },
       {
-        "next_state": 38,
+        "next_state": 37,
         "probability": 0.01
       },
       {
@@ -2468,7 +3788,7 @@
         "probability": 0.97
       }
     ],
-    "2,3,east,47": [
+    "2,4,east,47": [
       {
         "next_state": 30,
         "probability": 0.01
@@ -2486,7 +3806,7 @@
         "probability": 0.97
       }
     ],
-    "2,3,east,48": [
+    "2,4,east,48": [
       {
         "next_state": 0,
         "probability": 0.01
@@ -2504,7 +3824,11 @@
         "probability": 0.97
       }
     ],
-    "2,3,east,49": [
+    "2,4,east,49": [
+      {
+        "next_state": 0,
+        "probability": 0.01
+      },
       {
         "next_state": 32,
         "probability": 0.01
@@ -2514,397 +3838,31 @@
         "probability": 0.01
       },
       {
-        "next_state": 41,
-        "probability": 0.01
-      },
-      {
         "next_state": 49,
         "probability": 0.97
       }
     ],
-    "2,3,east,50": [
+    "2,4,east,54": [
       {
-        "next_state": 0,
+        "next_state": 37,
         "probability": 0.01
       },
       {
-        "next_state": 33,
-        "probability": 0.01
-      },
-      {
-        "next_state": 41,
-        "probability": 0.01
-      },
-      {
-        "next_state": 50,
-        "probability": 0.97
-      }
-    ],
-    "2,3,east,55": [
-      {
-        "next_state": 38,
-        "probability": 0.01
-      },
-      {
-        "next_state": 46,
+        "next_state": 45,
         "probability": 0.98
       },
       {
-        "next_state": 47,
-        "probability": 0.01
-      }
-    ],
-    "2,3,east,56": [
-      {
-        "next_state": 39,
-        "probability": 0.01
-      },
-      {
-        "next_state": 46,
-        "probability": 0.01
-      },
-      {
-        "next_state": 47,
-        "probability": 0.97
-      },
-      {
-        "next_state": 48,
-        "probability": 0.01
-      }
-    ],
-    "2,3,east,57": [
-      {
-        "next_state": 40,
-        "probability": 0.01
-      },
-      {
-        "next_state": 47,
-        "probability": 0.01
-      },
-      {
-        "next_state": 48,
-        "probability": 0.97
-      },
-      {
-        "next_state": 49,
-        "probability": 0.01
-      }
-    ],
-    "2,3,east,58": [
-      {
-        "next_state": 0,
-        "probability": 0.01
-      },
-      {
-        "next_state": 48,
-        "probability": 0.01
-      },
-      {
-        "next_state": 49,
-        "probability": 0.97
-      },
-      {
-        "next_state": 50,
-        "probability": 0.01
-      }
-    ],
-    "2,3,east,59": [
-      {
-        "next_state": 41,
-        "probability": 0.01
-      },
-      {
-        "next_state": 49,
-        "probability": 0.01
-      },
-      {
-        "next_state": 50,
-        "probability": 0.98
-      }
-    ],
-    "2,4,south,0": [
-      {
-        "next_state": 0,
-        "probability": 0.97
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      },
-      {
-        "next_state": 41,
-        "probability": 0.01
-      },
-      {
-        "next_state": 50,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,19": [
-      {
-        "next_state": 20,
-        "probability": 0.98
-      },
-      {
-        "next_state": 21,
-        "probability": 0.01
-      },
-      {
-        "next_state": 29,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,20": [
-      {
-        "next_state": 20,
-        "probability": 0.97
-      },
-      {
-        "next_state": 21,
-        "probability": 0.01
-      },
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 30,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,21": [
-      {
-        "next_state": 21,
-        "probability": 0.97
-      },
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,22": [
-      {
-        "next_state": 22,
-        "probability": 0.97
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,23": [
-      {
-        "next_state": 23,
-        "probability": 0.97
-      },
-      {
-        "next_state": 24,
-        "probability": 0.02
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,28": [
-      {
-        "next_state": 20,
-        "probability": 0.01
-      },
-      {
-        "next_state": 29,
-        "probability": 0.97
-      },
-      {
-        "next_state": 30,
-        "probability": 0.01
-      },
-      {
-        "next_state": 38,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,29": [
-      {
-        "next_state": 21,
-        "probability": 0.01
-      },
-      {
-        "next_state": 29,
-        "probability": 0.97
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      },
-      {
-        "next_state": 39,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,30": [
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 30,
-        "probability": 0.97
-      },
-      {
-        "next_state": 32,
-        "probability": 0.01
-      },
-      {
-        "next_state": 40,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,31": [
-      {
-        "next_state": 0,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.97
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,32": [
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.97
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      },
-      {
-        "next_state": 41,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,37": [
-      {
-        "next_state": 29,
-        "probability": 0.01
-      },
-      {
-        "next_state": 38,
-        "probability": 0.97
-      },
-      {
-        "next_state": 39,
-        "probability": 0.01
-      },
-      {
         "next_state": 46,
         "probability": 0.01
       }
     ],
-    "2,4,south,38": [
-      {
-        "next_state": 30,
-        "probability": 0.01
-      },
-      {
-        "next_state": 38,
-        "probability": 0.97
-      },
-      {
-        "next_state": 40,
-        "probability": 0.01
-      },
-      {
-        "next_state": 47,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,39": [
-      {
-        "next_state": 0,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      },
-      {
-        "next_state": 39,
-        "probability": 0.97
-      },
-      {
-        "next_state": 48,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,40": [
-      {
-        "next_state": 32,
-        "probability": 0.01
-      },
-      {
-        "next_state": 40,
-        "probability": 0.97
-      },
-      {
-        "next_state": 41,
-        "probability": 0.01
-      },
-      {
-        "next_state": 49,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,45": [
+    "2,4,east,55": [
       {
         "next_state": 38,
         "probability": 0.01
       },
       {
-        "next_state": 46,
-        "probability": 0.97
-      },
-      {
-        "next_state": 47,
-        "probability": 0.01
-      },
-      {
-        "next_state": 55,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,46": [
-      {
-        "next_state": 39,
+        "next_state": 45,
         "probability": 0.01
       },
       {
@@ -2912,517 +3870,29 @@
         "probability": 0.97
       },
       {
-        "next_state": 48,
-        "probability": 0.01
-      },
-      {
-        "next_state": 56,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,47": [
-      {
-        "next_state": 40,
-        "probability": 0.01
-      },
-      {
         "next_state": 47,
-        "probability": 0.97
-      },
-      {
-        "next_state": 49,
-        "probability": 0.01
-      },
-      {
-        "next_state": 57,
         "probability": 0.01
       }
     ],
-    "2,4,south,48": [
+    "2,4,east,56": [
       {
-        "next_state": 0,
+        "next_state": 39,
         "probability": 0.01
       },
-      {
-        "next_state": 48,
-        "probability": 0.97
-      },
-      {
-        "next_state": 50,
-        "probability": 0.01
-      },
-      {
-        "next_state": 58,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,49": [
-      {
-        "next_state": 41,
-        "probability": 0.01
-      },
-      {
-        "next_state": 49,
-        "probability": 0.97
-      },
-      {
-        "next_state": 50,
-        "probability": 0.01
-      },
-      {
-        "next_state": 59,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,54": [
       {
         "next_state": 46,
         "probability": 0.01
       },
       {
-        "next_state": 55,
-        "probability": 0.98
-      },
-      {
-        "next_state": 56,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,55": [
-      {
         "next_state": 47,
-        "probability": 0.01
-      },
-      {
-        "next_state": 55,
         "probability": 0.97
-      },
-      {
-        "next_state": 56,
-        "probability": 0.01
-      },
-      {
-        "next_state": 57,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,56": [
-      {
-        "next_state": 48,
-        "probability": 0.01
-      },
-      {
-        "next_state": 56,
-        "probability": 0.97
-      },
-      {
-        "next_state": 57,
-        "probability": 0.01
-      },
-      {
-        "next_state": 58,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,57": [
-      {
-        "next_state": 49,
-        "probability": 0.01
-      },
-      {
-        "next_state": 57,
-        "probability": 0.97
-      },
-      {
-        "next_state": 58,
-        "probability": 0.01
-      },
-      {
-        "next_state": 59,
-        "probability": 0.01
-      }
-    ],
-    "2,4,south,58": [
-      {
-        "next_state": 50,
-        "probability": 0.01
-      },
-      {
-        "next_state": 58,
-        "probability": 0.97
-      },
-      {
-        "next_state": 59,
-        "probability": 0.02
-      }
-    ],
-    "3,1,north,0": [
-      {
-        "next_state": 0,
-        "probability": 0.97
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      },
-      {
-        "next_state": 39,
-        "probability": 0.01
       },
       {
         "next_state": 48,
         "probability": 0.01
       }
     ],
-    "3,1,north,13": [
-      {
-        "next_state": 12,
-        "probability": 0.02
-      },
-      {
-        "next_state": 13,
-        "probability": 0.97
-      },
-      {
-        "next_state": 21,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,14": [
-      {
-        "next_state": 12,
-        "probability": 0.01
-      },
-      {
-        "next_state": 13,
-        "probability": 0.01
-      },
-      {
-        "next_state": 14,
-        "probability": 0.97
-      },
-      {
-        "next_state": 22,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,15": [
-      {
-        "next_state": 13,
-        "probability": 0.01
-      },
-      {
-        "next_state": 14,
-        "probability": 0.01
-      },
-      {
-        "next_state": 15,
-        "probability": 0.97
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,16": [
-      {
-        "next_state": 14,
-        "probability": 0.01
-      },
-      {
-        "next_state": 15,
-        "probability": 0.01
-      },
-      {
-        "next_state": 16,
-        "probability": 0.97
-      },
-      {
-        "next_state": 24,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,17": [
-      {
-        "next_state": 15,
-        "probability": 0.01
-      },
-      {
-        "next_state": 16,
-        "probability": 0.98
-      },
-      {
-        "next_state": 25,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,22": [
-      {
-        "next_state": 12,
-        "probability": 0.01
-      },
-      {
-        "next_state": 21,
-        "probability": 0.01
-      },
-      {
-        "next_state": 22,
-        "probability": 0.97
-      },
-      {
-        "next_state": 30,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,23": [
-      {
-        "next_state": 13,
-        "probability": 0.01
-      },
-      {
-        "next_state": 21,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.97
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,24": [
-      {
-        "next_state": 14,
-        "probability": 0.01
-      },
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 24,
-        "probability": 0.97
-      },
-      {
-        "next_state": 32,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,25": [
-      {
-        "next_state": 15,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 25,
-        "probability": 0.97
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,26": [
-      {
-        "next_state": 16,
-        "probability": 0.01
-      },
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
-        "next_state": 25,
-        "probability": 0.97
-      },
-      {
-        "next_state": 34,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,31": [
-      {
-        "next_state": 21,
-        "probability": 0.01
-      },
-      {
-        "next_state": 30,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.97
-      },
-      {
-        "next_state": 39,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,32": [
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 30,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.97
-      },
-      {
-        "next_state": 40,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,33": [
-      {
-        "next_state": 0,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.97
-      }
-    ],
-    "3,1,north,34": [
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.01
-      },
-      {
-        "next_state": 34,
-        "probability": 0.97
-      },
-      {
-        "next_state": 41,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,35": [
-      {
-        "next_state": 25,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      },
-      {
-        "next_state": 34,
-        "probability": 0.97
-      },
-      {
-        "next_state": 42,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,40": [
-      {
-        "next_state": 30,
-        "probability": 0.01
-      },
-      {
-        "next_state": 39,
-        "probability": 0.01
-      },
-      {
-        "next_state": 40,
-        "probability": 0.97
-      },
-      {
-        "next_state": 47,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,41": [
-      {
-        "next_state": 32,
-        "probability": 0.01
-      },
-      {
-        "next_state": 40,
-        "probability": 0.01
-      },
-      {
-        "next_state": 41,
-        "probability": 0.97
-      },
-      {
-        "next_state": 49,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,42": [
-      {
-        "next_state": 0,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      },
-      {
-        "next_state": 42,
-        "probability": 0.97
-      },
-      {
-        "next_state": 50,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,43": [
-      {
-        "next_state": 34,
-        "probability": 0.01
-      },
-      {
-        "next_state": 41,
-        "probability": 0.01
-      },
-      {
-        "next_state": 42,
-        "probability": 0.97
-      },
-      {
-        "next_state": 51,
-        "probability": 0.01
-      }
-    ],
-    "3,1,north,48": [
-      {
-        "next_state": 39,
-        "probability": 0.01
-      },
-      {
-        "next_state": 47,
-        "probability": 0.02
-      },
-      {
-        "next_state": 48,
-        "probability": 0.97
-      }
-    ],
-    "3,1,north,49": [
+    "2,4,east,57": [
       {
         "next_state": 40,
         "probability": 0.01
@@ -3433,14 +3903,14 @@
       },
       {
         "next_state": 48,
-        "probability": 0.01
+        "probability": 0.97
       },
       {
         "next_state": 49,
-        "probability": 0.97
+        "probability": 0.01
       }
     ],
-    "3,1,north,50": [
+    "2,4,east,58": [
       {
         "next_state": 0,
         "probability": 0.01
@@ -3451,42 +3921,6 @@
       },
       {
         "next_state": 49,
-        "probability": 0.01
-      },
-      {
-        "next_state": 50,
-        "probability": 0.97
-      }
-    ],
-    "3,1,north,51": [
-      {
-        "next_state": 41,
-        "probability": 0.01
-      },
-      {
-        "next_state": 49,
-        "probability": 0.01
-      },
-      {
-        "next_state": 50,
-        "probability": 0.01
-      },
-      {
-        "next_state": 51,
-        "probability": 0.97
-      }
-    ],
-    "3,1,north,52": [
-      {
-        "next_state": 42,
-        "probability": 0.01
-      },
-      {
-        "next_state": 50,
-        "probability": 0.01
-      },
-      {
-        "next_state": 51,
         "probability": 0.98
       }
     ],
@@ -3924,473 +4358,491 @@
         "probability": 0.98
       }
     ],
-    "3,3,east,0": [
+    "3,3,north,0": [
       {
         "next_state": 0,
         "probability": 0.97
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
       },
       {
         "next_state": 31,
         "probability": 0.01
       },
       {
-        "next_state": 33,
+        "next_state": 39,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
         "probability": 0.01
       }
     ],
-    "3,3,east,11": [
+    "3,3,north,11": [
       {
-        "next_state": 2,
+        "next_state": 10,
         "probability": 0.02
       },
       {
-        "next_state": 3,
+        "next_state": 11,
+        "probability": 0.97
+      },
+      {
+        "next_state": 19,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,12": [
+      {
+        "next_state": 10,
         "probability": 0.01
       },
       {
         "next_state": 11,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,12": [
-      {
-        "next_state": 2,
-        "probability": 0.01
-      },
-      {
-        "next_state": 3,
-        "probability": 0.01
-      },
-      {
-        "next_state": 4,
         "probability": 0.01
       },
       {
         "next_state": 12,
         "probability": 0.97
+      },
+      {
+        "next_state": 20,
+        "probability": 0.01
       }
     ],
-    "3,3,east,13": [
+    "3,3,north,13": [
       {
-        "next_state": 3,
+        "next_state": 11,
         "probability": 0.01
       },
       {
-        "next_state": 4,
-        "probability": 0.01
-      },
-      {
-        "next_state": 5,
+        "next_state": 12,
         "probability": 0.01
       },
       {
         "next_state": 13,
         "probability": 0.97
+      },
+      {
+        "next_state": 21,
+        "probability": 0.01
       }
     ],
-    "3,3,east,14": [
+    "3,3,north,14": [
       {
-        "next_state": 4,
+        "next_state": 12,
         "probability": 0.01
       },
       {
-        "next_state": 5,
-        "probability": 0.01
-      },
-      {
-        "next_state": 6,
+        "next_state": 13,
         "probability": 0.01
       },
       {
         "next_state": 14,
         "probability": 0.97
+      },
+      {
+        "next_state": 22,
+        "probability": 0.01
       }
     ],
-    "3,3,east,15": [
+    "3,3,north,15": [
       {
-        "next_state": 5,
+        "next_state": 13,
         "probability": 0.01
       },
       {
-        "next_state": 6,
+        "next_state": 14,
+        "probability": 0.98
+      },
+      {
+        "next_state": 23,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,20": [
+      {
+        "next_state": 10,
+        "probability": 0.01
+      },
+      {
+        "next_state": 19,
+        "probability": 0.01
+      },
+      {
+        "next_state": 20,
+        "probability": 0.97
+      },
+      {
+        "next_state": 28,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,21": [
+      {
+        "next_state": 11,
+        "probability": 0.01
+      },
+      {
+        "next_state": 19,
+        "probability": 0.01
+      },
+      {
+        "next_state": 21,
+        "probability": 0.97
+      },
+      {
+        "next_state": 29,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,22": [
+      {
+        "next_state": 12,
+        "probability": 0.01
+      },
+      {
+        "next_state": 20,
+        "probability": 0.01
+      },
+      {
+        "next_state": 22,
+        "probability": 0.97
+      },
+      {
+        "next_state": 30,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,23": [
+      {
+        "next_state": 13,
+        "probability": 0.01
+      },
+      {
+        "next_state": 21,
+        "probability": 0.01
+      },
+      {
+        "next_state": 23,
+        "probability": 0.97
+      },
+      {
+        "next_state": 31,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,24": [
+      {
+        "next_state": 14,
+        "probability": 0.01
+      },
+      {
+        "next_state": 22,
+        "probability": 0.01
+      },
+      {
+        "next_state": 23,
+        "probability": 0.97
+      },
+      {
+        "next_state": 32,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,29": [
+      {
+        "next_state": 19,
+        "probability": 0.01
+      },
+      {
+        "next_state": 28,
+        "probability": 0.01
+      },
+      {
+        "next_state": 29,
+        "probability": 0.97
+      },
+      {
+        "next_state": 37,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,30": [
+      {
+        "next_state": 20,
+        "probability": 0.01
+      },
+      {
+        "next_state": 28,
+        "probability": 0.01
+      },
+      {
+        "next_state": 30,
+        "probability": 0.97
+      },
+      {
+        "next_state": 38,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,31": [
+      {
+        "next_state": 21,
+        "probability": 0.01
+      },
+      {
+        "next_state": 29,
+        "probability": 0.01
+      },
+      {
+        "next_state": 31,
+        "probability": 0.97
+      },
+      {
+        "next_state": 39,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,32": [
+      {
+        "next_state": 22,
+        "probability": 0.01
+      },
+      {
+        "next_state": 30,
+        "probability": 0.01
+      },
+      {
+        "next_state": 32,
+        "probability": 0.97
+      },
+      {
+        "next_state": 40,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,33": [
+      {
+        "next_state": 0,
+        "probability": 0.01
+      },
+      {
+        "next_state": 23,
+        "probability": 0.01
+      },
+      {
+        "next_state": 31,
+        "probability": 0.01
+      },
+      {
+        "next_state": 32,
+        "probability": 0.97
+      }
+    ],
+    "3,3,north,38": [
+      {
+        "next_state": 28,
+        "probability": 0.01
+      },
+      {
+        "next_state": 37,
+        "probability": 0.01
+      },
+      {
+        "next_state": 38,
+        "probability": 0.97
+      },
+      {
+        "next_state": 45,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,39": [
+      {
+        "next_state": 29,
+        "probability": 0.01
+      },
+      {
+        "next_state": 37,
+        "probability": 0.01
+      },
+      {
+        "next_state": 39,
+        "probability": 0.97
+      },
+      {
+        "next_state": 46,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,40": [
+      {
+        "next_state": 30,
+        "probability": 0.01
+      },
+      {
+        "next_state": 38,
+        "probability": 0.01
+      },
+      {
+        "next_state": 40,
+        "probability": 0.97
+      },
+      {
+        "next_state": 47,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,41": [
+      {
+        "next_state": 0,
+        "probability": 0.97
+      },
+      {
+        "next_state": 32,
+        "probability": 0.01
+      },
+      {
+        "next_state": 40,
+        "probability": 0.01
+      },
+      {
+        "next_state": 49,
+        "probability": 0.01
+      }
+    ],
+    "3,3,north,46": [
+      {
+        "next_state": 37,
+        "probability": 0.01
+      },
+      {
+        "next_state": 45,
         "probability": 0.02
       },
       {
-        "next_state": 15,
+        "next_state": 46,
         "probability": 0.97
       }
     ],
-    "3,3,east,20": [
-      {
-        "next_state": 2,
-        "probability": 0.01
-      },
-      {
-        "next_state": 11,
-        "probability": 0.01
-      },
-      {
-        "next_state": 12,
-        "probability": 0.01
-      },
-      {
-        "next_state": 20,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,21": [
-      {
-        "next_state": 3,
-        "probability": 0.01
-      },
-      {
-        "next_state": 11,
-        "probability": 0.01
-      },
-      {
-        "next_state": 13,
-        "probability": 0.01
-      },
-      {
-        "next_state": 21,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,22": [
-      {
-        "next_state": 4,
-        "probability": 0.01
-      },
-      {
-        "next_state": 12,
-        "probability": 0.01
-      },
-      {
-        "next_state": 14,
-        "probability": 0.01
-      },
-      {
-        "next_state": 22,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,23": [
-      {
-        "next_state": 5,
-        "probability": 0.01
-      },
-      {
-        "next_state": 13,
-        "probability": 0.01
-      },
-      {
-        "next_state": 15,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,24": [
-      {
-        "next_state": 6,
-        "probability": 0.01
-      },
-      {
-        "next_state": 14,
-        "probability": 0.01
-      },
-      {
-        "next_state": 15,
-        "probability": 0.01
-      },
-      {
-        "next_state": 24,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,29": [
-      {
-        "next_state": 11,
-        "probability": 0.01
-      },
-      {
-        "next_state": 20,
-        "probability": 0.01
-      },
-      {
-        "next_state": 21,
-        "probability": 0.01
-      },
-      {
-        "next_state": 29,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,30": [
-      {
-        "next_state": 12,
-        "probability": 0.01
-      },
-      {
-        "next_state": 20,
-        "probability": 0.01
-      },
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 30,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,31": [
-      {
-        "next_state": 13,
-        "probability": 0.01
-      },
-      {
-        "next_state": 21,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,32": [
-      {
-        "next_state": 14,
-        "probability": 0.01
-      },
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,33": [
-      {
-        "next_state": 15,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,38": [
-      {
-        "next_state": 20,
-        "probability": 0.01
-      },
-      {
-        "next_state": 29,
-        "probability": 0.01
-      },
-      {
-        "next_state": 30,
-        "probability": 0.01
-      },
-      {
-        "next_state": 38,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,39": [
-      {
-        "next_state": 21,
-        "probability": 0.01
-      },
-      {
-        "next_state": 29,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      },
-      {
-        "next_state": 39,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,40": [
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 30,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.01
-      },
-      {
-        "next_state": 40,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,41": [
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      },
-      {
-        "next_state": 41,
-        "probability": 0.97
-      }
-    ],
-    "3,3,east,46": [
-      {
-        "next_state": 29,
-        "probability": 0.01
-      },
-      {
-        "next_state": 38,
-        "probability": 0.98
-      },
-      {
-        "next_state": 39,
-        "probability": 0.01
-      }
-    ],
-    "3,3,east,47": [
-      {
-        "next_state": 30,
-        "probability": 0.01
-      },
+    "3,3,north,47": [
       {
         "next_state": 38,
         "probability": 0.01
       },
       {
-        "next_state": 39,
-        "probability": 0.97
+        "next_state": 45,
+        "probability": 0.01
       },
       {
-        "next_state": 40,
+        "next_state": 46,
         "probability": 0.01
+      },
+      {
+        "next_state": 47,
+        "probability": 0.97
       }
     ],
-    "3,3,east,48": [
-      {
-        "next_state": 0,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      },
+    "3,3,north,48": [
       {
         "next_state": 39,
         "probability": 0.01
       },
       {
-        "next_state": 40,
+        "next_state": 46,
+        "probability": 0.01
+      },
+      {
+        "next_state": 47,
+        "probability": 0.01
+      },
+      {
+        "next_state": 48,
         "probability": 0.97
       }
     ],
-    "3,3,east,49": [
-      {
-        "next_state": 0,
-        "probability": 0.97
-      },
-      {
-        "next_state": 32,
-        "probability": 0.01
-      },
+    "3,3,north,49": [
       {
         "next_state": 40,
         "probability": 0.01
       },
       {
-        "next_state": 41,
+        "next_state": 47,
         "probability": 0.01
+      },
+      {
+        "next_state": 48,
+        "probability": 0.01
+      },
+      {
+        "next_state": 49,
+        "probability": 0.97
       }
     ],
-    "3,3,east,50": [
+    "3,3,north,50": [
       {
         "next_state": 0,
         "probability": 0.01
       },
       {
-        "next_state": 33,
+        "next_state": 48,
         "probability": 0.01
       },
       {
-        "next_state": 41,
+        "next_state": 49,
         "probability": 0.98
       }
     ],
-    "4,2,north,0": [
+    "3,4,east,0": [
       {
         "next_state": 0,
         "probability": 0.97
+      },
+      {
+        "next_state": 23,
+        "probability": 0.01
       },
       {
         "next_state": 31,
         "probability": 0.01
       },
       {
-        "next_state": 39,
-        "probability": 0.01
-      },
-      {
-        "next_state": 40,
+        "next_state": 32,
         "probability": 0.01
       }
     ],
-    "4,2,north,3": [
+    "3,4,east,10": [
       {
-        "next_state": 2,
+        "next_state": 1,
         "probability": 0.02
       },
       {
-        "next_state": 3,
+        "next_state": 2,
+        "probability": 0.01
+      },
+      {
+        "next_state": 10,
         "probability": 0.97
+      }
+    ],
+    "3,4,east,11": [
+      {
+        "next_state": 1,
+        "probability": 0.01
+      },
+      {
+        "next_state": 2,
+        "probability": 0.01
+      },
+      {
+        "next_state": 3,
+        "probability": 0.01
       },
       {
         "next_state": 11,
-        "probability": 0.01
+        "probability": 0.97
       }
     ],
-    "4,2,north,4": [
+    "3,4,east,12": [
       {
         "next_state": 2,
         "probability": 0.01
@@ -4401,14 +4853,14 @@
       },
       {
         "next_state": 4,
-        "probability": 0.97
+        "probability": 0.01
       },
       {
         "next_state": 12,
-        "probability": 0.01
+        "probability": 0.97
       }
     ],
-    "4,2,north,5": [
+    "3,4,east,13": [
       {
         "next_state": 3,
         "probability": 0.01
@@ -4419,330 +4871,312 @@
       },
       {
         "next_state": 5,
-        "probability": 0.97
+        "probability": 0.01
       },
       {
         "next_state": 13,
-        "probability": 0.01
+        "probability": 0.97
       }
     ],
-    "4,2,north,6": [
+    "3,4,east,14": [
       {
         "next_state": 4,
         "probability": 0.01
       },
       {
         "next_state": 5,
-        "probability": 0.01
-      },
-      {
-        "next_state": 6,
-        "probability": 0.97
-      },
-      {
-        "next_state": 14,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,7": [
-      {
-        "next_state": 5,
-        "probability": 0.01
-      },
-      {
-        "next_state": 6,
-        "probability": 0.98
-      },
-      {
-        "next_state": 15,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,12": [
-      {
-        "next_state": 2,
-        "probability": 0.01
-      },
-      {
-        "next_state": 11,
-        "probability": 0.01
-      },
-      {
-        "next_state": 12,
-        "probability": 0.97
-      },
-      {
-        "next_state": 20,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,13": [
-      {
-        "next_state": 3,
-        "probability": 0.01
-      },
-      {
-        "next_state": 11,
-        "probability": 0.01
-      },
-      {
-        "next_state": 13,
-        "probability": 0.97
-      },
-      {
-        "next_state": 21,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,14": [
-      {
-        "next_state": 4,
-        "probability": 0.01
-      },
-      {
-        "next_state": 12,
-        "probability": 0.01
-      },
-      {
-        "next_state": 14,
-        "probability": 0.97
-      },
-      {
-        "next_state": 22,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,15": [
-      {
-        "next_state": 5,
-        "probability": 0.01
-      },
-      {
-        "next_state": 13,
-        "probability": 0.01
-      },
-      {
-        "next_state": 15,
-        "probability": 0.97
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,16": [
-      {
-        "next_state": 6,
-        "probability": 0.01
-      },
-      {
-        "next_state": 14,
-        "probability": 0.01
-      },
-      {
-        "next_state": 15,
-        "probability": 0.97
-      },
-      {
-        "next_state": 24,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,21": [
-      {
-        "next_state": 11,
-        "probability": 0.01
-      },
-      {
-        "next_state": 20,
-        "probability": 0.01
-      },
-      {
-        "next_state": 21,
-        "probability": 0.97
-      },
-      {
-        "next_state": 29,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,22": [
-      {
-        "next_state": 12,
-        "probability": 0.01
-      },
-      {
-        "next_state": 20,
-        "probability": 0.01
-      },
-      {
-        "next_state": 22,
-        "probability": 0.97
-      },
-      {
-        "next_state": 30,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,23": [
-      {
-        "next_state": 13,
-        "probability": 0.01
-      },
-      {
-        "next_state": 21,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.97
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,24": [
-      {
-        "next_state": 14,
-        "probability": 0.01
-      },
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 24,
-        "probability": 0.97
-      },
-      {
-        "next_state": 32,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,25": [
-      {
-        "next_state": 15,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 24,
-        "probability": 0.97
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,30": [
-      {
-        "next_state": 20,
-        "probability": 0.01
-      },
-      {
-        "next_state": 29,
-        "probability": 0.01
-      },
-      {
-        "next_state": 30,
-        "probability": 0.97
-      },
-      {
-        "next_state": 38,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,31": [
-      {
-        "next_state": 21,
-        "probability": 0.01
-      },
-      {
-        "next_state": 29,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.97
-      },
-      {
-        "next_state": 39,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,32": [
-      {
-        "next_state": 22,
-        "probability": 0.01
-      },
-      {
-        "next_state": 30,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.97
-      },
-      {
-        "next_state": 40,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,33": [
-      {
-        "next_state": 0,
-        "probability": 0.01
-      },
-      {
-        "next_state": 23,
-        "probability": 0.01
-      },
-      {
-        "next_state": 31,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.97
-      }
-    ],
-    "4,2,north,34": [
-      {
-        "next_state": 24,
-        "probability": 0.01
-      },
-      {
-        "next_state": 32,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.97
-      },
-      {
-        "next_state": 41,
-        "probability": 0.01
-      }
-    ],
-    "4,2,north,39": [
-      {
-        "next_state": 29,
-        "probability": 0.01
-      },
-      {
-        "next_state": 38,
         "probability": 0.02
       },
       {
+        "next_state": 14,
+        "probability": 0.97
+      }
+    ],
+    "3,4,east,19": [
+      {
+        "next_state": 1,
+        "probability": 0.01
+      },
+      {
+        "next_state": 10,
+        "probability": 0.01
+      },
+      {
+        "next_state": 11,
+        "probability": 0.01
+      },
+      {
+        "next_state": 19,
+        "probability": 0.97
+      }
+    ],
+    "3,4,east,20": [
+      {
+        "next_state": 2,
+        "probability": 0.01
+      },
+      {
+        "next_state": 10,
+        "probability": 0.01
+      },
+      {
+        "next_state": 12,
+        "probability": 0.01
+      },
+      {
+        "next_state": 20,
+        "probability": 0.97
+      }
+    ],
+    "3,4,east,21": [
+      {
+        "next_state": 3,
+        "probability": 0.01
+      },
+      {
+        "next_state": 11,
+        "probability": 0.01
+      },
+      {
+        "next_state": 13,
+        "probability": 0.01
+      },
+      {
+        "next_state": 21,
+        "probability": 0.97
+      }
+    ],
+    "3,4,east,22": [
+      {
+        "next_state": 4,
+        "probability": 0.01
+      },
+      {
+        "next_state": 12,
+        "probability": 0.01
+      },
+      {
+        "next_state": 14,
+        "probability": 0.01
+      },
+      {
+        "next_state": 22,
+        "probability": 0.97
+      }
+    ],
+    "3,4,east,23": [
+      {
+        "next_state": 5,
+        "probability": 0.01
+      },
+      {
+        "next_state": 13,
+        "probability": 0.01
+      },
+      {
+        "next_state": 14,
+        "probability": 0.01
+      },
+      {
+        "next_state": 23,
+        "probability": 0.97
+      }
+    ],
+    "3,4,east,28": [
+      {
+        "next_state": 10,
+        "probability": 0.01
+      },
+      {
+        "next_state": 19,
+        "probability": 0.01
+      },
+      {
+        "next_state": 20,
+        "probability": 0.01
+      },
+      {
+        "next_state": 28,
+        "probability": 0.97
+      }
+    ],
+    "3,4,east,29": [
+      {
+        "next_state": 11,
+        "probability": 0.01
+      },
+      {
+        "next_state": 19,
+        "probability": 0.01
+      },
+      {
+        "next_state": 21,
+        "probability": 0.01
+      },
+      {
+        "next_state": 29,
+        "probability": 0.97
+      }
+    ],
+    "3,4,east,30": [
+      {
+        "next_state": 12,
+        "probability": 0.01
+      },
+      {
+        "next_state": 20,
+        "probability": 0.01
+      },
+      {
+        "next_state": 22,
+        "probability": 0.01
+      },
+      {
+        "next_state": 30,
+        "probability": 0.97
+      }
+    ],
+    "3,4,east,31": [
+      {
+        "next_state": 13,
+        "probability": 0.01
+      },
+      {
+        "next_state": 21,
+        "probability": 0.01
+      },
+      {
+        "next_state": 23,
+        "probability": 0.01
+      },
+      {
+        "next_state": 31,
+        "probability": 0.97
+      }
+    ],
+    "3,4,east,32": [
+      {
+        "next_state": 14,
+        "probability": 0.01
+      },
+      {
+        "next_state": 22,
+        "probability": 0.01
+      },
+      {
+        "next_state": 23,
+        "probability": 0.01
+      },
+      {
+        "next_state": 32,
+        "probability": 0.97
+      }
+    ],
+    "3,4,east,37": [
+      {
+        "next_state": 19,
+        "probability": 0.01
+      },
+      {
+        "next_state": 28,
+        "probability": 0.01
+      },
+      {
+        "next_state": 29,
+        "probability": 0.01
+      },
+      {
+        "next_state": 37,
+        "probability": 0.97
+      }
+    ],
+    "3,4,east,38": [
+      {
+        "next_state": 20,
+        "probability": 0.01
+      },
+      {
+        "next_state": 28,
+        "probability": 0.01
+      },
+      {
+        "next_state": 30,
+        "probability": 0.01
+      },
+      {
+        "next_state": 38,
+        "probability": 0.97
+      }
+    ],
+    "3,4,east,39": [
+      {
+        "next_state": 21,
+        "probability": 0.01
+      },
+      {
+        "next_state": 29,
+        "probability": 0.01
+      },
+      {
+        "next_state": 31,
+        "probability": 0.01
+      },
+      {
         "next_state": 39,
         "probability": 0.97
       }
     ],
-    "4,2,north,40": [
+    "3,4,east,40": [
+      {
+        "next_state": 22,
+        "probability": 0.01
+      },
+      {
+        "next_state": 30,
+        "probability": 0.01
+      },
+      {
+        "next_state": 32,
+        "probability": 0.01
+      },
+      {
+        "next_state": 40,
+        "probability": 0.97
+      }
+    ],
+    "3,4,east,45": [
+      {
+        "next_state": 28,
+        "probability": 0.01
+      },
+      {
+        "next_state": 37,
+        "probability": 0.98
+      },
+      {
+        "next_state": 38,
+        "probability": 0.01
+      }
+    ],
+    "3,4,east,46": [
+      {
+        "next_state": 29,
+        "probability": 0.01
+      },
+      {
+        "next_state": 37,
+        "probability": 0.01
+      },
+      {
+        "next_state": 38,
+        "probability": 0.97
+      },
+      {
+        "next_state": 39,
+        "probability": 0.01
+      }
+    ],
+    "3,4,east,47": [
       {
         "next_state": 30,
         "probability": 0.01
@@ -4753,6 +5187,24 @@
       },
       {
         "next_state": 39,
+        "probability": 0.97
+      },
+      {
+        "next_state": 40,
+        "probability": 0.01
+      }
+    ],
+    "3,4,east,48": [
+      {
+        "next_state": 0,
+        "probability": 0.01
+      },
+      {
+        "next_state": 31,
+        "probability": 0.01
+      },
+      {
+        "next_state": 39,
         "probability": 0.01
       },
       {
@@ -4760,10 +5212,10 @@
         "probability": 0.97
       }
     ],
-    "4,2,north,41": [
+    "3,4,east,49": [
       {
         "next_state": 0,
-        "probability": 0.01
+        "probability": 0.98
       },
       {
         "next_state": 32,
@@ -4772,24 +5224,6 @@
       {
         "next_state": 40,
         "probability": 0.01
-      },
-      {
-        "next_state": 41,
-        "probability": 0.97
-      }
-    ],
-    "4,2,north,42": [
-      {
-        "next_state": 0,
-        "probability": 0.01
-      },
-      {
-        "next_state": 33,
-        "probability": 0.01
-      },
-      {
-        "next_state": 41,
-        "probability": 0.98
       }
     ],
     "4,3,north,0": [

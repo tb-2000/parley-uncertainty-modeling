@@ -714,7 +714,7 @@ if __name__ == "__main__":
     # sigma_obs=0.5
     precompute_maps(
         first_map=0,
-        last_map=2,
+        last_map=3,
         maps_dir="maps",
         p=0.01,
         sigma_obs=0.0,

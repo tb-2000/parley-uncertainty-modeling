@@ -4,33 +4,23 @@
   "map_id": 0,
   "grid_size": 5,
   "n": 4,
-  "max_steps": 20,
+  "max_steps": 10,
   "max_steps_semantics": "threshold_calibration_only",
   "uncertainty_metric": "expected_squared_error = sum_i beta_i * ||e_i||^2",
   "thresholds": [
-    0.07500000000000001,
-    0.1433,
-    0.21438100000000002,
-    0.28880804,
-    0.35657683195000006,
-    0.41717575067650003,
-    0.47557086973991,
-    0.47557086973991,
-    0.47557086973991,
-    0.47557086973991,
-    0.47557086973991,
-    0.47557086973991,
-    0.47557086973991,
-    0.47557086973991,
-    0.47557086973991,
-    0.47557086973991,
-    0.47557086973991,
-    0.47557086973991,
-    0.47557086973991,
-    0.47557086973991
+    0.07,
+    0.1426,
+    0.21438100000000004,
+    0.25667767,
+    0.3244804536,
+    0.38013061525,
+    0.44458687630292,
+    0.4871650846193907,
+    0.4871650846193907,
+    0.4871650846193907
   ],
   "hidden_state_count_full": 81,
-  "reachable_hidden_state_count": 36,
+  "reachable_hidden_state_count": 42,
   "reachable_hidden_states": [
     0,
     1,
@@ -38,68 +28,74 @@
     3,
     4,
     5,
-    6,
     10,
     11,
     12,
     13,
     14,
-    15,
     19,
     20,
     21,
     22,
     23,
-    24,
-    25,
     28,
     29,
     30,
     31,
     32,
-    33,
     37,
     38,
     39,
     40,
-    41,
+    45,
     46,
     47,
     48,
+    49,
     50,
-    56
+    54,
+    55,
+    56,
+    57,
+    58,
+    63,
+    64,
+    65,
+    66,
+    72,
+    74
   ],
-  "exact_belief_count": 42,
-  "exact_context_count": 71,
-  "context_count": 71,
-  "max_local_states": 13,
-  "max_hmm_state": 12,
+  "exact_belief_count": 47,
+  "exact_context_count": 77,
+  "context_count": 77,
+  "max_local_states": 14,
+  "max_hmm_state": 13,
   "local_state_counts": {
     "0,0": 1,
-    "0,1": 1,
-    "0,2": 1,
-    "0,3": 1,
-    "0,4": 1,
+    "0,1": 2,
+    "0,2": 4,
+    "0,3": 5,
+    "0,4": 6,
     "1,0": 1,
     "1,1": 1,
     "1,2": 1,
     "1,3": 1,
-    "1,4": 1,
-    "2,0": 2,
-    "2,1": 3,
-    "2,2": 4,
-    "2,3": 3,
-    "2,4": 2,
+    "1,4": 7,
+    "2,0": 1,
+    "2,1": 1,
+    "2,2": 1,
+    "2,3": 1,
+    "2,4": 9,
     "3,0": 1,
     "3,1": 1,
-    "3,2": 6,
-    "3,3": 10,
-    "3,4": 1,
+    "3,2": 1,
+    "3,3": 2,
+    "3,4": 12,
     "4,0": 1,
     "4,1": 1,
     "4,2": 1,
-    "4,3": 12,
-    "4,4": 13
+    "4,3": 1,
+    "4,4": 14
   },
   "contexts": [
     {
@@ -122,97 +118,16 @@
     },
     {
       "xhat": 0,
-      "yhat": 2,
-      "hmm_state": 0,
-      "belief_uid": 0,
-      "mse": 0.0,
-      "urc_level": 0,
-      "support_size": 1
-    },
-    {
-      "xhat": 0,
-      "yhat": 3,
-      "hmm_state": 0,
-      "belief_uid": 0,
-      "mse": 0.0,
-      "urc_level": 0,
-      "support_size": 1
-    },
-    {
-      "xhat": 0,
-      "yhat": 4,
-      "hmm_state": 0,
-      "belief_uid": 0,
-      "mse": 0.0,
-      "urc_level": 0,
-      "support_size": 1
-    },
-    {
-      "xhat": 1,
-      "yhat": 0,
-      "hmm_state": 0,
-      "belief_uid": 0,
-      "mse": 0.0,
-      "urc_level": 0,
-      "support_size": 1
-    },
-    {
-      "xhat": 1,
       "yhat": 1,
-      "hmm_state": 0,
-      "belief_uid": 0,
-      "mse": 0.0,
-      "urc_level": 0,
-      "support_size": 1
-    },
-    {
-      "xhat": 1,
-      "yhat": 2,
-      "hmm_state": 0,
-      "belief_uid": 0,
-      "mse": 0.0,
-      "urc_level": 0,
-      "support_size": 1
-    },
-    {
-      "xhat": 1,
-      "yhat": 3,
-      "hmm_state": 0,
-      "belief_uid": 0,
-      "mse": 0.0,
-      "urc_level": 0,
-      "support_size": 1
-    },
-    {
-      "xhat": 1,
-      "yhat": 4,
-      "hmm_state": 0,
-      "belief_uid": 0,
-      "mse": 0.0,
-      "urc_level": 0,
-      "support_size": 1
-    },
-    {
-      "xhat": 2,
-      "yhat": 0,
-      "hmm_state": 0,
-      "belief_uid": 0,
-      "mse": 0.0,
-      "urc_level": 0,
-      "support_size": 1
-    },
-    {
-      "xhat": 2,
-      "yhat": 0,
       "hmm_state": 1,
       "belief_uid": 1,
-      "mse": 0.06999999999999999,
+      "mse": 0.04,
       "urc_level": 0,
-      "support_size": 4
+      "support_size": 3
     },
     {
-      "xhat": 2,
-      "yhat": 1,
+      "xhat": 0,
+      "yhat": 2,
       "hmm_state": 0,
       "belief_uid": 0,
       "mse": 0.0,
@@ -220,61 +135,34 @@
       "support_size": 1
     },
     {
-      "xhat": 2,
-      "yhat": 1,
+      "xhat": 0,
+      "yhat": 2,
       "hmm_state": 1,
-      "belief_uid": 3,
-      "mse": 0.05,
-      "urc_level": 0,
-      "support_size": 4
-    },
-    {
-      "xhat": 2,
-      "yhat": 1,
-      "hmm_state": 2,
-      "belief_uid": 8,
-      "mse": 0.11900000000000001,
+      "belief_uid": 2,
+      "mse": 0.07,
       "urc_level": 1,
-      "support_size": 8
+      "support_size": 4
     },
     {
-      "xhat": 2,
+      "xhat": 0,
       "yhat": 2,
-      "hmm_state": 0,
-      "belief_uid": 0,
-      "mse": 0.0,
-      "urc_level": 0,
-      "support_size": 1
-    },
-    {
-      "xhat": 2,
-      "yhat": 2,
-      "hmm_state": 1,
+      "hmm_state": 2,
       "belief_uid": 4,
       "mse": 0.08,
       "urc_level": 1,
       "support_size": 4
     },
     {
-      "xhat": 2,
-      "yhat": 2,
-      "hmm_state": 2,
-      "belief_uid": 10,
-      "mse": 0.13090000000000002,
-      "urc_level": 1,
-      "support_size": 9
-    },
-    {
-      "xhat": 2,
+      "xhat": 0,
       "yhat": 2,
       "hmm_state": 3,
-      "belief_uid": 19,
-      "mse": 0.19861299999999998,
-      "urc_level": 2,
-      "support_size": 13
+      "belief_uid": 8,
+      "mse": 0.11100000000000002,
+      "urc_level": 1,
+      "support_size": 6
     },
     {
-      "xhat": 2,
+      "xhat": 0,
       "yhat": 3,
       "hmm_state": 0,
       "belief_uid": 0,
@@ -283,25 +171,43 @@
       "support_size": 1
     },
     {
-      "xhat": 2,
+      "xhat": 0,
       "yhat": 3,
       "hmm_state": 1,
-      "belief_uid": 6,
-      "mse": 0.05,
-      "urc_level": 0,
+      "belief_uid": 2,
+      "mse": 0.07,
+      "urc_level": 1,
       "support_size": 4
     },
     {
-      "xhat": 2,
+      "xhat": 0,
       "yhat": 3,
       "hmm_state": 2,
       "belief_uid": 9,
-      "mse": 0.119,
-      "urc_level": 1,
+      "mse": 0.1426,
+      "urc_level": 2,
       "support_size": 8
     },
     {
-      "xhat": 2,
+      "xhat": 0,
+      "yhat": 3,
+      "hmm_state": 3,
+      "belief_uid": 13,
+      "mse": 0.15030000000000004,
+      "urc_level": 2,
+      "support_size": 9
+    },
+    {
+      "xhat": 0,
+      "yhat": 3,
+      "hmm_state": 4,
+      "belief_uid": 19,
+      "mse": 0.18603199999999998,
+      "urc_level": 2,
+      "support_size": 10
+    },
+    {
+      "xhat": 0,
       "yhat": 4,
       "hmm_state": 0,
       "belief_uid": 0,
@@ -310,184 +216,418 @@
       "support_size": 1
     },
     {
-      "xhat": 2,
+      "xhat": 0,
       "yhat": 4,
       "hmm_state": 1,
       "belief_uid": 2,
-      "mse": 0.06999999999999999,
-      "urc_level": 0,
-      "support_size": 4
-    },
-    {
-      "xhat": 3,
-      "yhat": 0,
-      "hmm_state": 0,
-      "belief_uid": 0,
-      "mse": 0.0,
-      "urc_level": 0,
-      "support_size": 1
-    },
-    {
-      "xhat": 3,
-      "yhat": 1,
-      "hmm_state": 0,
-      "belief_uid": 0,
-      "mse": 0.0,
-      "urc_level": 0,
-      "support_size": 1
-    },
-    {
-      "xhat": 3,
-      "yhat": 2,
-      "hmm_state": 0,
-      "belief_uid": 0,
-      "mse": 0.0,
-      "urc_level": 0,
-      "support_size": 1
-    },
-    {
-      "xhat": 3,
-      "yhat": 2,
-      "hmm_state": 1,
-      "belief_uid": 5,
-      "mse": 0.08,
+      "mse": 0.07,
       "urc_level": 1,
       "support_size": 4
     },
     {
-      "xhat": 3,
-      "yhat": 2,
+      "xhat": 0,
+      "yhat": 4,
       "hmm_state": 2,
-      "belief_uid": 4,
-      "mse": 0.08,
-      "urc_level": 1,
-      "support_size": 4
+      "belief_uid": 10,
+      "mse": 0.14330000000000004,
+      "urc_level": 2,
+      "support_size": 9
     },
     {
-      "xhat": 3,
-      "yhat": 2,
+      "xhat": 0,
+      "yhat": 4,
       "hmm_state": 3,
-      "belief_uid": 11,
-      "mse": 0.1595,
-      "urc_level": 2,
-      "support_size": 9
-    },
-    {
-      "xhat": 3,
-      "yhat": 2,
-      "hmm_state": 4,
-      "belief_uid": 21,
-      "mse": 0.210072,
-      "urc_level": 2,
-      "support_size": 14
-    },
-    {
-      "xhat": 3,
-      "yhat": 2,
-      "hmm_state": 5,
-      "belief_uid": 28,
-      "mse": 0.28026919,
-      "urc_level": 3,
-      "support_size": 18
-    },
-    {
-      "xhat": 3,
-      "yhat": 3,
-      "hmm_state": 0,
-      "belief_uid": 0,
-      "mse": 0.0,
-      "urc_level": 0,
-      "support_size": 1
-    },
-    {
-      "xhat": 3,
-      "yhat": 3,
-      "hmm_state": 1,
-      "belief_uid": 5,
-      "mse": 0.08,
-      "urc_level": 1,
-      "support_size": 4
-    },
-    {
-      "xhat": 3,
-      "yhat": 3,
-      "hmm_state": 2,
-      "belief_uid": 4,
-      "mse": 0.08,
-      "urc_level": 1,
-      "support_size": 4
-    },
-    {
-      "xhat": 3,
-      "yhat": 3,
-      "hmm_state": 3,
-      "belief_uid": 12,
-      "mse": 0.16,
-      "urc_level": 2,
-      "support_size": 9
-    },
-    {
-      "xhat": 3,
-      "yhat": 3,
-      "hmm_state": 4,
-      "belief_uid": 14,
-      "mse": 0.12910000000000002,
-      "urc_level": 1,
-      "support_size": 9
-    },
-    {
-      "xhat": 3,
-      "yhat": 3,
-      "hmm_state": 5,
-      "belief_uid": 15,
-      "mse": 0.16220000000000004,
-      "urc_level": 2,
-      "support_size": 9
-    },
-    {
-      "xhat": 3,
-      "yhat": 3,
-      "hmm_state": 6,
       "belief_uid": 20,
-      "mse": 0.200591,
-      "urc_level": 2,
+      "mse": 0.21914499999999998,
+      "urc_level": 3,
       "support_size": 13
     },
     {
-      "xhat": 3,
-      "yhat": 3,
-      "hmm_state": 7,
-      "belief_uid": 22,
-      "mse": 0.24168699999999999,
+      "xhat": 0,
+      "yhat": 4,
+      "hmm_state": 4,
+      "belief_uid": 24,
+      "mse": 0.21447700000000003,
       "urc_level": 3,
       "support_size": 16
     },
     {
-      "xhat": 3,
+      "xhat": 0,
+      "yhat": 4,
+      "hmm_state": 5,
+      "belief_uid": 28,
+      "mse": 0.2650213,
+      "urc_level": 4,
+      "support_size": 15
+    },
+    {
+      "xhat": 1,
+      "yhat": 0,
+      "hmm_state": 0,
+      "belief_uid": 0,
+      "mse": 0.0,
+      "urc_level": 0,
+      "support_size": 1
+    },
+    {
+      "xhat": 1,
+      "yhat": 1,
+      "hmm_state": 0,
+      "belief_uid": 0,
+      "mse": 0.0,
+      "urc_level": 0,
+      "support_size": 1
+    },
+    {
+      "xhat": 1,
+      "yhat": 2,
+      "hmm_state": 0,
+      "belief_uid": 0,
+      "mse": 0.0,
+      "urc_level": 0,
+      "support_size": 1
+    },
+    {
+      "xhat": 1,
       "yhat": 3,
-      "hmm_state": 8,
-      "belief_uid": 30,
-      "mse": 0.29428372999999997,
+      "hmm_state": 0,
+      "belief_uid": 0,
+      "mse": 0.0,
+      "urc_level": 0,
+      "support_size": 1
+    },
+    {
+      "xhat": 1,
+      "yhat": 4,
+      "hmm_state": 0,
+      "belief_uid": 0,
+      "mse": 0.0,
+      "urc_level": 0,
+      "support_size": 1
+    },
+    {
+      "xhat": 1,
+      "yhat": 4,
+      "hmm_state": 1,
+      "belief_uid": 3,
+      "mse": 0.04,
+      "urc_level": 0,
+      "support_size": 3
+    },
+    {
+      "xhat": 1,
+      "yhat": 4,
+      "hmm_state": 2,
+      "belief_uid": 11,
+      "mse": 0.10980000000000001,
+      "urc_level": 1,
+      "support_size": 8
+    },
+    {
+      "xhat": 1,
+      "yhat": 4,
+      "hmm_state": 3,
+      "belief_uid": 21,
+      "mse": 0.182884,
+      "urc_level": 2,
+      "support_size": 14
+    },
+    {
+      "xhat": 1,
+      "yhat": 4,
+      "hmm_state": 4,
+      "belief_uid": 29,
+      "mse": 0.25850509000000005,
+      "urc_level": 4,
+      "support_size": 18
+    },
+    {
+      "xhat": 1,
+      "yhat": 4,
+      "hmm_state": 5,
+      "belief_uid": 33,
+      "mse": 0.25186208000000004,
+      "urc_level": 3,
+      "support_size": 21
+    },
+    {
+      "xhat": 1,
+      "yhat": 4,
+      "hmm_state": 6,
+      "belief_uid": 34,
+      "mse": 0.3041595008,
       "urc_level": 4,
       "support_size": 19
     },
     {
-      "xhat": 3,
+      "xhat": 2,
+      "yhat": 0,
+      "hmm_state": 0,
+      "belief_uid": 0,
+      "mse": 0.0,
+      "urc_level": 0,
+      "support_size": 1
+    },
+    {
+      "xhat": 2,
+      "yhat": 1,
+      "hmm_state": 0,
+      "belief_uid": 0,
+      "mse": 0.0,
+      "urc_level": 0,
+      "support_size": 1
+    },
+    {
+      "xhat": 2,
+      "yhat": 2,
+      "hmm_state": 0,
+      "belief_uid": 0,
+      "mse": 0.0,
+      "urc_level": 0,
+      "support_size": 1
+    },
+    {
+      "xhat": 2,
       "yhat": 3,
-      "hmm_state": 9,
+      "hmm_state": 0,
+      "belief_uid": 0,
+      "mse": 0.0,
+      "urc_level": 0,
+      "support_size": 1
+    },
+    {
+      "xhat": 2,
+      "yhat": 4,
+      "hmm_state": 0,
+      "belief_uid": 0,
+      "mse": 0.0,
+      "urc_level": 0,
+      "support_size": 1
+    },
+    {
+      "xhat": 2,
+      "yhat": 4,
+      "hmm_state": 1,
+      "belief_uid": 5,
+      "mse": 0.06999999999999999,
+      "urc_level": 1,
+      "support_size": 4
+    },
+    {
+      "xhat": 2,
+      "yhat": 4,
+      "hmm_state": 2,
+      "belief_uid": 6,
+      "mse": 0.08,
+      "urc_level": 1,
+      "support_size": 4
+    },
+    {
+      "xhat": 2,
+      "yhat": 4,
+      "hmm_state": 3,
+      "belief_uid": 12,
+      "mse": 0.111,
+      "urc_level": 1,
+      "support_size": 6
+    },
+    {
+      "xhat": 2,
+      "yhat": 4,
+      "hmm_state": 4,
+      "belief_uid": 22,
+      "mse": 0.180313,
+      "urc_level": 2,
+      "support_size": 13
+    },
+    {
+      "xhat": 2,
+      "yhat": 4,
+      "hmm_state": 5,
+      "belief_uid": 30,
+      "mse": 0.25289963,
+      "urc_level": 3,
+      "support_size": 19
+    },
+    {
+      "xhat": 2,
+      "yhat": 4,
+      "hmm_state": 6,
       "belief_uid": 35,
-      "mse": 0.3634051208000001,
+      "mse": 0.32801607400000005,
+      "urc_level": 5,
+      "support_size": 22
+    },
+    {
+      "xhat": 2,
+      "yhat": 4,
+      "hmm_state": 7,
+      "belief_uid": 38,
+      "mse": 0.3179343975000001,
+      "urc_level": 4,
+      "support_size": 25
+    },
+    {
+      "xhat": 2,
+      "yhat": 4,
+      "hmm_state": 8,
+      "belief_uid": 39,
+      "mse": 0.373163662764,
       "urc_level": 5,
       "support_size": 22
     },
     {
       "xhat": 3,
+      "yhat": 0,
+      "hmm_state": 0,
+      "belief_uid": 0,
+      "mse": 0.0,
+      "urc_level": 0,
+      "support_size": 1
+    },
+    {
+      "xhat": 3,
+      "yhat": 1,
+      "hmm_state": 0,
+      "belief_uid": 0,
+      "mse": 0.0,
+      "urc_level": 0,
+      "support_size": 1
+    },
+    {
+      "xhat": 3,
+      "yhat": 2,
+      "hmm_state": 0,
+      "belief_uid": 0,
+      "mse": 0.0,
+      "urc_level": 0,
+      "support_size": 1
+    },
+    {
+      "xhat": 3,
+      "yhat": 3,
+      "hmm_state": 0,
+      "belief_uid": 0,
+      "mse": 0.0,
+      "urc_level": 0,
+      "support_size": 1
+    },
+    {
+      "xhat": 3,
+      "yhat": 3,
+      "hmm_state": 1,
+      "belief_uid": 6,
+      "mse": 0.08,
+      "urc_level": 1,
+      "support_size": 4
+    },
+    {
+      "xhat": 3,
       "yhat": 4,
       "hmm_state": 0,
       "belief_uid": 0,
       "mse": 0.0,
       "urc_level": 0,
       "support_size": 1
+    },
+    {
+      "xhat": 3,
+      "yhat": 4,
+      "hmm_state": 1,
+      "belief_uid": 5,
+      "mse": 0.06999999999999999,
+      "urc_level": 1,
+      "support_size": 4
+    },
+    {
+      "xhat": 3,
+      "yhat": 4,
+      "hmm_state": 2,
+      "belief_uid": 6,
+      "mse": 0.08,
+      "urc_level": 1,
+      "support_size": 4
+    },
+    {
+      "xhat": 3,
+      "yhat": 4,
+      "hmm_state": 3,
+      "belief_uid": 14,
+      "mse": 0.14260000000000003,
+      "urc_level": 2,
+      "support_size": 8
+    },
+    {
+      "xhat": 3,
+      "yhat": 4,
+      "hmm_state": 4,
+      "belief_uid": 15,
+      "mse": 0.1503,
+      "urc_level": 2,
+      "support_size": 9
+    },
+    {
+      "xhat": 3,
+      "yhat": 4,
+      "hmm_state": 5,
+      "belief_uid": 17,
+      "mse": 0.16290000000000002,
+      "urc_level": 2,
+      "support_size": 9
+    },
+    {
+      "xhat": 3,
+      "yhat": 4,
+      "hmm_state": 6,
+      "belief_uid": 23,
+      "mse": 0.18603199999999998,
+      "urc_level": 2,
+      "support_size": 10
+    },
+    {
+      "xhat": 3,
+      "yhat": 4,
+      "hmm_state": 7,
+      "belief_uid": 31,
+      "mse": 0.25485025,
+      "urc_level": 3,
+      "support_size": 18
+    },
+    {
+      "xhat": 3,
+      "yhat": 4,
+      "hmm_state": 8,
+      "belief_uid": 36,
+      "mse": 0.3266579127,
+      "urc_level": 5,
+      "support_size": 23
+    },
+    {
+      "xhat": 3,
+      "yhat": 4,
+      "hmm_state": 9,
+      "belief_uid": 40,
+      "mse": 0.40072974075300005,
+      "urc_level": 6,
+      "support_size": 24
+    },
+    {
+      "xhat": 3,
+      "yhat": 4,
+      "hmm_state": 10,
+      "belief_uid": 42,
+      "mse": 0.360752107719,
+      "urc_level": 5,
+      "support_size": 25
+    },
+    {
+      "xhat": 3,
+      "yhat": 4,
+      "hmm_state": 11,
+      "belief_uid": 43,
+      "mse": 0.44458687630292,
+      "urc_level": 7,
+      "support_size": 24
     },
     {
       "xhat": 4,
@@ -527,105 +667,6 @@
     },
     {
       "xhat": 4,
-      "yhat": 3,
-      "hmm_state": 1,
-      "belief_uid": 5,
-      "mse": 0.08,
-      "urc_level": 1,
-      "support_size": 4
-    },
-    {
-      "xhat": 4,
-      "yhat": 3,
-      "hmm_state": 2,
-      "belief_uid": 7,
-      "mse": 0.06999999999999999,
-      "urc_level": 0,
-      "support_size": 4
-    },
-    {
-      "xhat": 4,
-      "yhat": 3,
-      "hmm_state": 3,
-      "belief_uid": 13,
-      "mse": 0.16290000000000002,
-      "urc_level": 2,
-      "support_size": 9
-    },
-    {
-      "xhat": 4,
-      "yhat": 3,
-      "hmm_state": 4,
-      "belief_uid": 16,
-      "mse": 0.1503,
-      "urc_level": 2,
-      "support_size": 9
-    },
-    {
-      "xhat": 4,
-      "yhat": 3,
-      "hmm_state": 5,
-      "belief_uid": 23,
-      "mse": 0.23348399999999997,
-      "urc_level": 3,
-      "support_size": 16
-    },
-    {
-      "xhat": 4,
-      "yhat": 3,
-      "hmm_state": 6,
-      "belief_uid": 25,
-      "mse": 0.20170000000000002,
-      "urc_level": 2,
-      "support_size": 14
-    },
-    {
-      "xhat": 4,
-      "yhat": 3,
-      "hmm_state": 7,
-      "belief_uid": 26,
-      "mse": 0.22306399999999998,
-      "urc_level": 3,
-      "support_size": 14
-    },
-    {
-      "xhat": 4,
-      "yhat": 3,
-      "hmm_state": 8,
-      "belief_uid": 29,
-      "mse": 0.27662125000000004,
-      "urc_level": 3,
-      "support_size": 18
-    },
-    {
-      "xhat": 4,
-      "yhat": 3,
-      "hmm_state": 9,
-      "belief_uid": 31,
-      "mse": 0.30601504,
-      "urc_level": 4,
-      "support_size": 21
-    },
-    {
-      "xhat": 4,
-      "yhat": 3,
-      "hmm_state": 10,
-      "belief_uid": 37,
-      "mse": 0.34974854310000003,
-      "urc_level": 4,
-      "support_size": 23
-    },
-    {
-      "xhat": 4,
-      "yhat": 3,
-      "hmm_state": 11,
-      "belief_uid": 39,
-      "mse": 0.422539869681,
-      "urc_level": 6,
-      "support_size": 24
-    },
-    {
-      "xhat": 4,
       "yhat": 4,
       "hmm_state": 0,
       "belief_uid": 0,
@@ -637,25 +678,25 @@
       "xhat": 4,
       "yhat": 4,
       "hmm_state": 1,
-      "belief_uid": 7,
+      "belief_uid": 5,
       "mse": 0.06999999999999999,
-      "urc_level": 0,
+      "urc_level": 1,
       "support_size": 4
     },
     {
       "xhat": 4,
       "yhat": 4,
       "hmm_state": 2,
-      "belief_uid": 17,
-      "mse": 0.1406,
+      "belief_uid": 7,
+      "mse": 0.06999999999999999,
       "urc_level": 1,
-      "support_size": 9
+      "support_size": 4
     },
     {
       "xhat": 4,
       "yhat": 4,
       "hmm_state": 3,
-      "belief_uid": 18,
+      "belief_uid": 16,
       "mse": 0.1433,
       "urc_level": 2,
       "support_size": 9
@@ -664,16 +705,25 @@
       "xhat": 4,
       "yhat": 4,
       "hmm_state": 4,
-      "belief_uid": 24,
-      "mse": 0.214381,
-      "urc_level": 3,
-      "support_size": 16
+      "belief_uid": 18,
+      "mse": 0.1406,
+      "urc_level": 1,
+      "support_size": 9
     },
     {
       "xhat": 4,
       "yhat": 4,
       "hmm_state": 5,
-      "belief_uid": 27,
+      "belief_uid": 25,
+      "mse": 0.21914500000000003,
+      "urc_level": 3,
+      "support_size": 13
+    },
+    {
+      "xhat": 4,
+      "yhat": 4,
+      "hmm_state": 6,
+      "belief_uid": 26,
       "mse": 0.214477,
       "urc_level": 3,
       "support_size": 16
@@ -681,73 +731,103 @@
     {
       "xhat": 4,
       "yhat": 4,
-      "hmm_state": 6,
-      "belief_uid": 32,
-      "mse": 0.28880804,
-      "urc_level": 4,
-      "support_size": 25
-    },
-    {
-      "xhat": 4,
-      "yhat": 4,
       "hmm_state": 7,
-      "belief_uid": 33,
-      "mse": 0.22296791000000005,
+      "belief_uid": 27,
+      "mse": 0.21438100000000002,
       "urc_level": 3,
-      "support_size": 19
+      "support_size": 16
     },
     {
       "xhat": 4,
       "yhat": 4,
       "hmm_state": 8,
-      "belief_uid": 34,
-      "mse": 0.29075356,
+      "belief_uid": 32,
+      "mse": 0.2650213,
       "urc_level": 4,
-      "support_size": 20
+      "support_size": 15
     },
     {
       "xhat": 4,
       "yhat": 4,
       "hmm_state": 9,
-      "belief_uid": 36,
-      "mse": 0.299318868,
-      "urc_level": 4,
+      "belief_uid": 37,
+      "mse": 0.3244804536,
+      "urc_level": 5,
       "support_size": 22
     },
     {
       "xhat": 4,
       "yhat": 4,
       "hmm_state": 10,
-      "belief_uid": 38,
-      "mse": 0.36511057230000005,
-      "urc_level": 5,
+      "belief_uid": 41,
+      "mse": 0.3870975677360001,
+      "urc_level": 6,
       "support_size": 25
     },
     {
       "xhat": 4,
       "yhat": 4,
       "hmm_state": 11,
-      "belief_uid": 40,
-      "mse": 0.41181163167199997,
-      "urc_level": 5,
+      "belief_uid": 44,
+      "mse": 0.45215046435622985,
+      "urc_level": 7,
       "support_size": 25
     },
     {
       "xhat": 4,
       "yhat": 4,
       "hmm_state": 12,
-      "belief_uid": 41,
-      "mse": 0.47557086973991003,
-      "urc_level": 20,
+      "belief_uid": 45,
+      "mse": 0.39266395478584004,
+      "urc_level": 6,
+      "support_size": 25
+    },
+    {
+      "xhat": 4,
+      "yhat": 4,
+      "hmm_state": 13,
+      "belief_uid": 46,
+      "mse": 0.48716508461939056,
+      "urc_level": 10,
       "support_size": 25
     }
   ],
   "belief_transitions": {
-    "1,0,0": {
-      "action": "east",
-      "next_xhat": 2,
-      "next_yhat": 0,
+    "0,0,0": {
+      "action": "north",
+      "next_xhat": 0,
+      "next_yhat": 1,
       "next_state": 1
+    },
+    "0,1,0": {
+      "action": "north",
+      "next_xhat": 0,
+      "next_yhat": 2,
+      "next_state": 1
+    },
+    "0,2,0": {
+      "action": "north",
+      "next_xhat": 0,
+      "next_yhat": 3,
+      "next_state": 1
+    },
+    "0,3,0": {
+      "action": "north",
+      "next_xhat": 0,
+      "next_yhat": 4,
+      "next_state": 1
+    },
+    "0,4,0": {
+      "action": "east",
+      "next_xhat": 1,
+      "next_yhat": 4,
+      "next_state": 1
+    },
+    "1,2,0": {
+      "action": "west",
+      "next_xhat": 0,
+      "next_yhat": 2,
+      "next_state": 2
     },
     "1,4,0": {
       "action": "east",
@@ -755,269 +835,275 @@
       "next_yhat": 4,
       "next_state": 1
     },
-    "2,0,0": {
-      "action": "north",
-      "next_xhat": 2,
-      "next_yhat": 1,
-      "next_state": 1
-    },
-    "2,1,0": {
-      "action": "north",
-      "next_xhat": 2,
-      "next_yhat": 2,
-      "next_state": 1
-    },
-    "2,2,0": {
-      "action": "east",
-      "next_xhat": 3,
-      "next_yhat": 2,
-      "next_state": 1
-    },
     "2,3,0": {
-      "action": "east",
-      "next_xhat": 3,
-      "next_yhat": 3,
-      "next_state": 1
+      "action": "north",
+      "next_xhat": 2,
+      "next_yhat": 4,
+      "next_state": 2
     },
     "2,4,0": {
-      "action": "south",
-      "next_xhat": 2,
-      "next_yhat": 3,
-      "next_state": 1
-    },
-    "3,1,0": {
-      "action": "north",
+      "action": "east",
       "next_xhat": 3,
-      "next_yhat": 2,
-      "next_state": 2
+      "next_yhat": 4,
+      "next_state": 1
     },
     "3,2,0": {
       "action": "north",
       "next_xhat": 3,
       "next_yhat": 3,
-      "next_state": 2
-    },
-    "3,3,0": {
-      "action": "east",
-      "next_xhat": 4,
-      "next_yhat": 3,
       "next_state": 1
     },
-    "4,2,0": {
+    "3,3,0": {
       "action": "north",
-      "next_xhat": 4,
-      "next_yhat": 3,
+      "next_xhat": 3,
+      "next_yhat": 4,
       "next_state": 2
+    },
+    "3,4,0": {
+      "action": "east",
+      "next_xhat": 4,
+      "next_yhat": 4,
+      "next_state": 1
     },
     "4,3,0": {
       "action": "north",
       "next_xhat": 4,
       "next_yhat": 4,
-      "next_state": 1
+      "next_state": 2
     },
-    "2,0,1": {
+    "0,1,1": {
       "action": "north",
-      "next_xhat": 2,
-      "next_yhat": 1,
-      "next_state": 2
-    },
-    "2,4,1": {
-      "action": "south",
-      "next_xhat": 2,
-      "next_yhat": 3,
-      "next_state": 2
-    },
-    "2,1,1": {
-      "action": "north",
-      "next_xhat": 2,
-      "next_yhat": 2,
-      "next_state": 2
-    },
-    "2,2,1": {
-      "action": "east",
-      "next_xhat": 3,
+      "next_xhat": 0,
       "next_yhat": 2,
       "next_state": 3
     },
-    "3,2,1": {
+    "0,2,1": {
       "action": "north",
-      "next_xhat": 3,
+      "next_xhat": 0,
       "next_yhat": 3,
+      "next_state": 2
+    },
+    "0,3,1": {
+      "action": "north",
+      "next_xhat": 0,
+      "next_yhat": 4,
+      "next_state": 2
+    },
+    "0,4,1": {
+      "action": "east",
+      "next_xhat": 1,
+      "next_yhat": 4,
+      "next_state": 2
+    },
+    "1,4,1": {
+      "action": "east",
+      "next_xhat": 2,
+      "next_yhat": 4,
+      "next_state": 3
+    },
+    "0,2,2": {
+      "action": "north",
+      "next_xhat": 0,
+      "next_yhat": 3,
+      "next_state": 3
+    },
+    "2,4,1": {
+      "action": "east",
+      "next_xhat": 3,
+      "next_yhat": 4,
+      "next_state": 3
+    },
+    "2,4,2": {
+      "action": "east",
+      "next_xhat": 3,
+      "next_yhat": 4,
+      "next_state": 4
+    },
+    "3,4,1": {
+      "action": "east",
+      "next_xhat": 4,
+      "next_yhat": 4,
       "next_state": 3
     },
     "3,3,1": {
-      "action": "east",
-      "next_xhat": 4,
-      "next_yhat": 3,
-      "next_state": 3
-    },
-    "2,3,1": {
-      "action": "east",
-      "next_xhat": 3,
-      "next_yhat": 3,
-      "next_state": 4
-    },
-    "3,2,2": {
       "action": "north",
       "next_xhat": 3,
-      "next_yhat": 3,
+      "next_yhat": 4,
       "next_state": 5
     },
-    "3,3,2": {
+    "3,4,2": {
       "action": "east",
       "next_xhat": 4,
+      "next_yhat": 4,
+      "next_state": 4
+    },
+    "0,2,3": {
+      "action": "north",
+      "next_xhat": 0,
       "next_yhat": 3,
       "next_state": 4
     },
-    "4,3,1": {
+    "0,3,2": {
       "action": "north",
-      "next_xhat": 4,
-      "next_yhat": 4,
-      "next_state": 2
-    },
-    "4,3,2": {
-      "action": "north",
-      "next_xhat": 4,
+      "next_xhat": 0,
       "next_yhat": 4,
       "next_state": 3
     },
-    "2,1,2": {
-      "action": "north",
+    "0,4,2": {
+      "action": "east",
+      "next_xhat": 1,
+      "next_yhat": 4,
+      "next_state": 3
+    },
+    "1,4,2": {
+      "action": "east",
       "next_xhat": 2,
-      "next_yhat": 2,
-      "next_state": 3
-    },
-    "2,3,2": {
-      "action": "east",
-      "next_xhat": 3,
-      "next_yhat": 3,
-      "next_state": 6
-    },
-    "2,2,2": {
-      "action": "east",
-      "next_xhat": 3,
-      "next_yhat": 2,
-      "next_state": 4
-    },
-    "3,2,3": {
-      "action": "north",
-      "next_xhat": 3,
-      "next_yhat": 3,
-      "next_state": 7
-    },
-    "3,3,3": {
-      "action": "east",
-      "next_xhat": 4,
-      "next_yhat": 3,
-      "next_state": 5
-    },
-    "4,3,3": {
-      "action": "north",
-      "next_xhat": 4,
       "next_yhat": 4,
       "next_state": 4
     },
-    "3,3,4": {
+    "2,4,3": {
       "action": "east",
-      "next_xhat": 4,
-      "next_yhat": 3,
+      "next_xhat": 3,
+      "next_yhat": 4,
       "next_state": 6
     },
-    "3,3,5": {
-      "action": "east",
-      "next_xhat": 4,
-      "next_yhat": 3,
-      "next_state": 7
-    },
-    "4,3,4": {
+    "0,3,3": {
       "action": "north",
+      "next_xhat": 0,
+      "next_yhat": 4,
+      "next_state": 4
+    },
+    "3,4,3": {
+      "action": "east",
       "next_xhat": 4,
       "next_yhat": 4,
       "next_state": 5
     },
-    "2,2,3": {
+    "3,4,4": {
       "action": "east",
-      "next_xhat": 3,
-      "next_yhat": 2,
-      "next_state": 5
-    },
-    "3,3,6": {
-      "action": "east",
-      "next_xhat": 4,
-      "next_yhat": 3,
-      "next_state": 8
-    },
-    "3,2,4": {
-      "action": "north",
-      "next_xhat": 3,
-      "next_yhat": 3,
-      "next_state": 8
-    },
-    "3,3,7": {
-      "action": "east",
-      "next_xhat": 4,
-      "next_yhat": 3,
-      "next_state": 9
-    },
-    "4,3,5": {
-      "action": "north",
       "next_xhat": 4,
       "next_yhat": 4,
       "next_state": 6
     },
-    "4,3,6": {
-      "action": "north",
+    "3,4,5": {
+      "action": "east",
       "next_xhat": 4,
       "next_yhat": 4,
       "next_state": 7
     },
-    "4,3,7": {
+    "0,3,4": {
       "action": "north",
+      "next_xhat": 0,
+      "next_yhat": 4,
+      "next_state": 5
+    },
+    "0,4,3": {
+      "action": "east",
+      "next_xhat": 1,
+      "next_yhat": 4,
+      "next_state": 4
+    },
+    "1,4,3": {
+      "action": "east",
+      "next_xhat": 2,
+      "next_yhat": 4,
+      "next_state": 5
+    },
+    "2,4,4": {
+      "action": "east",
+      "next_xhat": 3,
+      "next_yhat": 4,
+      "next_state": 7
+    },
+    "3,4,6": {
+      "action": "east",
       "next_xhat": 4,
       "next_yhat": 4,
       "next_state": 8
     },
-    "3,2,5": {
-      "action": "north",
+    "0,4,4": {
+      "action": "east",
+      "next_xhat": 1,
+      "next_yhat": 4,
+      "next_state": 5
+    },
+    "0,4,5": {
+      "action": "east",
+      "next_xhat": 1,
+      "next_yhat": 4,
+      "next_state": 6
+    },
+    "1,4,4": {
+      "action": "east",
+      "next_xhat": 2,
+      "next_yhat": 4,
+      "next_state": 6
+    },
+    "2,4,5": {
+      "action": "east",
       "next_xhat": 3,
-      "next_yhat": 3,
-      "next_state": 9
-    },
-    "4,3,8": {
-      "action": "north",
-      "next_xhat": 4,
       "next_yhat": 4,
-      "next_state": 9
+      "next_state": 8
     },
-    "3,3,8": {
+    "3,4,7": {
       "action": "east",
       "next_xhat": 4,
-      "next_yhat": 3,
-      "next_state": 10
-    },
-    "4,3,9": {
-      "action": "north",
-      "next_xhat": 4,
       "next_yhat": 4,
-      "next_state": 10
+      "next_state": 9
     },
-    "3,3,9": {
+    "1,4,5": {
+      "action": "east",
+      "next_xhat": 2,
+      "next_yhat": 4,
+      "next_state": 7
+    },
+    "1,4,6": {
+      "action": "east",
+      "next_xhat": 2,
+      "next_yhat": 4,
+      "next_state": 8
+    },
+    "2,4,6": {
+      "action": "east",
+      "next_xhat": 3,
+      "next_yhat": 4,
+      "next_state": 9
+    },
+    "3,4,8": {
       "action": "east",
       "next_xhat": 4,
-      "next_yhat": 3,
+      "next_yhat": 4,
+      "next_state": 10
+    },
+    "2,4,7": {
+      "action": "east",
+      "next_xhat": 3,
+      "next_yhat": 4,
+      "next_state": 10
+    },
+    "2,4,8": {
+      "action": "east",
+      "next_xhat": 3,
+      "next_yhat": 4,
       "next_state": 11
     },
-    "4,3,10": {
-      "action": "north",
+    "3,4,9": {
+      "action": "east",
       "next_xhat": 4,
       "next_yhat": 4,
       "next_state": 11
     },
-    "4,3,11": {
-      "action": "north",
+    "3,4,10": {
+      "action": "east",
       "next_xhat": 4,
       "next_yhat": 4,
       "next_state": 12
+    },
+    "3,4,11": {
+      "action": "east",
+      "next_xhat": 4,
+      "next_yhat": 4,
+      "next_state": 13
     }
   },
   "uncertainties": {
@@ -1025,16 +1111,29 @@
       0.0
     ],
     "0,1": [
-      0.0
+      0.0,
+      0.04
     ],
     "0,2": [
-      0.0
+      0.0,
+      0.07,
+      0.08,
+      0.11100000000000002
     ],
     "0,3": [
-      0.0
+      0.0,
+      0.07,
+      0.1426,
+      0.15030000000000004,
+      0.18603199999999998
     ],
     "0,4": [
-      0.0
+      0.0,
+      0.07,
+      0.14330000000000004,
+      0.21914499999999998,
+      0.21447700000000003,
+      0.2650213
     ],
     "1,0": [
       0.0
@@ -1049,31 +1148,36 @@
       0.0
     ],
     "1,4": [
-      0.0
+      0.0,
+      0.04,
+      0.10980000000000001,
+      0.182884,
+      0.25850509000000005,
+      0.25186208000000004,
+      0.3041595008
     ],
     "2,0": [
-      0.0,
-      0.06999999999999999
+      0.0
     ],
     "2,1": [
-      0.0,
-      0.05,
-      0.11900000000000001
+      0.0
     ],
     "2,2": [
-      0.0,
-      0.08,
-      0.13090000000000002,
-      0.19861299999999998
+      0.0
     ],
     "2,3": [
-      0.0,
-      0.05,
-      0.119
+      0.0
     ],
     "2,4": [
       0.0,
-      0.06999999999999999
+      0.06999999999999999,
+      0.08,
+      0.111,
+      0.180313,
+      0.25289963,
+      0.32801607400000005,
+      0.3179343975000001,
+      0.373163662764
     ],
     "3,0": [
       0.0
@@ -1082,27 +1186,25 @@
       0.0
     ],
     "3,2": [
-      0.0,
-      0.08,
-      0.08,
-      0.1595,
-      0.210072,
-      0.28026919
+      0.0
     ],
     "3,3": [
       0.0,
-      0.08,
-      0.08,
-      0.16,
-      0.12910000000000002,
-      0.16220000000000004,
-      0.200591,
-      0.24168699999999999,
-      0.29428372999999997,
-      0.3634051208000001
+      0.08
     ],
     "3,4": [
-      0.0
+      0.0,
+      0.06999999999999999,
+      0.08,
+      0.14260000000000003,
+      0.1503,
+      0.16290000000000002,
+      0.18603199999999998,
+      0.25485025,
+      0.3266579127,
+      0.40072974075300005,
+      0.360752107719,
+      0.44458687630292
     ],
     "4,0": [
       0.0
@@ -1114,33 +1216,23 @@
       0.0
     ],
     "4,3": [
-      0.0,
-      0.08,
-      0.06999999999999999,
-      0.16290000000000002,
-      0.1503,
-      0.23348399999999997,
-      0.20170000000000002,
-      0.22306399999999998,
-      0.27662125000000004,
-      0.30601504,
-      0.34974854310000003,
-      0.422539869681
+      0.0
     ],
     "4,4": [
       0.0,
       0.06999999999999999,
-      0.1406,
+      0.06999999999999999,
       0.1433,
-      0.214381,
+      0.1406,
+      0.21914500000000003,
       0.214477,
-      0.28880804,
-      0.22296791000000005,
-      0.29075356,
-      0.299318868,
-      0.36511057230000005,
-      0.41181163167199997,
-      0.47557086973991003
+      0.21438100000000002,
+      0.2650213,
+      0.3244804536,
+      0.3870975677360001,
+      0.45215046435622985,
+      0.39266395478584004,
+      0.48716508461939056
     ]
   },
   "urc_levels": {
@@ -1148,16 +1240,29 @@
       0
     ],
     "0,1": [
+      0,
       0
     ],
     "0,2": [
-      0
+      0,
+      1,
+      1,
+      1
     ],
     "0,3": [
-      0
+      0,
+      1,
+      2,
+      2,
+      2
     ],
     "0,4": [
-      0
+      0,
+      1,
+      2,
+      3,
+      3,
+      4
     ],
     "1,0": [
       0
@@ -1172,31 +1277,36 @@
       0
     ],
     "1,4": [
-      0
+      0,
+      0,
+      1,
+      2,
+      4,
+      3,
+      4
     ],
     "2,0": [
-      0,
       0
     ],
     "2,1": [
-      0,
-      0,
-      1
+      0
     ],
     "2,2": [
-      0,
-      1,
-      1,
-      2
+      0
     ],
     "2,3": [
-      0,
-      0,
-      1
+      0
     ],
     "2,4": [
       0,
-      0
+      1,
+      1,
+      1,
+      2,
+      3,
+      5,
+      4,
+      5
     ],
     "3,0": [
       0
@@ -1205,27 +1315,25 @@
       0
     ],
     "3,2": [
-      0,
-      1,
-      1,
-      2,
-      2,
-      3
+      0
     ],
     "3,3": [
       0,
+      1
+    ],
+    "3,4": [
+      0,
       1,
       1,
       2,
-      1,
+      2,
       2,
       2,
       3,
-      4,
-      5
-    ],
-    "3,4": [
-      0
+      5,
+      6,
+      5,
+      7
     ],
     "4,0": [
       0
@@ -1237,33 +1345,23 @@
       0
     ],
     "4,3": [
-      0,
-      1,
-      0,
-      2,
-      2,
-      3,
-      2,
-      3,
-      3,
-      4,
-      4,
-      6
+      0
     ],
     "4,4": [
       0,
-      0,
+      1,
       1,
       2,
+      1,
       3,
       3,
-      4,
       3,
-      4,
       4,
       5,
-      5,
-      20
+      6,
+      7,
+      6,
+      10
     ]
   },
   "reset_local_state": 0,
@@ -1282,32 +1380,28 @@
     },
     {
       "belief_uid": 1,
-      "mse": 0.06999999999999999,
+      "mse": 0.04,
       "urc_level": 0,
-      "support_size": 4,
+      "support_size": 3,
       "belief": [
         {
           "hidden_state": 0,
           "probability": 0.97
         },
         {
-          "hidden_state": 23,
-          "probability": 0.01
+          "hidden_state": 40,
+          "probability": 0.02
         },
         {
-          "hidden_state": 32,
-          "probability": 0.01
-        },
-        {
-          "hidden_state": 33,
+          "hidden_state": 48,
           "probability": 0.01
         }
       ]
     },
     {
       "belief_uid": 2,
-      "mse": 0.06999999999999999,
-      "urc_level": 0,
+      "mse": 0.07,
+      "urc_level": 1,
       "support_size": 4,
       "belief": [
         {
@@ -1315,31 +1409,7 @@
           "probability": 0.97
         },
         {
-          "hidden_state": 23,
-          "probability": 0.01
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.01
-        },
-        {
-          "hidden_state": 32,
-          "probability": 0.01
-        }
-      ]
-    },
-    {
-      "belief_uid": 3,
-      "mse": 0.05,
-      "urc_level": 0,
-      "support_size": 4,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.97
-        },
-        {
-          "hidden_state": 31,
+          "hidden_state": 39,
           "probability": 0.01
         },
         {
@@ -1353,7 +1423,75 @@
       ]
     },
     {
+      "belief_uid": 3,
+      "mse": 0.04,
+      "urc_level": 0,
+      "support_size": 3,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.97
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.01
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.02
+        }
+      ]
+    },
+    {
       "belief_uid": 4,
+      "mse": 0.08,
+      "urc_level": 1,
+      "support_size": 4,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.97
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.01
+        },
+        {
+          "hidden_state": 50,
+          "probability": 0.01
+        },
+        {
+          "hidden_state": 58,
+          "probability": 0.01
+        }
+      ]
+    },
+    {
+      "belief_uid": 5,
+      "mse": 0.06999999999999999,
+      "urc_level": 1,
+      "support_size": 4,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.97
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.01
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.01
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.01
+        }
+      ]
+    },
+    {
+      "belief_uid": 6,
       "mse": 0.08,
       "urc_level": 1,
       "support_size": 4,
@@ -1377,57 +1515,9 @@
       ]
     },
     {
-      "belief_uid": 5,
-      "mse": 0.08,
-      "urc_level": 1,
-      "support_size": 4,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.97
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.01
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.01
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.01
-        }
-      ]
-    },
-    {
-      "belief_uid": 6,
-      "mse": 0.05,
-      "urc_level": 0,
-      "support_size": 4,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.97
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.01
-        },
-        {
-          "hidden_state": 41,
-          "probability": 0.01
-        },
-        {
-          "hidden_state": 50,
-          "probability": 0.01
-        }
-      ]
-    },
-    {
       "belief_uid": 7,
       "mse": 0.06999999999999999,
-      "urc_level": 0,
+      "urc_level": 1,
       "support_size": 4,
       "belief": [
         {
@@ -1450,333 +1540,57 @@
     },
     {
       "belief_uid": 8,
-      "mse": 0.11900000000000001,
+      "mse": 0.11100000000000002,
       "urc_level": 1,
-      "support_size": 8,
+      "support_size": 6,
       "belief": [
         {
           "hidden_state": 0,
-          "probability": 0.941
+          "probability": 0.9409000000000001
         },
         {
-          "hidden_state": 22,
-          "probability": 0.00030000000000000003
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.0098
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.009999999999999998
-        },
-        {
-          "hidden_state": 32,
-          "probability": 0.0097
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.0097
+          "hidden_state": 39,
+          "probability": 0.0102
         },
         {
           "hidden_state": 40,
-          "probability": 0.0098
+          "probability": 0.029100000000000004
+        },
+        {
+          "hidden_state": 47,
+          "probability": 0.0003000000000000001
         },
         {
           "hidden_state": 48,
-          "probability": 0.0097
+          "probability": 0.019400000000000004
+        },
+        {
+          "hidden_state": 56,
+          "probability": 0.00010000000000000002
         }
       ]
     },
     {
       "belief_uid": 9,
-      "mse": 0.119,
-      "urc_level": 1,
+      "mse": 0.1426,
+      "urc_level": 2,
       "support_size": 8,
       "belief": [
         {
           "hidden_state": 0,
-          "probability": 0.941
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.0098
-        },
-        {
-          "hidden_state": 24,
-          "probability": 0.00030000000000000003
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.0097
-        },
-        {
-          "hidden_state": 32,
-          "probability": 0.0097
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.009999999999999998
-        },
-        {
-          "hidden_state": 41,
-          "probability": 0.0098
-        },
-        {
-          "hidden_state": 50,
-          "probability": 0.0097
-        }
-      ]
-    },
-    {
-      "belief_uid": 10,
-      "mse": 0.13090000000000002,
-      "urc_level": 1,
-      "support_size": 9,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.9409
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.0001
-        },
-        {
-          "hidden_state": 30,
-          "probability": 0.0002
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.0194
-        },
-        {
-          "hidden_state": 39,
-          "probability": 0.009999999999999998
-        },
-        {
-          "hidden_state": 40,
-          "probability": 0.0097
-        },
-        {
-          "hidden_state": 47,
-          "probability": 0.0002
-        },
-        {
-          "hidden_state": 48,
-          "probability": 0.0194
-        },
-        {
-          "hidden_state": 56,
-          "probability": 0.0001
-        }
-      ]
-    },
-    {
-      "belief_uid": 11,
-      "mse": 0.1595,
-      "urc_level": 2,
-      "support_size": 9,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.941
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.0001
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.0002
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.0098
-        },
-        {
-          "hidden_state": 30,
-          "probability": 0.0001
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.0196
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.0097
-        },
-        {
-          "hidden_state": 39,
-          "probability": 0.0098
-        },
-        {
-          "hidden_state": 48,
-          "probability": 0.0097
-        }
-      ]
-    },
-    {
-      "belief_uid": 12,
-      "mse": 0.16,
-      "urc_level": 2,
-      "support_size": 9,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.941
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.0001
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.0002
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.0098
-        },
-        {
-          "hidden_state": 29,
-          "probability": 0.0001
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.0196
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.0097
-        },
-        {
-          "hidden_state": 39,
-          "probability": 0.0098
-        },
-        {
-          "hidden_state": 48,
-          "probability": 0.0097
-        }
-      ]
-    },
-    {
-      "belief_uid": 13,
-      "mse": 0.16290000000000002,
-      "urc_level": 2,
-      "support_size": 9,
-      "belief": [
-        {
-          "hidden_state": 0,
           "probability": 0.9409000000000001
-        },
-        {
-          "hidden_state": 5,
-          "probability": 0.00010000000000000002
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.00020000000000000004
-        },
-        {
-          "hidden_state": 15,
-          "probability": 0.00020000000000000004
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.00010000000000000002
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.019600000000000003
-        },
-        {
-          "hidden_state": 24,
-          "probability": 0.00010000000000000002
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.019400000000000004
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.019400000000000004
-        }
-      ]
-    },
-    {
-      "belief_uid": 14,
-      "mse": 0.12910000000000002,
-      "urc_level": 1,
-      "support_size": 9,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.9410000000000001
-        },
-        {
-          "hidden_state": 15,
-          "probability": 0.00010000000000000002
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.009800000000000001
-        },
-        {
-          "hidden_state": 24,
-          "probability": 0.00020000000000000004
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.009700000000000002
-        },
-        {
-          "hidden_state": 32,
-          "probability": 0.00010000000000000002
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.019600000000000003
-        },
-        {
-          "hidden_state": 41,
-          "probability": 0.009800000000000001
-        },
-        {
-          "hidden_state": 50,
-          "probability": 0.009700000000000002
-        }
-      ]
-    },
-    {
-      "belief_uid": 15,
-      "mse": 0.16220000000000004,
-      "urc_level": 2,
-      "support_size": 9,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.9409000000000001
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.00010000000000000002
-        },
-        {
-          "hidden_state": 29,
-          "probability": 0.00020000000000000004
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.019400000000000004
         },
         {
           "hidden_state": 38,
-          "probability": 0.00010000000000000002
+          "probability": 0.0003000000000000001
         },
         {
           "hidden_state": 39,
           "probability": 0.019600000000000003
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.019400000000000004
         },
         {
           "hidden_state": 46,
@@ -1789,11 +1603,215 @@
         {
           "hidden_state": 48,
           "probability": 0.019400000000000004
+        },
+        {
+          "hidden_state": 56,
+          "probability": 0.00010000000000000002
         }
       ]
     },
     {
-      "belief_uid": 16,
+      "belief_uid": 10,
+      "mse": 0.14330000000000004,
+      "urc_level": 2,
+      "support_size": 9,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.9409000000000001
+        },
+        {
+          "hidden_state": 37,
+          "probability": 0.00010000000000000002
+        },
+        {
+          "hidden_state": 38,
+          "probability": 0.00020000000000000004
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.019600000000000003
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.019400000000000004
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.00020000000000000004
+        },
+        {
+          "hidden_state": 47,
+          "probability": 0.00010000000000000002
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.019400000000000004
+        },
+        {
+          "hidden_state": 56,
+          "probability": 0.00010000000000000002
+        }
+      ]
+    },
+    {
+      "belief_uid": 11,
+      "mse": 0.10980000000000001,
+      "urc_level": 1,
+      "support_size": 8,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.941
+        },
+        {
+          "hidden_state": 29,
+          "probability": 0.0001
+        },
+        {
+          "hidden_state": 30,
+          "probability": 0.0002
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.009999999999999998
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.0195
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.0098
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.0097
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.0097
+        }
+      ]
+    },
+    {
+      "belief_uid": 12,
+      "mse": 0.111,
+      "urc_level": 1,
+      "support_size": 6,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.9409
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.0001
+        },
+        {
+          "hidden_state": 22,
+          "probability": 0.00030000000000000003
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.010199999999999999
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.0194
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.0291
+        }
+      ]
+    },
+    {
+      "belief_uid": 13,
+      "mse": 0.15030000000000004,
+      "urc_level": 2,
+      "support_size": 9,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.9410000000000001
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.009800000000000001
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.009700000000000002
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.00010000000000000002
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.019600000000000003
+        },
+        {
+          "hidden_state": 50,
+          "probability": 0.009700000000000002
+        },
+        {
+          "hidden_state": 56,
+          "probability": 0.00020000000000000004
+        },
+        {
+          "hidden_state": 58,
+          "probability": 0.009800000000000001
+        },
+        {
+          "hidden_state": 66,
+          "probability": 0.00010000000000000002
+        }
+      ]
+    },
+    {
+      "belief_uid": 14,
+      "mse": 0.14260000000000003,
+      "urc_level": 2,
+      "support_size": 8,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.9409000000000001
+        },
+        {
+          "hidden_state": 13,
+          "probability": 0.00020000000000000004
+        },
+        {
+          "hidden_state": 14,
+          "probability": 0.0003000000000000001
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.00010000000000000002
+        },
+        {
+          "hidden_state": 22,
+          "probability": 0.00010000000000000002
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.019600000000000003
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.019400000000000004
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.019400000000000004
+        }
+      ]
+    },
+    {
+      "belief_uid": 15,
       "mse": 0.1503,
       "urc_level": 2,
       "support_size": 9,
@@ -1823,7 +1841,7 @@
           "probability": 0.0196
         },
         {
-          "hidden_state": 33,
+          "hidden_state": 32,
           "probability": 0.0097
         },
         {
@@ -1831,13 +1849,101 @@
           "probability": 0.0098
         },
         {
-          "hidden_state": 40,
+          "hidden_state": 48,
           "probability": 0.0097
         }
       ]
     },
     {
+      "belief_uid": 16,
+      "mse": 0.1433,
+      "urc_level": 2,
+      "support_size": 9,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.9409000000000001
+        },
+        {
+          "hidden_state": 5,
+          "probability": 0.00010000000000000002
+        },
+        {
+          "hidden_state": 13,
+          "probability": 0.00020000000000000004
+        },
+        {
+          "hidden_state": 14,
+          "probability": 0.00020000000000000004
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.00010000000000000002
+        },
+        {
+          "hidden_state": 22,
+          "probability": 0.00010000000000000002
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.019600000000000003
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.019400000000000004
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.019400000000000004
+        }
+      ]
+    },
+    {
       "belief_uid": 17,
+      "mse": 0.16290000000000002,
+      "urc_level": 2,
+      "support_size": 9,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.9409000000000001
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.00010000000000000002
+        },
+        {
+          "hidden_state": 29,
+          "probability": 0.00020000000000000004
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.019400000000000004
+        },
+        {
+          "hidden_state": 37,
+          "probability": 0.00010000000000000002
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.019600000000000003
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.00020000000000000004
+        },
+        {
+          "hidden_state": 47,
+          "probability": 0.00010000000000000002
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.019400000000000004
+        }
+      ]
+    },
+    {
+      "belief_uid": 18,
       "mse": 0.1406,
       "urc_level": 1,
       "support_size": 9,
@@ -1881,517 +1987,117 @@
       ]
     },
     {
-      "belief_uid": 18,
-      "mse": 0.1433,
+      "belief_uid": 19,
+      "mse": 0.18603199999999998,
       "urc_level": 2,
-      "support_size": 9,
+      "support_size": 10,
       "belief": [
         {
           "hidden_state": 0,
-          "probability": 0.9409000000000001
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.00010000000000000002
-        },
-        {
-          "hidden_state": 29,
-          "probability": 0.00020000000000000004
-        },
-        {
-          "hidden_state": 30,
-          "probability": 0.00010000000000000002
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.019400000000000004
-        },
-        {
-          "hidden_state": 37,
-          "probability": 0.00010000000000000002
+          "probability": 0.9126729999999998
         },
         {
           "hidden_state": 38,
-          "probability": 0.00020000000000000004
+          "probability": 0.0004979999999999999
         },
         {
           "hidden_state": 39,
-          "probability": 0.019600000000000003
+          "probability": 0.019787999999999997
         },
         {
           "hidden_state": 40,
-          "probability": 0.019400000000000004
-        }
-      ]
-    },
-    {
-      "belief_uid": 19,
-      "mse": 0.19861299999999998,
-      "urc_level": 2,
-      "support_size": 13,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.912867
+          "probability": 0.037635999999999996
         },
         {
-          "hidden_state": 21,
-          "probability": 0.00020399999999999997
-        },
-        {
-          "hidden_state": 22,
-          "probability": 0.000486
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.009602999999999999
-        },
-        {
-          "hidden_state": 30,
-          "probability": 0.000298
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.019304999999999996
-        },
-        {
-          "hidden_state": 32,
-          "probability": 0.009409
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.009409
-        },
-        {
-          "hidden_state": 39,
-          "probability": 0.009704999999999998
-        },
-        {
-          "hidden_state": 40,
-          "probability": 0.009602999999999999
+          "hidden_state": 46,
+          "probability": 0.00030000000000000003
         },
         {
           "hidden_state": 47,
-          "probability": 0.000195
+          "probability": 0.0005819999999999999
         },
         {
           "hidden_state": 48,
-          "probability": 0.018819000000000002
+          "probability": 0.028227
+        },
+        {
+          "hidden_state": 55,
+          "probability": 4e-06
         },
         {
           "hidden_state": 56,
-          "probability": 9.7e-05
+          "probability": 0.000291
+        },
+        {
+          "hidden_state": 64,
+          "probability": 1e-06
         }
       ]
     },
     {
       "belief_uid": 20,
-      "mse": 0.200591,
-      "urc_level": 2,
+      "mse": 0.21914499999999998,
+      "urc_level": 3,
       "support_size": 13,
       "belief": [
         {
           "hidden_state": 0,
-          "probability": 0.912867
+          "probability": 0.9126729999999998
         },
         {
-          "hidden_state": 13,
-          "probability": 0.000195
-        },
-        {
-          "hidden_state": 14,
-          "probability": 0.000198
-        },
-        {
-          "hidden_state": 15,
+          "hidden_state": 37,
           "probability": 0.00020399999999999997
         },
         {
-          "hidden_state": 21,
-          "probability": 9.7e-05
+          "hidden_state": 38,
+          "probability": 0.0006820000000000001
         },
         {
-          "hidden_state": 22,
-          "probability": 9.7e-05
+          "hidden_state": 39,
+          "probability": 0.028808999999999994
         },
         {
-          "hidden_state": 23,
-          "probability": 0.019112999999999998
+          "hidden_state": 40,
+          "probability": 0.028227
         },
         {
-          "hidden_state": 24,
-          "probability": 0.0005859999999999999
+          "hidden_state": 45,
+          "probability": 6e-06
         },
         {
-          "hidden_state": 31,
-          "probability": 0.018819000000000002
+          "hidden_state": 46,
+          "probability": 0.000585
         },
         {
-          "hidden_state": 32,
-          "probability": 0.009507000000000002
+          "hidden_state": 47,
+          "probability": 0.000291
         },
         {
-          "hidden_state": 33,
-          "probability": 0.019305
+          "hidden_state": 48,
+          "probability": 0.028227
         },
         {
-          "hidden_state": 41,
-          "probability": 0.009602999999999999
+          "hidden_state": 54,
+          "probability": 2.9999999999999997e-06
         },
         {
-          "hidden_state": 50,
-          "probability": 0.009409
+          "hidden_state": 55,
+          "probability": 1e-06
+        },
+        {
+          "hidden_state": 56,
+          "probability": 0.000291
+        },
+        {
+          "hidden_state": 64,
+          "probability": 1e-06
         }
       ]
     },
     {
       "belief_uid": 21,
-      "mse": 0.210072,
+      "mse": 0.182884,
       "urc_level": 2,
-      "support_size": 14,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.912867
-        },
-        {
-          "hidden_state": 12,
-          "probability": 4.000000000000001e-06
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.000195
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.00039299999999999996
-        },
-        {
-          "hidden_state": 22,
-          "probability": 9.9e-05
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.009602999999999999
-        },
-        {
-          "hidden_state": 30,
-          "probability": 0.00039299999999999996
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.028521
-        },
-        {
-          "hidden_state": 32,
-          "probability": 9.7e-05
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.009408999999999999
-        },
-        {
-          "hidden_state": 39,
-          "probability": 0.009896999999999998
-        },
-        {
-          "hidden_state": 40,
-          "probability": 0.009411000000000001
-        },
-        {
-          "hidden_state": 47,
-          "probability": 0.000292
-        },
-        {
-          "hidden_state": 48,
-          "probability": 0.018819000000000002
-        }
-      ]
-    },
-    {
-      "belief_uid": 22,
-      "mse": 0.24168699999999999,
-      "urc_level": 3,
-      "support_size": 16,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.912867
-        },
-        {
-          "hidden_state": 11,
-          "probability": 3.0000000000000005e-06
-        },
-        {
-          "hidden_state": 12,
-          "probability": 1.0000000000000002e-06
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.000195
-        },
-        {
-          "hidden_state": 20,
-          "probability": 3.0000000000000005e-06
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.000489
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.009602999999999999
-        },
-        {
-          "hidden_state": 29,
-          "probability": 0.00029699999999999996
-        },
-        {
-          "hidden_state": 30,
-          "probability": 9.7e-05
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.028616999999999997
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.009409
-        },
-        {
-          "hidden_state": 38,
-          "probability": 9.9e-05
-        },
-        {
-          "hidden_state": 39,
-          "probability": 0.019208999999999997
-        },
-        {
-          "hidden_state": 46,
-          "probability": 0.000195
-        },
-        {
-          "hidden_state": 47,
-          "probability": 9.7e-05
-        },
-        {
-          "hidden_state": 48,
-          "probability": 0.018819000000000002
-        }
-      ]
-    },
-    {
-      "belief_uid": 23,
-      "mse": 0.23348399999999997,
-      "urc_level": 3,
-      "support_size": 16,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.912867
-        },
-        {
-          "hidden_state": 3,
-          "probability": 3.0000000000000005e-06
-        },
-        {
-          "hidden_state": 4,
-          "probability": 1.0000000000000002e-06
-        },
-        {
-          "hidden_state": 5,
-          "probability": 9.9e-05
-        },
-        {
-          "hidden_state": 11,
-          "probability": 3.0000000000000005e-06
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.000393
-        },
-        {
-          "hidden_state": 15,
-          "probability": 0.000195
-        },
-        {
-          "hidden_state": 20,
-          "probability": 1.0000000000000002e-06
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.000489
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.019208999999999997
-        },
-        {
-          "hidden_state": 24,
-          "probability": 9.7e-05
-        },
-        {
-          "hidden_state": 29,
-          "probability": 0.000195
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.028616999999999997
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.018819000000000002
-        },
-        {
-          "hidden_state": 39,
-          "probability": 0.009602999999999999
-        },
-        {
-          "hidden_state": 40,
-          "probability": 0.009409
-        }
-      ]
-    },
-    {
-      "belief_uid": 24,
-      "mse": 0.214381,
-      "urc_level": 3,
-      "support_size": 16,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.9128670000000001
-        },
-        {
-          "hidden_state": 3,
-          "probability": 3.0000000000000005e-06
-        },
-        {
-          "hidden_state": 4,
-          "probability": 1.0000000000000002e-06
-        },
-        {
-          "hidden_state": 5,
-          "probability": 9.900000000000001e-05
-        },
-        {
-          "hidden_state": 11,
-          "probability": 3.0000000000000005e-06
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.000393
-        },
-        {
-          "hidden_state": 14,
-          "probability": 0.00019500000000000002
-        },
-        {
-          "hidden_state": 19,
-          "probability": 1.0000000000000002e-06
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.0004890000000000001
-        },
-        {
-          "hidden_state": 22,
-          "probability": 1.0000000000000002e-06
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.019305
-        },
-        {
-          "hidden_state": 29,
-          "probability": 0.00019500000000000005
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.028617000000000004
-        },
-        {
-          "hidden_state": 32,
-          "probability": 0.018819000000000006
-        },
-        {
-          "hidden_state": 39,
-          "probability": 0.009603
-        },
-        {
-          "hidden_state": 40,
-          "probability": 0.009409
-        }
-      ]
-    },
-    {
-      "belief_uid": 25,
-      "mse": 0.20170000000000002,
-      "urc_level": 2,
-      "support_size": 14,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.9128670000000001
-        },
-        {
-          "hidden_state": 5,
-          "probability": 9.900000000000001e-05
-        },
-        {
-          "hidden_state": 6,
-          "probability": 4.000000000000001e-06
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.00019500000000000002
-        },
-        {
-          "hidden_state": 14,
-          "probability": 3.0000000000000005e-06
-        },
-        {
-          "hidden_state": 15,
-          "probability": 0.000393
-        },
-        {
-          "hidden_state": 21,
-          "probability": 9.700000000000003e-05
-        },
-        {
-          "hidden_state": 22,
-          "probability": 1.0000000000000002e-06
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.019209000000000004
-        },
-        {
-          "hidden_state": 24,
-          "probability": 0.0004890000000000001
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.018819000000000002
-        },
-        {
-          "hidden_state": 32,
-          "probability": 0.00019500000000000002
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.028617000000000004
-        },
-        {
-          "hidden_state": 41,
-          "probability": 0.019012
-        }
-      ]
-    },
-    {
-      "belief_uid": 26,
-      "mse": 0.22306399999999998,
-      "urc_level": 3,
       "support_size": 14,
       "belief": [
         {
@@ -2399,61 +2105,301 @@
           "probability": 0.9128669999999999
         },
         {
-          "hidden_state": 3,
-          "probability": 1e-06
-        },
-        {
-          "hidden_state": 11,
-          "probability": 2.9999999999999997e-06
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.000195
-        },
-        {
-          "hidden_state": 20,
-          "probability": 2.9999999999999997e-06
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.000489
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.009602999999999999
+          "hidden_state": 28,
+          "probability": 4e-06
         },
         {
           "hidden_state": 29,
-          "probability": 0.00039299999999999996
+          "probability": 0.00020099999999999995
         },
         {
           "hidden_state": 30,
-          "probability": 2e-06
+          "probability": 0.000393
         },
         {
           "hidden_state": 31,
-          "probability": 0.028617
+          "probability": 0.009992999999999998
         },
         {
-          "hidden_state": 33,
-          "probability": 0.009408999999999999
+          "hidden_state": 32,
+          "probability": 0.019011999999999998
+        },
+        {
+          "hidden_state": 37,
+          "probability": 9.899999999999998e-05
         },
         {
           "hidden_state": 38,
-          "probability": 0.000294
+          "probability": 0.00019499999999999997
         },
         {
           "hidden_state": 39,
-          "probability": 0.019304999999999996
+          "probability": 0.019208999999999997
         },
         {
           "hidden_state": 40,
           "probability": 0.018819000000000002
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.00019499999999999997
+        },
+        {
+          "hidden_state": 47,
+          "probability": 9.699999999999999e-05
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.018819000000000002
+        },
+        {
+          "hidden_state": 56,
+          "probability": 9.699999999999999e-05
         }
       ]
     },
     {
-      "belief_uid": 27,
+      "belief_uid": 22,
+      "mse": 0.180313,
+      "urc_level": 2,
+      "support_size": 13,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.912867
+        },
+        {
+          "hidden_state": 19,
+          "probability": 1.0000000000000002e-06
+        },
+        {
+          "hidden_state": 20,
+          "probability": 3.0000000000000005e-06
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.000201
+        },
+        {
+          "hidden_state": 22,
+          "probability": 0.00039399999999999993
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.009899999999999999
+        },
+        {
+          "hidden_state": 29,
+          "probability": 0.000195
+        },
+        {
+          "hidden_state": 30,
+          "probability": 0.000291
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.019305
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.028421999999999996
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.009602999999999999
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.009409
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.009409
+        }
+      ]
+    },
+    {
+      "belief_uid": 23,
+      "mse": 0.18603199999999998,
+      "urc_level": 2,
+      "support_size": 10,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.912673
+        },
+        {
+          "hidden_state": 11,
+          "probability": 1.0000000000000002e-06
+        },
+        {
+          "hidden_state": 12,
+          "probability": 4.000000000000001e-06
+        },
+        {
+          "hidden_state": 13,
+          "probability": 0.0003
+        },
+        {
+          "hidden_state": 14,
+          "probability": 0.000498
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.000291
+        },
+        {
+          "hidden_state": 22,
+          "probability": 0.000582
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.019787999999999997
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.028227000000000002
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.037635999999999996
+        }
+      ]
+    },
+    {
+      "belief_uid": 24,
+      "mse": 0.21447700000000003,
+      "urc_level": 3,
+      "support_size": 16,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.9128670000000001
+        },
+        {
+          "hidden_state": 37,
+          "probability": 9.900000000000001e-05
+        },
+        {
+          "hidden_state": 38,
+          "probability": 0.00019500000000000002
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.019209000000000004
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.018819000000000002
+        },
+        {
+          "hidden_state": 45,
+          "probability": 1.0000000000000002e-06
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.00039300000000000007
+        },
+        {
+          "hidden_state": 47,
+          "probability": 9.700000000000003e-05
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.028617000000000004
+        },
+        {
+          "hidden_state": 49,
+          "probability": 0.009409000000000002
+        },
+        {
+          "hidden_state": 54,
+          "probability": 3.0000000000000005e-06
+        },
+        {
+          "hidden_state": 56,
+          "probability": 0.0004890000000000001
+        },
+        {
+          "hidden_state": 58,
+          "probability": 0.009603
+        },
+        {
+          "hidden_state": 64,
+          "probability": 3.0000000000000005e-06
+        },
+        {
+          "hidden_state": 66,
+          "probability": 0.00019500000000000002
+        },
+        {
+          "hidden_state": 74,
+          "probability": 1.0000000000000002e-06
+        }
+      ]
+    },
+    {
+      "belief_uid": 25,
+      "mse": 0.21914500000000003,
+      "urc_level": 3,
+      "support_size": 13,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.9126730000000001
+        },
+        {
+          "hidden_state": 3,
+          "probability": 3.0000000000000005e-06
+        },
+        {
+          "hidden_state": 4,
+          "probability": 6.000000000000002e-06
+        },
+        {
+          "hidden_state": 5,
+          "probability": 0.00020400000000000003
+        },
+        {
+          "hidden_state": 11,
+          "probability": 1.0000000000000002e-06
+        },
+        {
+          "hidden_state": 12,
+          "probability": 1.0000000000000002e-06
+        },
+        {
+          "hidden_state": 13,
+          "probability": 0.0005850000000000001
+        },
+        {
+          "hidden_state": 14,
+          "probability": 0.0006820000000000002
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.0002910000000000001
+        },
+        {
+          "hidden_state": 22,
+          "probability": 0.0002910000000000001
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.028809
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.028227000000000006
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.028227000000000006
+        }
+      ]
+    },
+    {
+      "belief_uid": 26,
       "mse": 0.214477,
       "urc_level": 3,
       "support_size": 16,
@@ -2464,7 +2410,15 @@
         },
         {
           "hidden_state": 3,
+          "probability": 3.0000000000000005e-06
+        },
+        {
+          "hidden_state": 4,
           "probability": 1.0000000000000002e-06
+        },
+        {
+          "hidden_state": 5,
+          "probability": 9.9e-05
         },
         {
           "hidden_state": 11,
@@ -2472,31 +2426,31 @@
         },
         {
           "hidden_state": 13,
+          "probability": 0.000393
+        },
+        {
+          "hidden_state": 14,
           "probability": 0.000195
         },
         {
           "hidden_state": 19,
-          "probability": 3.0000000000000005e-06
+          "probability": 1.0000000000000002e-06
         },
         {
           "hidden_state": 21,
           "probability": 0.000489
         },
         {
-          "hidden_state": 23,
-          "probability": 0.009602999999999999
+          "hidden_state": 22,
+          "probability": 9.7e-05
         },
         {
-          "hidden_state": 28,
-          "probability": 1.0000000000000002e-06
+          "hidden_state": 23,
+          "probability": 0.019208999999999997
         },
         {
           "hidden_state": 29,
-          "probability": 0.000393
-        },
-        {
-          "hidden_state": 30,
-          "probability": 9.7e-05
+          "probability": 0.000195
         },
         {
           "hidden_state": 31,
@@ -2504,1150 +2458,1250 @@
         },
         {
           "hidden_state": 32,
+          "probability": 0.018819000000000002
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.009602999999999999
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.009409
+        }
+      ]
+    },
+    {
+      "belief_uid": 27,
+      "mse": 0.21438100000000002,
+      "urc_level": 3,
+      "support_size": 16,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.9128670000000001
+        },
+        {
+          "hidden_state": 3,
+          "probability": 1.0000000000000002e-06
+        },
+        {
+          "hidden_state": 11,
+          "probability": 3.0000000000000005e-06
+        },
+        {
+          "hidden_state": 13,
+          "probability": 0.00019500000000000005
+        },
+        {
+          "hidden_state": 19,
+          "probability": 3.0000000000000005e-06
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.0004890000000000001
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.009603
+        },
+        {
+          "hidden_state": 28,
+          "probability": 1.0000000000000002e-06
+        },
+        {
+          "hidden_state": 29,
+          "probability": 0.00039300000000000007
+        },
+        {
+          "hidden_state": 30,
+          "probability": 1.0000000000000002e-06
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.028617000000000007
+        },
+        {
+          "hidden_state": 32,
           "probability": 0.009409
         },
         {
           "hidden_state": 37,
-          "probability": 9.9e-05
+          "probability": 9.900000000000001e-05
         },
         {
           "hidden_state": 38,
-          "probability": 0.000195
+          "probability": 0.00019500000000000002
         },
         {
           "hidden_state": 39,
-          "probability": 0.019208999999999997
+          "probability": 0.019305
         },
         {
           "hidden_state": 40,
-          "probability": 0.018819000000000002
+          "probability": 0.018819000000000006
         }
       ]
     },
     {
       "belief_uid": 28,
-      "mse": 0.28026919,
-      "urc_level": 3,
-      "support_size": 18,
+      "mse": 0.2650213,
+      "urc_level": 4,
+      "support_size": 15,
       "belief": [
         {
           "hidden_state": 0,
-          "probability": 0.88566918
+          "probability": 0.88529281
         },
         {
-          "hidden_state": 12,
-          "probability": 1.192e-05
+          "hidden_state": 37,
+          "probability": 0.00021084
         },
         {
-          "hidden_state": 13,
-          "probability": 0.00029597999999999994
-        },
-        {
-          "hidden_state": 14,
-          "probability": 0.00019498
-        },
-        {
-          "hidden_state": 15,
-          "probability": 0.00019012
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.0004909599999999999
-        },
-        {
-          "hidden_state": 22,
-          "probability": 0.00066452
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.018730720000000003
-        },
-        {
-          "hidden_state": 24,
-          "probability": 9.409000000000002e-05
-        },
-        {
-          "hidden_state": 25,
-          "probability": 9.409000000000002e-05
-        },
-        {
-          "hidden_state": 30,
-          "probability": 0.00048408999999999995
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.028139759999999996
-        },
-        {
-          "hidden_state": 32,
-          "probability": 0.00922276
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.018255399999999998
+          "hidden_state": 38,
+          "probability": 0.0010631199999999999
         },
         {
           "hidden_state": 39,
-          "probability": 0.009604959999999997
+          "probability": 0.02897972
         },
         {
           "hidden_state": 40,
-          "probability": 0.00931686
+          "probability": 0.045633650000000005
+        },
+        {
+          "hidden_state": 45,
+          "probability": 1.3840000000000003e-05
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.0007740600000000001
         },
         {
           "hidden_state": 47,
-          "probability": 0.00028421
+          "probability": 0.0009409
         },
         {
           "hidden_state": 48,
-          "probability": 0.0182554
+          "probability": 0.036506920000000005
+        },
+        {
+          "hidden_state": 54,
+          "probability": 5.960000000000002e-06
+        },
+        {
+          "hidden_state": 55,
+          "probability": 9.7e-06
+        },
+        {
+          "hidden_state": 56,
+          "probability": 0.0005645400000000001
+        },
+        {
+          "hidden_state": 63,
+          "probability": 5.000000000000001e-08
+        },
+        {
+          "hidden_state": 64,
+          "probability": 3.880000000000001e-06
+        },
+        {
+          "hidden_state": 72,
+          "probability": 1.0000000000000002e-08
         }
       ]
     },
     {
       "belief_uid": 29,
-      "mse": 0.27662125000000004,
-      "urc_level": 3,
+      "mse": 0.25850509000000005,
+      "urc_level": 4,
       "support_size": 18,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.88557508
-        },
-        {
-          "hidden_state": 3,
-          "probability": 2.92e-06
-        },
-        {
-          "hidden_state": 4,
-          "probability": 4.9e-06
-        },
-        {
-          "hidden_state": 5,
-          "probability": 0.0001971
-        },
-        {
-          "hidden_state": 6,
-          "probability": 1.192e-05
-        },
-        {
-          "hidden_state": 11,
-          "probability": 9.7e-07
-        },
-        {
-          "hidden_state": 12,
-          "probability": 9.7e-07
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.00056944
-        },
-        {
-          "hidden_state": 14,
-          "probability": 0.00029396
-        },
-        {
-          "hidden_state": 15,
-          "probability": 0.00058792
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.00028228000000000004
-        },
-        {
-          "hidden_state": 22,
-          "probability": 0.00018916
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.028049519999999998
-        },
-        {
-          "hidden_state": 24,
-          "probability": 0.00095257
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.0273831
-        },
-        {
-          "hidden_state": 32,
-          "probability": 0.009317820000000001
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.028044640000000003
-        },
-        {
-          "hidden_state": 41,
-          "probability": 0.01853573
-        }
-      ]
-    },
-    {
-      "belief_uid": 30,
-      "mse": 0.29428372999999997,
-      "urc_level": 4,
-      "support_size": 19,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.88557508
-        },
-        {
-          "hidden_state": 11,
-          "probability": 5.96e-06
-        },
-        {
-          "hidden_state": 12,
-          "probability": 6.82e-06
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.00028518
-        },
-        {
-          "hidden_state": 20,
-          "probability": 8.889999999999998e-06
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.0007643999999999999
-        },
-        {
-          "hidden_state": 22,
-          "probability": 9.699999999999999e-05
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.009408999999999999
-        },
-        {
-          "hidden_state": 29,
-          "probability": 0.00039204
-        },
-        {
-          "hidden_state": 30,
-          "probability": 0.0004772799999999999
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.03698416
-        },
-        {
-          "hidden_state": 32,
-          "probability": 9.409e-05
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.00912673
-        },
-        {
-          "hidden_state": 38,
-          "probability": 0.00019993
-        },
-        {
-          "hidden_state": 39,
-          "probability": 0.01920216
-        },
-        {
-          "hidden_state": 40,
-          "probability": 0.00912964
-        },
-        {
-          "hidden_state": 46,
-          "probability": 0.000293
-        },
-        {
-          "hidden_state": 47,
-          "probability": 0.00056554
-        },
-        {
-          "hidden_state": 48,
-          "probability": 0.0273831
-        }
-      ]
-    },
-    {
-      "belief_uid": 31,
-      "mse": 0.30601504,
-      "urc_level": 4,
-      "support_size": 21,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.88566918
-        },
-        {
-          "hidden_state": 2,
-          "probability": 1.0000000000000001e-07
-        },
-        {
-          "hidden_state": 3,
-          "probability": 6.88e-06
-        },
-        {
-          "hidden_state": 4,
-          "probability": 1.96e-06
-        },
-        {
-          "hidden_state": 5,
-          "probability": 9.797999999999998e-05
-        },
-        {
-          "hidden_state": 11,
-          "probability": 1.0800000000000002e-05
-        },
-        {
-          "hidden_state": 12,
-          "probability": 1.9699999999999998e-06
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.00057624
-        },
-        {
-          "hidden_state": 15,
-          "probability": 0.00019012
-        },
-        {
-          "hidden_state": 20,
-          "probability": 7.84e-06
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.0009555599999999999
-        },
-        {
-          "hidden_state": 22,
-          "probability": 9.7e-07
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.01882384
-        },
-        {
-          "hidden_state": 24,
-          "probability": 9.409000000000002e-05
-        },
-        {
-          "hidden_state": 29,
-          "probability": 0.00048311999999999997
-        },
-        {
-          "hidden_state": 30,
-          "probability": 9.605e-05
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.03726743999999999
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.018255399999999998
-        },
-        {
-          "hidden_state": 38,
-          "probability": 0.00028809999999999996
-        },
-        {
-          "hidden_state": 39,
-          "probability": 0.01891696
-        },
-        {
-          "hidden_state": 40,
-          "probability": 0.0182554
-        }
-      ]
-    },
-    {
-      "belief_uid": 32,
-      "mse": 0.28880804,
-      "urc_level": 4,
-      "support_size": 25,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.88566918
-        },
-        {
-          "hidden_state": 1,
-          "probability": 6.000000000000001e-08
-        },
-        {
-          "hidden_state": 2,
-          "probability": 4.000000000000001e-08
-        },
-        {
-          "hidden_state": 3,
-          "probability": 7.840000000000001e-06
-        },
-        {
-          "hidden_state": 4,
-          "probability": 1.96e-06
-        },
-        {
-          "hidden_state": 5,
-          "probability": 9.797999999999998e-05
-        },
-        {
-          "hidden_state": 10,
-          "probability": 4.000000000000001e-08
-        },
-        {
-          "hidden_state": 11,
-          "probability": 1.1760000000000001e-05
-        },
-        {
-          "hidden_state": 12,
-          "probability": 1.0000000000000002e-08
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.00057624
-        },
-        {
-          "hidden_state": 14,
-          "probability": 0.00019012
-        },
-        {
-          "hidden_state": 19,
-          "probability": 6.879999999999999e-06
-        },
-        {
-          "hidden_state": 20,
-          "probability": 9.7e-07
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.00095652
-        },
-        {
-          "hidden_state": 22,
-          "probability": 9.7e-07
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.01891696
-        },
-        {
-          "hidden_state": 28,
-          "probability": 1.96e-06
-        },
-        {
-          "hidden_state": 29,
-          "probability": 0.00057624
-        },
-        {
-          "hidden_state": 30,
-          "probability": 9.409000000000002e-05
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.03726743999999999
-        },
-        {
-          "hidden_state": 32,
-          "probability": 0.0182554
-        },
-        {
-          "hidden_state": 37,
-          "probability": 9.797999999999998e-05
-        },
-        {
-          "hidden_state": 38,
-          "probability": 0.00019012
-        },
-        {
-          "hidden_state": 39,
-          "probability": 0.01882384
-        },
-        {
-          "hidden_state": 40,
-          "probability": 0.018255399999999998
-        }
-      ]
-    },
-    {
-      "belief_uid": 33,
-      "mse": 0.22296791000000005,
-      "urc_level": 3,
-      "support_size": 19,
-      "belief": [
-        {
-          "hidden_state": 0,
-          "probability": 0.90439892
-        },
-        {
-          "hidden_state": 3,
-          "probability": 2.9400000000000007e-06
-        },
-        {
-          "hidden_state": 4,
-          "probability": 1.06e-06
-        },
-        {
-          "hidden_state": 5,
-          "probability": 0.00010388
-        },
-        {
-          "hidden_state": 11,
-          "probability": 2.920000000000001e-06
-        },
-        {
-          "hidden_state": 12,
-          "probability": 4.000000000000001e-08
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.0003861600000000001
-        },
-        {
-          "hidden_state": 14,
-          "probability": 0.00038905
-        },
-        {
-          "hidden_state": 19,
-          "probability": 9.700000000000002e-07
-        },
-        {
-          "hidden_state": 20,
-          "probability": 1.0000000000000002e-08
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.0004763200000000001
-        },
-        {
-          "hidden_state": 22,
-          "probability": 7.840000000000001e-06
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.01939716
-        },
-        {
-          "hidden_state": 29,
-          "probability": 0.00018916000000000004
-        },
-        {
-          "hidden_state": 30,
-          "probability": 1.9600000000000003e-06
-        },
-        {
-          "hidden_state": 31,
-          "probability": 0.027861360000000005
-        },
-        {
-          "hidden_state": 32,
-          "probability": 0.02814265
-        },
-        {
-          "hidden_state": 39,
-          "probability": 0.009316860000000001
-        },
-        {
-          "hidden_state": 40,
-          "probability": 0.009320740000000003
-        }
-      ]
-    },
-    {
-      "belief_uid": 34,
-      "mse": 0.29075356,
-      "urc_level": 4,
-      "support_size": 20,
       "belief": [
         {
           "hidden_state": 0,
           "probability": 0.8855750800000001
         },
         {
-          "hidden_state": 1,
-          "probability": 4.000000000000001e-08
-        },
-        {
-          "hidden_state": 2,
-          "probability": 1.0000000000000002e-08
-        },
-        {
-          "hidden_state": 3,
-          "probability": 2.920000000000001e-06
-        },
-        {
-          "hidden_state": 10,
-          "probability": 6.000000000000001e-08
-        },
-        {
-          "hidden_state": 11,
-          "probability": 9.76e-06
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.00028518000000000006
-        },
-        {
-          "hidden_state": 19,
-          "probability": 8.880000000000001e-06
-        },
-        {
-          "hidden_state": 20,
-          "probability": 2.9300000000000003e-06
-        },
-        {
-          "hidden_state": 21,
-          "probability": 0.0008584800000000002
-        },
-        {
-          "hidden_state": 23,
-          "probability": 0.009409
-        },
-        {
           "hidden_state": 28,
-          "probability": 6.920000000000001e-06
+          "probability": 1.0960000000000002e-05
         },
         {
           "hidden_state": 29,
-          "probability": 0.0008653200000000002
+          "probability": 0.00030280000000000004
         },
         {
           "hidden_state": 30,
-          "probability": 0.00019013000000000008
+          "probability": 0.00058009
         },
         {
           "hidden_state": 31,
-          "probability": 0.037077280000000004
+          "probability": 0.009979359999999998
         },
         {
           "hidden_state": 32,
-          "probability": 0.009126730000000001
+          "probability": 0.01853573
         },
         {
           "hidden_state": 37,
-          "probability": 0.00020286
+          "probability": 0.00020382000000000004
         },
         {
           "hidden_state": 38,
-          "probability": 0.00066644
+          "probability": 0.0006645200000000001
         },
         {
           "hidden_state": 39,
-          "probability": 0.028328880000000004
+          "probability": 0.028235760000000002
         },
         {
           "hidden_state": 40,
-          "probability": 0.027383100000000007
+          "probability": 0.027383100000000004
+        },
+        {
+          "hidden_state": 45,
+          "probability": 5.8600000000000015e-06
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.0005704000000000002
+        },
+        {
+          "hidden_state": 47,
+          "probability": 0.00028228000000000004
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.027383100000000004
+        },
+        {
+          "hidden_state": 54,
+          "probability": 2.9200000000000004e-06
+        },
+        {
+          "hidden_state": 55,
+          "probability": 9.700000000000002e-07
+        },
+        {
+          "hidden_state": 56,
+          "probability": 0.00028228000000000004
+        },
+        {
+          "hidden_state": 64,
+          "probability": 9.700000000000002e-07
+        }
+      ]
+    },
+    {
+      "belief_uid": 30,
+      "mse": 0.25289963,
+      "urc_level": 3,
+      "support_size": 19,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.8856691799999998
+        },
+        {
+          "hidden_state": 19,
+          "probability": 3.0799999999999993e-06
+        },
+        {
+          "hidden_state": 20,
+          "probability": 7.93e-06
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.00029796
+        },
+        {
+          "hidden_state": 22,
+          "probability": 0.00048216999999999997
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.009608839999999999
+        },
+        {
+          "hidden_state": 28,
+          "probability": 6.819999999999999e-06
+        },
+        {
+          "hidden_state": 29,
+          "probability": 0.00038999999999999994
+        },
+        {
+          "hidden_state": 30,
+          "probability": 0.00057232
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.01920216
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.0277585
+        },
+        {
+          "hidden_state": 37,
+          "probability": 9.797999999999997e-05
+        },
+        {
+          "hidden_state": 38,
+          "probability": 0.00019011999999999998
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.018823839999999998
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.0182554
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.00019011999999999998
+        },
+        {
+          "hidden_state": 47,
+          "probability": 9.408999999999999e-05
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.0182554
+        },
+        {
+          "hidden_state": 56,
+          "probability": 9.408999999999999e-05
+        }
+      ]
+    },
+    {
+      "belief_uid": 31,
+      "mse": 0.25485025,
+      "urc_level": 3,
+      "support_size": 18,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.88557508
+        },
+        {
+          "hidden_state": 10,
+          "probability": 5.000000000000001e-08
+        },
+        {
+          "hidden_state": 11,
+          "probability": 4.000000000000001e-06
+        },
+        {
+          "hidden_state": 12,
+          "probability": 8.890000000000001e-06
+        },
+        {
+          "hidden_state": 13,
+          "probability": 0.000298
+        },
+        {
+          "hidden_state": 14,
+          "probability": 0.0004861599999999999
+        },
+        {
+          "hidden_state": 19,
+          "probability": 2.92e-06
+        },
+        {
+          "hidden_state": 20,
+          "probability": 5.820000000000001e-06
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.000486
+        },
+        {
+          "hidden_state": 22,
+          "probability": 0.0007633999999999999
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.01920894
+        },
+        {
+          "hidden_state": 29,
+          "probability": 0.00028518
+        },
+        {
+          "hidden_state": 30,
+          "probability": 0.00037636
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.028044640000000003
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.036792099999999994
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.009408999999999999
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.00912673
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.00912673
+        }
+      ]
+    },
+    {
+      "belief_uid": 32,
+      "mse": 0.2650213,
+      "urc_level": 4,
+      "support_size": 15,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.88529281
+        },
+        {
+          "hidden_state": 1,
+          "probability": 1.0000000000000004e-08
+        },
+        {
+          "hidden_state": 2,
+          "probability": 5.000000000000002e-08
+        },
+        {
+          "hidden_state": 3,
+          "probability": 5.960000000000001e-06
+        },
+        {
+          "hidden_state": 4,
+          "probability": 1.3840000000000001e-05
+        },
+        {
+          "hidden_state": 5,
+          "probability": 0.00021084
+        },
+        {
+          "hidden_state": 11,
+          "probability": 3.880000000000001e-06
+        },
+        {
+          "hidden_state": 12,
+          "probability": 9.700000000000004e-06
+        },
+        {
+          "hidden_state": 13,
+          "probability": 0.0007740600000000001
+        },
+        {
+          "hidden_state": 14,
+          "probability": 0.00106312
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.0005645400000000002
+        },
+        {
+          "hidden_state": 22,
+          "probability": 0.0009409
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.02897972
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.036506920000000005
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.045633650000000005
+        }
+      ]
+    },
+    {
+      "belief_uid": 33,
+      "mse": 0.25186208000000004,
+      "urc_level": 3,
+      "support_size": 21,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.8859572800000001
+        },
+        {
+          "hidden_state": 28,
+          "probability": 3.94e-06
+        },
+        {
+          "hidden_state": 29,
+          "probability": 0.00019896000000000003
+        },
+        {
+          "hidden_state": 30,
+          "probability": 0.00038320000000000004
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.009795120000000003
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.018539620000000007
+        },
+        {
+          "hidden_state": 37,
+          "probability": 9.999999999999999e-05
+        },
+        {
+          "hidden_state": 38,
+          "probability": 0.00019013000000000002
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.018927720000000002
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.018349490000000003
+        },
+        {
+          "hidden_state": 45,
+          "probability": 1e-06
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.00038616000000000003
+        },
+        {
+          "hidden_state": 47,
+          "probability": 9.409000000000003e-05
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.027861360000000005
+        },
+        {
+          "hidden_state": 49,
+          "probability": 0.009222760000000002
+        },
+        {
+          "hidden_state": 54,
+          "probability": 2.9400000000000007e-06
+        },
+        {
+          "hidden_state": 56,
+          "probability": 0.0004763200000000001
+        },
+        {
+          "hidden_state": 58,
+          "probability": 0.009316860000000001
+        },
+        {
+          "hidden_state": 64,
+          "probability": 2.9200000000000004e-06
+        },
+        {
+          "hidden_state": 65,
+          "probability": 9.7e-07
+        },
+        {
+          "hidden_state": 66,
+          "probability": 0.00018916
+        }
+      ]
+    },
+    {
+      "belief_uid": 34,
+      "mse": 0.3041595008,
+      "urc_level": 4,
+      "support_size": 19,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.8590990949
+        },
+        {
+          "hidden_state": 28,
+          "probability": 1.49864e-05
+        },
+        {
+          "hidden_state": 29,
+          "probability": 0.0003102774
+        },
+        {
+          "hidden_state": 30,
+          "probability": 0.0007661739000000002
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.009964131000000001
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.018162192700000003
+        },
+        {
+          "hidden_state": 37,
+          "probability": 0.00021245339999999998
+        },
+        {
+          "hidden_state": 38,
+          "probability": 0.0010408707999999996
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.0284887836
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.0442740495
+        },
+        {
+          "hidden_state": 45,
+          "probability": 1.3581900000000001e-05
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.0007565820000000002
+        },
+        {
+          "hidden_state": 47,
+          "probability": 0.00091277
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.0354173578
+        },
+        {
+          "hidden_state": 54,
+          "probability": 5.820600000000003e-06
+        },
+        {
+          "hidden_state": 55,
+          "probability": 9.409499999999999e-06
+        },
+        {
+          "hidden_state": 56,
+          "probability": 0.0005476426000000001
+        },
+        {
+          "hidden_state": 63,
+          "probability": 5.830000000000001e-08
+        },
+        {
+          "hidden_state": 64,
+          "probability": 3.7637000000000005e-06
         }
       ]
     },
     {
       "belief_uid": 35,
-      "mse": 0.3634051208000001,
+      "mse": 0.32801607400000005,
       "urc_level": 5,
       "support_size": 22,
       "belief": [
         {
           "hidden_state": 0,
-          "probability": 0.8592816586000002
+          "probability": 0.8592816586
         },
         {
-          "hidden_state": 11,
-          "probability": 8.1078e-06
-        },
-        {
-          "hidden_state": 12,
-          "probability": 2.311720000000001e-05
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.0004782588000000001
-        },
-        {
-          "hidden_state": 14,
-          "probability": 0.00019197270000000005
-        },
-        {
-          "hidden_state": 15,
-          "probability": 0.00018535730000000006
+          "hidden_state": 19,
+          "probability": 5.2854e-06
         },
         {
           "hidden_state": 20,
-          "probability": 1.6514900000000003e-05
+          "probability": 1.5583700000000005e-05
         },
         {
           "hidden_state": 21,
-          "probability": 0.0009478958000000002
+          "probability": 0.0003909801
         },
         {
           "hidden_state": 22,
-          "probability": 0.0007397027000000003
+          "probability": 0.0005647828000000001
         },
         {
           "hidden_state": 23,
-          "probability": 0.018354194500000007
+          "probability": 0.009326259000000002
         },
         {
-          "hidden_state": 24,
-          "probability": 0.00018253460000000005
+          "hidden_state": 28,
+          "probability": 1.9373200000000003e-05
         },
         {
           "hidden_state": 29,
-          "probability": 0.00038719770000000006
+          "probability": 0.0005838158000000002
         },
         {
           "hidden_state": 30,
-          "probability": 0.0006616087000000001
+          "probability": 0.0008459863000000001
         },
         {
           "hidden_state": 31,
-          "probability": 0.0365221202
+          "probability": 0.0190919186
         },
         {
           "hidden_state": 32,
-          "probability": 0.0089470181
+          "probability": 0.027109239900000002
         },
         {
-          "hidden_state": 33,
-          "probability": 0.0177086789
+          "hidden_state": 37,
+          "probability": 0.00020349720000000006
         },
         {
           "hidden_state": 38,
-          "probability": 0.00019690120000000005
+          "probability": 0.0006474755000000002
         },
         {
           "hidden_state": 39,
-          "probability": 0.018637454600000002
+          "probability": 0.027671045
         },
         {
           "hidden_state": 40,
-          "probability": 0.009129581800000001
+          "probability": 0.026564429800000004
+        },
+        {
+          "hidden_state": 45,
+          "probability": 5.723100000000001e-06
         },
         {
           "hidden_state": 46,
-          "probability": 0.00028428780000000004
+          "probability": 0.0005561497000000002
         },
         {
           "hidden_state": 47,
-          "probability": 0.0005514063000000002
+          "probability": 0.00027382130000000004
         },
         {
           "hidden_state": 48,
-          "probability": 0.026564429800000008
+          "probability": 0.026564429800000004
+        },
+        {
+          "hidden_state": 54,
+          "probability": 2.8421000000000003e-06
+        },
+        {
+          "hidden_state": 55,
+          "probability": 1.8818000000000003e-06
+        },
+        {
+          "hidden_state": 56,
+          "probability": 0.00027382130000000004
         }
       ]
     },
     {
       "belief_uid": 36,
-      "mse": 0.299318868,
-      "urc_level": 4,
-      "support_size": 22,
+      "mse": 0.3266579127,
+      "urc_level": 5,
+      "support_size": 23,
       "belief": [
         {
           "hidden_state": 0,
-          "probability": 0.8774532894
-        },
-        {
-          "hidden_state": 1,
-          "probability": 3.89e-08
-        },
-        {
-          "hidden_state": 2,
-          "probability": 8.79e-08
-        },
-        {
-          "hidden_state": 3,
-          "probability": 1.05468e-05
-        },
-        {
-          "hidden_state": 4,
-          "probability": 9.782799999999999e-06
-        },
-        {
-          "hidden_state": 5,
-          "probability": 0.0002087478
+          "probability": 0.8592816585999998
         },
         {
           "hidden_state": 10,
-          "probability": 1.9400000000000002e-08
+          "probability": 2.0909999999999999e-07
         },
         {
           "hidden_state": 11,
-          "probability": 9.487300000000001e-06
+          "probability": 6.989699999999999e-06
         },
         {
           "hidden_state": 12,
-          "probability": 5.821100000000001e-06
+          "probability": 1.36038e-05
         },
         {
           "hidden_state": 13,
-          "probability": 0.0008407022000000001
+          "probability": 0.0002959113
         },
         {
           "hidden_state": 14,
-          "probability": 0.0008650685
+          "probability": 0.0004745835
         },
         {
           "hidden_state": 19,
-          "probability": 2.8325000000000004e-06
+          "probability": 7.935599999999999e-06
         },
         {
           "hidden_state": 20,
-          "probability": 1.9013000000000003e-06
+          "probability": 1.5384700000000002e-05
         },
         {
           "hidden_state": 21,
-          "probability": 0.0008338322
+          "probability": 0.0006731812
         },
         {
           "hidden_state": 22,
-          "probability": 0.0002891287
+          "probability": 0.0009335671
         },
         {
           "hidden_state": 23,
-          "probability": 0.028418352899999996
+          "probability": 0.0186468732
+        },
+        {
+          "hidden_state": 28,
+          "probability": 9.496399999999998e-06
         },
         {
           "hidden_state": 29,
-          "probability": 0.00027665379999999997
+          "probability": 0.0005694194
         },
         {
           "hidden_state": 30,
-          "probability": 9.506980000000001e-05
+          "probability": 0.0007405465
         },
         {
           "hidden_state": 31,
-          "probability": 0.035978299400000004
+          "probability": 0.027853579399999995
         },
         {
           "hidden_state": 32,
-          "probability": 0.03643646920000001
+          "probability": 0.0359649908
+        },
+        {
+          "hidden_state": 37,
+          "probability": 9.694179999999995e-05
+        },
+        {
+          "hidden_state": 38,
+          "probability": 0.00018535729999999997
         },
         {
           "hidden_state": 39,
-          "probability": 0.0091295818
+          "probability": 0.0184445209
         },
         {
           "hidden_state": 40,
-          "probability": 0.009134286299999999
+          "probability": 0.0177086789
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.00018535729999999997
+        },
+        {
+          "hidden_state": 47,
+          "probability": 0.00018253459999999997
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.0177086789
         }
       ]
     },
     {
       "belief_uid": 37,
-      "mse": 0.34974854310000003,
-      "urc_level": 4,
-      "support_size": 23,
+      "mse": 0.3244804536,
+      "urc_level": 5,
+      "support_size": 22,
       "belief": [
         {
           "hidden_state": 0,
-          "probability": 0.8592816586
+          "probability": 0.8590990948999999
+        },
+        {
+          "hidden_state": 1,
+          "probability": 7.02e-08
         },
         {
           "hidden_state": 2,
-          "probability": 2.7630000000000006e-07
+          "probability": 1.876e-07
         },
         {
           "hidden_state": 3,
-          "probability": 1.0623600000000001e-05
+          "probability": 7.968900000000001e-06
         },
         {
           "hidden_state": 4,
-          "probability": 3.890000000000001e-06
+          "probability": 1.5564499999999996e-05
         },
         {
           "hidden_state": 5,
-          "probability": 9.694180000000001e-05
+          "probability": 0.00020479260000000002
+        },
+        {
+          "hidden_state": 10,
+          "probability": 1.3590000000000002e-07
         },
         {
           "hidden_state": 11,
-          "probability": 1.7434500000000004e-05
+          "probability": 1.1621000000000001e-05
         },
         {
           "hidden_state": 12,
-          "probability": 1.24471e-05
+          "probability": 2.00791e-05
         },
         {
           "hidden_state": 13,
-          "probability": 0.0007482002
+          "probability": 0.0007664557999999999
         },
         {
           "hidden_state": 14,
-          "probability": 1.9109e-06
+          "probability": 0.0010392195999999999
         },
         {
-          "hidden_state": 15,
-          "probability": 0.0001853573
+          "hidden_state": 19,
+          "probability": 5.6842e-06
         },
         {
           "hidden_state": 20,
-          "probability": 1.93158e-05
+          "probability": 9.409000000000001e-06
         },
         {
           "hidden_state": 21,
-          "probability": 0.0013072516000000001
+          "probability": 0.0008488082
         },
         {
           "hidden_state": 22,
-          "probability": 0.00019110010000000002
+          "probability": 0.0012034499
         },
         {
           "hidden_state": 23,
-          "probability": 0.018443589700000002
-        },
-        {
-          "hidden_state": 24,
-          "probability": 9.220820000000001e-05
+          "probability": 0.02813679
         },
         {
           "hidden_state": 29,
-          "probability": 0.0005772297000000001
+          "probability": 0.00037071459999999995
         },
         {
           "hidden_state": 30,
-          "probability": 0.0005619127
+          "probability": 0.0004563365
         },
         {
           "hidden_state": 31,
-          "probability": 0.04519623860000001
+          "probability": 0.036244408900000004
         },
         {
           "hidden_state": 32,
-          "probability": 0.00018256370000000003
-        },
-        {
-          "hidden_state": 33,
-          "probability": 0.0177086789
-        },
-        {
-          "hidden_state": 38,
-          "probability": 0.00048672750000000007
+          "probability": 0.044635355099999996
         },
         {
           "hidden_state": 39,
-          "probability": 0.019451430000000002
+          "probability": 0.0092179973
         },
         {
           "hidden_state": 40,
-          "probability": 0.035423013200000006
+          "probability": 0.017705856199999998
         }
       ]
     },
     {
       "belief_uid": 38,
-      "mse": 0.36511057230000005,
-      "urc_level": 5,
+      "mse": 0.3179343975000001,
+      "urc_level": 4,
       "support_size": 25,
       "belief": [
         {
           "hidden_state": 0,
-          "probability": 0.8592816586
-        },
-        {
-          "hidden_state": 1,
-          "probability": 1.7880000000000007e-07
-        },
-        {
-          "hidden_state": 2,
-          "probability": 2.0510000000000003e-07
-        },
-        {
-          "hidden_state": 3,
-          "probability": 1.3435400000000002e-05
-        },
-        {
-          "hidden_state": 4,
-          "probability": 2.8810000000000005e-06
-        },
-        {
-          "hidden_state": 5,
-          "probability": 9.694179999999998e-05
-        },
-        {
-          "hidden_state": 10,
-          "probability": 2.0710000000000002e-07
-        },
-        {
-          "hidden_state": 11,
-          "probability": 2.5862800000000002e-05
-        },
-        {
-          "hidden_state": 12,
-          "probability": 1.9402000000000005e-06
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.0007500722
-        },
-        {
-          "hidden_state": 14,
-          "probability": 0.00018535730000000003
+          "probability": 0.8598425714000001
         },
         {
           "hidden_state": 19,
-          "probability": 1.45732e-05
+          "probability": 3.0684e-06
         },
         {
           "hidden_state": 20,
-          "probability": 8.594700000000001e-06
+          "probability": 7.762300000000002e-06
         },
         {
           "hidden_state": 21,
-          "probability": 0.0014935684000000002
+          "probability": 0.00029305000000000005
         },
         {
           "hidden_state": 22,
-          "probability": 1.8818000000000003e-06
+          "probability": 0.00047067430000000013
         },
         {
           "hidden_state": 23,
-          "probability": 0.018534847300000008
+          "probability": 0.009328316400000002
         },
         {
           "hidden_state": 28,
-          "probability": 8.751100000000002e-06
+          "probability": 6.7331e-06
         },
         {
           "hidden_state": 29,
-          "probability": 0.001040026
+          "probability": 0.00038713000000000007
         },
         {
           "hidden_state": 30,
-          "probability": 0.0002757322000000001
+          "probability": 0.0005580411000000001
         },
         {
           "hidden_state": 31,
-          "probability": 0.045376901000000004
+          "probability": 0.01882873000000001
         },
         {
           "hidden_state": 32,
-          "probability": 0.0177086789
+          "probability": 0.02711872670000001
         },
         {
           "hidden_state": 37,
-          "probability": 0.00019976280000000003
+          "probability": 0.00010090099999999997
         },
         {
           "hidden_state": 38,
-          "probability": 0.0006521411000000001
+          "probability": 0.00018537700000000002
         },
         {
           "hidden_state": 39,
-          "probability": 0.027761371400000002
+          "probability": 0.018647126800000004
         },
         {
           "hidden_state": 40,
-          "probability": 0.026564429800000004
+          "probability": 0.017892173800000005
+        },
+        {
+          "hidden_state": 45,
+          "probability": 9.994000000000001e-07
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.00037939699999999996
+        },
+        {
+          "hidden_state": 47,
+          "probability": 9.127700000000003e-05
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.027125342600000005
+        },
+        {
+          "hidden_state": 49,
+          "probability": 0.009039245800000002
+        },
+        {
+          "hidden_state": 54,
+          "probability": 2.8810000000000005e-06
+        },
+        {
+          "hidden_state": 55,
+          "probability": 2.8421000000000003e-06
+        },
+        {
+          "hidden_state": 56,
+          "probability": 0.00046489210000000004
+        },
+        {
+          "hidden_state": 57,
+          "probability": 0.0001834949
+        },
+        {
+          "hidden_state": 58,
+          "probability": 0.009039245800000002
         }
       ]
     },
     {
       "belief_uid": 39,
-      "mse": 0.422539869681,
-      "urc_level": 6,
-      "support_size": 24,
+      "mse": 0.373163662764,
+      "urc_level": 5,
+      "support_size": 22,
       "belief": [
         {
           "hidden_state": 0,
-          "probability": 0.8337688531399999
+          "probability": 0.8336802956310001
         },
         {
-          "hidden_state": 2,
-          "probability": 5.584770000000001e-07
-        },
-        {
-          "hidden_state": 3,
-          "probability": 1.4573796e-05
-        },
-        {
-          "hidden_state": 4,
-          "probability": 1.4330514000000003e-05
-        },
-        {
-          "hidden_state": 5,
-          "probability": 0.00019209783300000002
-        },
-        {
-          "hidden_state": 6,
-          "probability": 7.452219e-06
-        },
-        {
-          "hidden_state": 11,
-          "probability": 2.138065e-05
-        },
-        {
-          "hidden_state": 12,
-          "probability": 3.660194700000001e-05
-        },
-        {
-          "hidden_state": 13,
-          "probability": 0.001022153141
-        },
-        {
-          "hidden_state": 14,
-          "probability": 0.000284906073
-        },
-        {
-          "hidden_state": 15,
-          "probability": 0.000542250661
+          "hidden_state": 19,
+          "probability": 5.527036e-06
         },
         {
           "hidden_state": 20,
-          "probability": 2.8476528999999997e-05
+          "probability": 2.1323084999999998e-05
         },
         {
           "hidden_state": 21,
-          "probability": 0.0014749266509999997
+          "probability": 0.00039529365900000003
         },
         {
           "hidden_state": 22,
-          "probability": 0.000904893705
+          "probability": 0.0007316654710000001
         },
         {
           "hidden_state": 23,
-          "probability": 0.026938693242
+          "probability": 0.009053876113
         },
         {
-          "hidden_state": 24,
-          "probability": 0.00044361553199999995
+          "hidden_state": 28,
+          "probability": 2.7205869e-05
         },
         {
           "hidden_state": 29,
-          "probability": 0.000566768205
+          "probability": 0.000595547268
         },
         {
           "hidden_state": 30,
-          "probability": 0.000740539332
+          "probability": 0.0012054655860000004
         },
         {
           "hidden_state": 31,
-          "probability": 0.04447129202399999
+          "probability": 0.018895259433
         },
         {
           "hidden_state": 32,
-          "probability": 0.008769903374999997
+          "probability": 0.026651058363000003
         },
         {
-          "hidden_state": 33,
-          "probability": 0.025770235118999993
+          "hidden_state": 37,
+          "probability": 0.00021383964299999996
         },
         {
           "hidden_state": 38,
-          "probability": 0.00047511027099999994
+          "probability": 0.0010190022899999997
         },
         {
           "hidden_state": 39,
-          "probability": 0.018881682248999995
+          "probability": 0.028001335916
         },
         {
           "hidden_state": 40,
-          "probability": 0.034628705315
+          "probability": 0.042954955715
+        },
+        {
+          "hidden_state": 45,
+          "probability": 1.3327327e-05
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.0007394568090000001
+        },
+        {
+          "hidden_state": 47,
+          "probability": 0.000885480995
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.034360313492
+        },
+        {
+          "hidden_state": 54,
+          "probability": 5.740753000000003e-06
+        },
+        {
+          "hidden_state": 55,
+          "probability": 1.2778587e-05
+        },
+        {
+          "hidden_state": 56,
+          "probability": 0.000531250959
         }
       ]
     },
     {
       "belief_uid": 40,
-      "mse": 0.41181163167199997,
-      "urc_level": 5,
+      "mse": 0.40072974075300005,
+      "urc_level": 6,
+      "support_size": 24,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.83376885314
+        },
+        {
+          "hidden_state": 10,
+          "probability": 4.5527700000000006e-07
+        },
+        {
+          "hidden_state": 11,
+          "probability": 9.956650000000002e-06
+        },
+        {
+          "hidden_state": 12,
+          "probability": 1.8173329000000004e-05
+        },
+        {
+          "hidden_state": 13,
+          "probability": 0.000293739405
+        },
+        {
+          "hidden_state": 14,
+          "probability": 0.0004632654070000001
+        },
+        {
+          "hidden_state": 19,
+          "probability": 1.3193700000000002e-05
+        },
+        {
+          "hidden_state": 20,
+          "probability": 3.024453900000001e-05
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.0008527184910000001
+        },
+        {
+          "hidden_state": 22,
+          "probability": 0.0010930358760000002
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.018101299401000002
+        },
+        {
+          "hidden_state": 28,
+          "probability": 2.7358962000000006e-05
+        },
+        {
+          "hidden_state": 29,
+          "probability": 0.0008506082450000002
+        },
+        {
+          "hidden_state": 30,
+          "probability": 0.001095463977
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.027654332376
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.035154423587
+        },
+        {
+          "hidden_state": 37,
+          "probability": 0.00020303943300000005
+        },
+        {
+          "hidden_state": 38,
+          "probability": 0.0006308654970000002
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.027114857658
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.025770235119000007
+        },
+        {
+          "hidden_state": 45,
+          "probability": 8.355483000000002e-06
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.0005440571890000001
+        },
+        {
+          "hidden_state": 47,
+          "probability": 0.0005312321400000001
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.025770235119000007
+        }
+      ]
+    },
+    {
+      "belief_uid": 41,
+      "mse": 0.3870975677360001,
+      "urc_level": 6,
       "support_size": 25,
       "belief": [
         {
@@ -3656,207 +3710,635 @@
         },
         {
           "hidden_state": 1,
-          "probability": 2.861070000000001e-07
+          "probability": 1.5343500000000002e-07
         },
         {
           "hidden_state": 2,
-          "probability": 5.376180000000001e-07
+          "probability": 3.6187300000000013e-07
         },
         {
           "hidden_state": 3,
-          "probability": 1.8795212000000002e-05
+          "probability": 9.896860000000002e-06
         },
         {
           "hidden_state": 4,
-          "probability": 4.761827e-06
+          "probability": 1.7176657000000003e-05
         },
         {
           "hidden_state": 5,
-          "probability": 9.5887119e-05
+          "probability": 0.00019891951500000007
         },
         {
           "hidden_state": 10,
-          "probability": 4.947370000000001e-07
+          "probability": 5.309940000000001e-07
         },
         {
           "hidden_state": 11,
-          "probability": 3.7572219000000005e-05
+          "probability": 1.9285371000000004e-05
         },
         {
           "hidden_state": 12,
-          "probability": 1.4042697e-05
+          "probability": 3.009066900000001e-05
         },
         {
           "hidden_state": 13,
-          "probability": 0.0009130130820000001
+          "probability": 0.0007587702990000002
         },
         {
           "hidden_state": 14,
-          "probability": 0.00018257223600000002
+          "probability": 0.0010158003060000002
         },
         {
           "hidden_state": 19,
-          "probability": 1.9212316000000003e-05
+          "probability": 1.4456108000000004e-05
         },
         {
           "hidden_state": 20,
-          "probability": 2.6390925e-05
+          "probability": 2.4277161000000005e-05
         },
         {
           "hidden_state": 21,
-          "probability": 0.0019119143370000002
+          "probability": 0.0011216609610000003
         },
         {
           "hidden_state": 22,
-          "probability": 0.00018813392500000004
+          "probability": 0.0014497022490000003
         },
         {
           "hidden_state": 23,
-          "probability": 0.018158664325000004
+          "probability": 0.02731846929200001
         },
         {
           "hidden_state": 28,
-          "probability": 1.6451857000000003e-05
+          "probability": 1.2034499e-05
         },
         {
           "hidden_state": 29,
-          "probability": 0.0012194620110000003
+          "probability": 0.0007396050180000002
         },
         {
           "hidden_state": 30,
-          "probability": 0.0009030220890000001
+          "probability": 0.0008990958130000003
         },
         {
           "hidden_state": 31,
-          "probability": 0.052794690714
+          "probability": 0.035972320602
         },
         {
           "hidden_state": 32,
-          "probability": 0.017355427404
+          "probability": 0.043655944450999996
         },
         {
           "hidden_state": 37,
-          "probability": 0.00021002114700000002
+          "probability": 9.588711899999998e-05
         },
         {
           "hidden_state": 38,
-          "probability": 0.0010264892340000002
+          "probability": 0.000361418508
         },
         {
           "hidden_state": 39,
-          "probability": 0.028266896204
+          "probability": 0.018247184197000006
         },
         {
           "hidden_state": 40,
-          "probability": 0.042954965027000004
+          "probability": 0.03435666241200001
         }
       ]
     },
     {
-      "belief_uid": 41,
-      "mse": 0.47557086973991003,
-      "urc_level": 20,
+      "belief_uid": 42,
+      "mse": 0.360752107719,
+      "urc_level": 5,
       "support_size": 25,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.8344993325999999
+        },
+        {
+          "hidden_state": 10,
+          "probability": 2.0632199999999996e-07
+        },
+        {
+          "hidden_state": 11,
+          "probability": 6.910106999999999e-06
+        },
+        {
+          "hidden_state": 12,
+          "probability": 1.3295277e-05
+        },
+        {
+          "hidden_state": 13,
+          "probability": 0.00028920770700000003
+        },
+        {
+          "hidden_state": 14,
+          "probability": 0.00046246033800000005
+        },
+        {
+          "hidden_state": 19,
+          "probability": 7.923988999999999e-06
+        },
+        {
+          "hidden_state": 20,
+          "probability": 1.5030943e-05
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.0006628883680000001
+        },
+        {
+          "hidden_state": 22,
+          "probability": 0.0009122434870000001
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.018106367189
+        },
+        {
+          "hidden_state": 28,
+          "probability": 9.403880999999998e-06
+        },
+        {
+          "hidden_state": 29,
+          "probability": 0.000566790348
+        },
+        {
+          "hidden_state": 30,
+          "probability": 0.000722988145
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.027320018508000005
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.035172904809000004
+        },
+        {
+          "hidden_state": 37,
+          "probability": 0.00010170674399999995
+        },
+        {
+          "hidden_state": 38,
+          "probability": 0.00018076687499999998
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.018367409313000002
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.017448548763
+        },
+        {
+          "hidden_state": 45,
+          "probability": 3.821218999999999e-06
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.00037544965799999984
+        },
+        {
+          "hidden_state": 47,
+          "probability": 0.000541347397
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.026584613753999998
+        },
+        {
+          "hidden_state": 49,
+          "probability": 0.017628364259
+        }
+      ]
+    },
+    {
+      "belief_uid": 43,
+      "mse": 0.44458687630292,
+      "urc_level": 7,
+      "support_size": 24,
       "belief": [
         {
           "hidden_state": 0,
           "probability": 0.8090134898969901
         },
         {
-          "hidden_state": 1,
-          "probability": 3.7071400000000007e-07
-        },
-        {
-          "hidden_state": 2,
-          "probability": 1.1967852600000004e-06
-        },
-        {
-          "hidden_state": 3,
-          "probability": 2.6422397e-05
-        },
-        {
-          "hidden_state": 4,
-          "probability": 1.874515983000001e-05
-        },
-        {
-          "hidden_state": 5,
-          "probability": 0.00019906057924000005
-        },
-        {
           "hidden_state": 10,
-          "probability": 8.701760300000002e-07
+          "probability": 5.958302599999999e-07
         },
         {
           "hidden_state": 11,
-          "probability": 4.585576638e-05
+          "probability": 1.017691048e-05
         },
         {
           "hidden_state": 12,
-          "probability": 4.754519151000001e-05
+          "probability": 2.3537478010000006e-05
         },
         {
           "hidden_state": 13,
-          "probability": 0.0012682189641300002
+          "probability": 0.00029076094676000003
         },
         {
           "hidden_state": 14,
-          "probability": 0.0008068527094900002
+          "probability": 0.00045490476060000004
         },
         {
           "hidden_state": 19,
-          "probability": 2.0915520350000002e-05
+          "probability": 1.372715272e-05
         },
         {
           "hidden_state": 20,
-          "probability": 4.4442582970000004e-05
+          "probability": 4.32001299e-05
         },
         {
           "hidden_state": 21,
-          "probability": 0.00215500023554
+          "probability": 0.0008583562754
         },
         {
           "hidden_state": 22,
-          "probability": 0.0009727311436500001
+          "probability": 0.00141783030351
         },
         {
           "hidden_state": 23,
-          "probability": 0.026823964368580002
+          "probability": 0.01757452596388
         },
         {
           "hidden_state": 28,
-          "probability": 1.8108943370000003e-05
+          "probability": 3.885138552999999e-05
         },
         {
           "hidden_state": 29,
-          "probability": 0.0011980441680900001
+          "probability": 0.00086722717364
         },
         {
           "hidden_state": 30,
-          "probability": 0.00116135817599
+          "probability": 0.0016178960084200003
         },
         {
           "hidden_state": 31,
-          "probability": 0.05200193107829
+          "probability": 0.027288821100400002
         },
         {
           "hidden_state": 32,
-          "probability": 0.0335083704945
+          "probability": 0.03461787912557
         },
         {
           "hidden_state": 37,
-          "probability": 0.00020398670995999996
+          "probability": 0.0002150097026
         },
         {
           "hidden_state": 38,
-          "probability": 0.0010033662318300002
+          "probability": 0.0009975480903899997
         },
         {
           "hidden_state": 39,
-          "probability": 0.027443920286319996
+          "probability": 0.027517606051119997
         },
         {
           "hidden_state": 40,
-          "probability": 0.04201523172070001
+          "probability": 0.041675161853499995
+        },
+        {
+          "hidden_state": 45,
+          "probability": 1.8681231e-05
+        },
+        {
+          "hidden_state": 46,
+          "probability": 0.0007350382512400001
+        },
+        {
+          "hidden_state": 47,
+          "probability": 0.00137435778125
+        },
+        {
+          "hidden_state": 48,
+          "probability": 0.03333481659683
+        }
+      ]
+    },
+    {
+      "belief_uid": 44,
+      "mse": 0.45215046435622985,
+      "urc_level": 7,
+      "support_size": 25,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.8090134898969898
+        },
+        {
+          "hidden_state": 1,
+          "probability": 2.4060904e-07
+        },
+        {
+          "hidden_state": 2,
+          "probability": 5.8829795e-07
+        },
+        {
+          "hidden_state": 3,
+          "probability": 1.1745878749999997e-05
+        },
+        {
+          "hidden_state": 4,
+          "probability": 1.8682140170000002e-05
+        },
+        {
+          "hidden_state": 5,
+          "probability": 0.00019321569619999997
+        },
+        {
+          "hidden_state": 10,
+          "probability": 1.1495907e-06
+        },
+        {
+          "hidden_state": 11,
+          "probability": 2.682315486e-05
+        },
+        {
+          "hidden_state": 12,
+          "probability": 3.9815573049999994e-05
+        },
+        {
+          "hidden_state": 13,
+          "probability": 0.0007510107255299998
+        },
+        {
+          "hidden_state": 14,
+          "probability": 0.0009928550334299998
+        },
+        {
+          "hidden_state": 19,
+          "probability": 2.3607955399999998e-05
+        },
+        {
+          "hidden_state": 20,
+          "probability": 4.687408719e-05
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.00138333491906
+        },
+        {
+          "hidden_state": 22,
+          "probability": 0.00168044602655
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.02652403650999999
+        },
+        {
+          "hidden_state": 28,
+          "probability": 3.4960797269999996e-05
+        },
+        {
+          "hidden_state": 29,
+          "probability": 0.0011037095404499999
+        },
+        {
+          "hidden_state": 30,
+          "probability": 0.00133192338525
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.03569124186388999
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.04269518176198
+        },
+        {
+          "hidden_state": 37,
+          "probability": 0.00021057719524000002
+        },
+        {
+          "hidden_state": 38,
+          "probability": 0.0011450708816500002
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.02707985002713999
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.04999956845226
+        }
+      ]
+    },
+    {
+      "belief_uid": 45,
+      "mse": 0.39266395478584004,
+      "urc_level": 6,
+      "support_size": 25,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.82700599573336
+        },
+        {
+          "hidden_state": 1,
+          "probability": 1.524674e-07
+        },
+        {
+          "hidden_state": 2,
+          "probability": 3.5442649000000006e-07
+        },
+        {
+          "hidden_state": 3,
+          "probability": 9.723014590000003e-06
+        },
+        {
+          "hidden_state": 4,
+          "probability": 1.6772068090000006e-05
+        },
+        {
+          "hidden_state": 5,
+          "probability": 0.00019320495572000004
+        },
+        {
+          "hidden_state": 10,
+          "probability": 5.2372047e-07
+        },
+        {
+          "hidden_state": 11,
+          "probability": 1.9078830840000002e-05
+        },
+        {
+          "hidden_state": 12,
+          "probability": 2.9399044440000004e-05
+        },
+        {
+          "hidden_state": 13,
+          "probability": 0.0007414242164400002
+        },
+        {
+          "hidden_state": 14,
+          "probability": 0.0009905016827100003
+        },
+        {
+          "hidden_state": 19,
+          "probability": 1.4465279059999998e-05
+        },
+        {
+          "hidden_state": 20,
+          "probability": 2.371160372e-05
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.0011055438986500004
+        },
+        {
+          "hidden_state": 22,
+          "probability": 0.0014183205995600002
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.0265330987325
+        },
+        {
+          "hidden_state": 28,
+          "probability": 1.1984712949999999e-05
+        },
+        {
+          "hidden_state": 29,
+          "probability": 0.00073823229471
+        },
+        {
+          "hidden_state": 30,
+          "probability": 0.0008830051310000001
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.03529493150943001
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.042813480120950015
+        },
+        {
+          "hidden_state": 37,
+          "probability": 0.00010615483287999997
+        },
+        {
+          "hidden_state": 38,
+          "probability": 0.00054498172317
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.018611094642820007
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.04289386475805001
+        }
+      ]
+    },
+    {
+      "belief_uid": 46,
+      "mse": 0.48716508461939056,
+      "urc_level": 10,
+      "support_size": 25,
+      "belief": [
+        {
+          "hidden_state": 0,
+          "probability": 0.7850764333660486
+        },
+        {
+          "hidden_state": 1,
+          "probability": 2.509572372e-07
+        },
+        {
+          "hidden_state": 2,
+          "probability": 7.751034865000001e-07
+        },
+        {
+          "hidden_state": 3,
+          "probability": 1.18283161065e-05
+        },
+        {
+          "hidden_state": 4,
+          "probability": 2.1870334888800002e-05
+        },
+        {
+          "hidden_state": 5,
+          "probability": 0.00018775096431840002
+        },
+        {
+          "hidden_state": 10,
+          "probability": 1.5357420337e-06
+        },
+        {
+          "hidden_state": 11,
+          "probability": 2.72647091832e-05
+        },
+        {
+          "hidden_state": 12,
+          "probability": 5.3620618088e-05
+        },
+        {
+          "hidden_state": 13,
+          "probability": 0.0007392551517540001
+        },
+        {
+          "hidden_state": 14,
+          "probability": 0.0009773599717116
+        },
+        {
+          "hidden_state": 19,
+          "probability": 2.4526220756099993e-05
+        },
+        {
+          "hidden_state": 20,
+          "probability": 6.84470808464e-05
+        },
+        {
+          "hidden_state": 21,
+          "probability": 0.0013893421303896
+        },
+        {
+          "hidden_state": 22,
+          "probability": 0.0021544047642796
+        },
+        {
+          "hidden_state": 23,
+          "probability": 0.0257564920861932
+        },
+        {
+          "hidden_state": 28,
+          "probability": 4.999823420399999e-05
+        },
+        {
+          "hidden_state": 29,
+          "probability": 0.0011258868984803999
+        },
+        {
+          "hidden_state": 30,
+          "probability": 0.0020098298054188005
+        },
+        {
+          "hidden_state": 31,
+          "probability": 0.0351688155928374
+        },
+        {
+          "hidden_state": 32,
+          "probability": 0.04208622926930781
+        },
+        {
+          "hidden_state": 37,
+          "probability": 0.00023421740041439998
+        },
+        {
+          "hidden_state": 38,
+          "probability": 0.0016945391415035998
+        },
+        {
+          "hidden_state": 39,
+          "probability": 0.028365903465879597
+        },
+        {
+          "hidden_state": 40,
+          "probability": 0.07277342267463259
         }
       ]
     }
@@ -3865,7 +4347,7 @@
     "between_updates": "beta_next = beta * A[xhat,yhat,action]",
     "observation_between_moves": false,
     "on_update": "beta = pi",
-    "reachability_stop": "target/no-action or HMM-MSE >= tau_20",
+    "reachability_stop": "target/no-action or HMM-MSE >= tau_10",
     "frontier": false
   }
 }
